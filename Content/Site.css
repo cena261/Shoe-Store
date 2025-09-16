@@ -5,8 +5,8 @@
     padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
+/* Override the default bootstrap behavior where horizontal description lists
+   will truncate terms that are too long to fit in the left column
 */
 .dl-horizontal dt {
     white-space: normal;
@@ -18,3 +18,60 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* Theme: ShoeStore - clean, modern, vibrant */
+:root{
+  --brand:#111827; /* slate-900 */
+  --accent:#ef4444; /* red-500 */
+  --accent-2:#f59e0b; /* amber-500 */
+  --text:#111827;
+  --muted:#6b7280;
+  --bg:#ffffff;
+}
+
+html,body{height:100%;}
+/* Smooth scroll for in-page anchors */
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'Be Vietnam Pro', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color:var(--text);
+  background:var(--bg);
+}
+.navbar{
+  background:linear-gradient(90deg,var(--brand), #1f2937);
+}
+.navbar-brand{font-weight:700;letter-spacing:.5px}
+.navbar .nav-link{color:#e5e7eb !important;margin:0 .25rem}
+.navbar .nav-link:hover{color:#fff !important}
+
+.btn-primary{background:var(--accent);border-color:var(--accent)}
+.btn-primary:hover{background:#dc2626;border-color:#dc2626}
+.btn-outline-light{color:#fff;border-color:#fff}
+
+.hero{
+  background: radial-gradient(1200px 400px at 10% 10%, rgba(239,68,68,.15), transparent 40%),
+              radial-gradient(900px 300px at 80% 0%, rgba(245,158,11,.12), transparent 40%),
+              #0b0f19 url('/Content/hero-shoes.jpg') right/contain no-repeat;
+  color:#f9fafb;
+  border-radius:1rem;
+}
+.hero h1{font-size:3rem;font-weight:800}
+.hero p{font-size:1.125rem;color:#e5e7eb}
+
+.section-title{font-weight:800;letter-spacing:.3px}
+.card-product{
+  border:none;border-radius:.75rem;overflow:hidden;background:#fff;box-shadow:0 10px 25px rgba(0,0,0,.08);
+  transition:transform .25s ease, box-shadow .25s ease
+}
+.card-product:hover{transform:translateY(-6px);box-shadow:0 16px 30px rgba(0,0,0,.12)}
+.card-product .badge{position:absolute;top:.75rem;left:.75rem}
+.card-product img{object-fit:cover;height:220px;width:100%}
+.card-product .price{font-weight:700;color:var(--accent)}
+.card-product .price del{color:#9ca3af;font-weight:400;margin-left:.5rem}
+
+.form-control{border-radius:.5rem}
+.form-label{font-weight:600}
+.text-danger{font-size:.9rem}
+
+.footer{color:#9ca3af}

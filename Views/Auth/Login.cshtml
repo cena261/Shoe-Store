@@ -1,0 +1,47 @@
+@model ShoeStore.Models.LoginViewModel
+@{
+    ViewBag.Title = "Đăng nhập";
+}
+<div class="container" style="max-width:520px">
+    <div class="card shadow-sm border-0 rounded-4 mt-4">
+        <div class="card-body p-4">
+            <h2 class="mb-3">Chào mừng trở lại</h2>
+            <p class="text-muted mb-4">Đăng nhập để tiếp tục mua sắm</p>
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@err.ErrorMessage</div>
+                    }
+                </div>
+            }
+            @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "email@domain.com", autocomplete = "username" })
+                    @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Mật khẩu", autocomplete = "current-password" })
+                    @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(m => m.RememberMe, new { @class = "form-check-input", id = "remember" })
+                        <label class="form-check-label" for="remember">Ghi nhớ đăng nhập</label>
+                    </div>
+                    <a href="#" class="small text-muted">Quên mật khẩu?</a>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+            }
+            <div class="text-center mt-3">
+                <span class="text-muted">Chưa có tài khoản?</span> @Html.ActionLink("Đăng ký ngay", "Register", "Auth")
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{ @Scripts.Render("~/bundles/jqueryval") }

@@ -1,0 +1,58 @@
+@model ShoeStore.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Đăng ký";
+}
+<div class="container" style="max-width:720px">
+    <div class="card shadow-sm border-0 rounded-4 mt-4">
+        <div class="card-body p-4">
+            <h2 class="mb-3">Tạo tài khoản</h2>
+            <p class="text-muted mb-4">Đăng ký để nhận nhiều ưu đãi hấp dẫn</p>
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@err.ErrorMessage</div>
+                    }
+                </div>
+            }
+            @using (Html.BeginForm("Register", "Auth", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.FullName, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Ví dụ: Nguyễn Văn A", autocomplete = "name" })
+                        @Html.ValidationMessageFor(m => m.FullName, null, new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "email@domain.com", autocomplete = "email" })
+                        @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Phone, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "0123 456 789", autocomplete = "tel" })
+                        @Html.ValidationMessageFor(m => m.Phone, null, new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Tối thiểu 6 ký tự", autocomplete = "new-password" })
+                        @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Nhập lại mật khẩu", autocomplete = "new-password" })
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3 w-100">Tạo tài khoản</button>
+            }
+            <div class="text-center mt-3">
+                <span class="text-muted">Đã có tài khoản?</span> @Html.ActionLink("Đăng nhập", "Login", "Auth")
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{ @Scripts.Render("~/bundles/jqueryval") }

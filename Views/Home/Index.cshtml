@@ -1,33 +1,81 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Trang chủ";
 }
 
 <main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+    <section class="hero p-5 mb-5">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1>Giày chất lượng, phong cách vượt trội</h1>
+                <p>Khám phá bộ sưu tập mới nhất từ các thương hiệu hàng đầu. Giao hàng nhanh, đổi trả dễ dàng.</p>
+                <div class="mt-3">
+                    @if (Request.IsAuthenticated) {
+                        <a href="#san-pham" class="btn btn-primary btn-lg me-2">Mua sắm ngay</a>
+                    } else {
+                        @Html.ActionLink("Mua sắm ngay", "Login", "Auth", new { returnUrl = Url.Action("Index","Home") + "#san-pham" }, new { @class = "btn btn-primary btn-lg me-2" })
+                    }
+                    <a href="#san-pham" class="btn btn-outline-light btn-lg">Xem sản phẩm</a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <!-- background image handled by CSS -->
+            </div>
+        </div>
     </section>
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-    </div>
+    <section id="san-pham" class="mb-5">
+        <h2 class="section-title mb-4">Sản phẩm nổi bật</h2>
+        <div class="row g-4">
+            @for (int i = 0; i < 6; i++)
+            {
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card-product position-relative">
+                        <span class="badge bg-danger">Hot</span>
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop" alt="Giày sneaker" />
+                        <div class="p-3">
+                            <h5 class="mb-1">Sneaker X</h5>
+                            <div class="small text-muted mb-2">Nam/Nữ • Nhiều màu</div>
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="price">1.499.000đ <del>1.799.000đ</del></div>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-primary">Thêm vào giỏ</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section id="thuong-hieu" class="mb-5">
+        <h2 class="section-title mb-4">Thương hiệu</h2>
+        <div class="row text-center g-3">
+            <div class="col-6 col-md-3"><img class="img-fluid p-3" src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" alt="Nike" /></div>
+            <div class="col-6 col-md-3"><img class="img-fluid p-3" src="https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" alt="Adidas" /></div>
+            <div class="col-6 col-md-3"><img class="img-fluid p-3" src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Puma_AG.svg" alt="Puma" /></div>
+            <div class="col-6 col-md-3"><img class="img-fluid p-3" src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Converse_logo.svg" alt="Converse" /></div>
+        </div>
+    </section>
+
+    <section id="uu-dai" class="mb-5">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-4 rounded-4" style="background:linear-gradient(135deg,#111827,#1f2937);color:#fff">
+                    <h3 class="mb-2">Ưu đãi mùa lễ</h3>
+                    <p class="mb-3">Giảm đến 30% cho một số mẫu chọn lọc. Số lượng có hạn.</p>
+                    <a class="btn btn-outline-light" href="#san-pham">Săn sale</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-4 rounded-4" style="background:linear-gradient(135deg,#0b0f19,#111827);color:#fff">
+                    <h3 class="mb-2">Thành viên thân thiết</h3>
+                    <p class="mb-3">Tích điểm và nhận quà mỗi tháng dành cho hội viên.</p>
+                    @if (!Request.IsAuthenticated) {
+                        @Html.ActionLink("Tham gia ngay", "Register", "Auth", null, new { @class = "btn btn-primary" })
+                    } else {
+                        <a class="btn btn-primary" href="#san-pham">Khám phá ngay</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
