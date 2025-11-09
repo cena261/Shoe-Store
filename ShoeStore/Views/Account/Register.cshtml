@@ -1,0 +1,268 @@
+﻿
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section Styles {
+    <style>
+    body #app > footer {
+        display: none;
+    }
+    @@keyframes slideDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #register-content {
+      animation-name: slideDown;
+      animation-duration: 0.8s;
+      animation-timing-function: cubic-bezier(0.6, 0.01, -0.05, 0.9);
+      animation-fill-mode: forwards;
+      opacity: 0;
+    }
+
+    .register-video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -20;
+      pointer-events: none;
+    }
+
+    .register-video-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .register-overlay-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -10;
+      pointer-events: none;
+    }
+
+    body {
+      color: white;
+    }
+
+    nav {
+      color: white;
+    }
+
+    nav a {
+      color: white;
+    }
+
+    nav .btn-icon svg {
+      color: white;
+    }
+    </style>
+}
+
+<div class="register-video-bg">
+    <video autoplay muted loop playsinline poster="~/Content/images/videoPoster.png">
+        <source src="~/Content/images/register.mp4" type="video/mp4">
+    </video>
+</div>
+<div class="register-overlay-bg"></div>
+
+<div class="flex flex-col items-center justify-center" style="min-height: 80vh;">
+    <div class="mt-10 w-full p-4 sm:mt-16 sm:p-7 2xl:mt-0" id="register-content">
+        <h1 class="text-center text-4xl font-semibold leading-tight xl:text-6xl">
+            Join us and rock the world.
+        </h1>
+
+        <h4 class="hidden text-center text-xl sm:block xl:text-2xl">
+            Join us to get our newsletters, discount codes and more!
+        </h4>
+
+        <div class="w-full text-center">
+            <a class="underline" href="/Account/Login">Already has account? Login here!</a>
+        </div>
+
+        <div class="mt-5">
+            <div class="flex w-full justify-center">
+                <form class="flex w-160 flex-col gap-1" id="register-form">
+
+                    <!-- Name -->
+                    <label class="flex flex-col">
+                        <span class="text-lg font-semibold">Name</span>
+                        <input type="text"
+                               class="input border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
+                               placeholder="Enter your name..."
+                               id="username"
+                               name="username"
+                               value="" />
+                        <div class="h-4 text-xs italic text-red-500" id="username-error"></div>
+                    </label>
+
+                    <!-- Email -->
+                    <label class="flex flex-col">
+                        <span class="text-lg font-semibold">Email</span>
+                        <input type="text"
+                               class="input border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
+                               placeholder="Enter your email..."
+                               id="email"
+                               name="email"
+                               value="" />
+                        <div class="h-4 text-xs italic text-red-500" id="email-error"></div>
+                    </label>
+
+                    <!-- Password -->
+                    <label class="flex flex-col">
+                        <span class="text-lg font-semibold">Password</span>
+                        <div class="relative w-full">
+                            <input type="password"
+                                   class="input w-full border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
+                                   placeholder="Enter your password..."
+                                   id="password"
+                                   name="password"
+                                   value="" />
+                            <button class="btn-icon absolute right-0 h-full px-2" type="button" onclick="togglePassword('password')">
+                                <svg stroke="currentColor"
+                                     fill="currentColor"
+                                     stroke-width="0"
+                                     viewBox="0 0 1024 1024"
+                                     height="1em"
+                                     width="1em"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="h-4 text-xs italic text-red-500" id="password-error"></div>
+                    </label>
+
+                    <!-- Confirm Password -->
+                    <label class="flex flex-col">
+                        <span class="text-lg font-semibold">Confirm password</span>
+                        <div class="relative w-full">
+                            <input type="password"
+                                   class="input w-full border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
+                                   placeholder="Confirm your password..."
+                                   id="confirmPassword"
+                                   name="confirmPassword"
+                                   value="" />
+                            <button class="btn-icon absolute right-0 h-full px-2" type="button" onclick="togglePassword('confirmPassword')">
+                                <svg stroke="currentColor"
+                                     fill="currentColor"
+                                     stroke-width="0"
+                                     viewBox="0 0 1024 1024"
+                                     height="1em"
+                                     width="1em"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="h-4 text-xs italic text-red-500" id="confirmPassword-error"></div>
+                    </label>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            class="btn mt-1 h-10 rounded-md bg-white py-0 font-semibold text-black disabled:cursor-not-allowed disabled:bg-white/75">
+                        Register
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div id="success-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 2.5rem; border-radius: 0.5rem; max-width: 400px; margin: 2rem; text-align: center; color: black;">
+        <div style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;">✓</div>
+        <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
+            Registration Successful!
+        </h1>
+        <p style="margin-bottom: 1.5rem; color: #6b7280;">
+            A verification email has been sent to <strong id="email-sent"></strong>
+        </p>
+        <button class="btn" onclick="goToLogin()" style="width: 100%; padding: 0.75rem;">
+            Go to Login
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function togglePassword(fieldId) {
+      const passwordInput = document.getElementById(fieldId);
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+      } else {
+        passwordInput.type = 'password';
+      }
+    }
+
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      document.querySelectorAll('.text-red-500').forEach(el => el.textContent = '');
+
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      let hasError = false;
+
+      if (!username || username.length <= 2) {
+        document.getElementById('username-error').textContent = 'Name must be at least 3 characters';
+        hasError = true;
+      }
+
+      if (!email) {
+        document.getElementById('email-error').textContent = 'Required';
+        hasError = true;
+      } else if (!validateEmail(email)) {
+        document.getElementById('email-error').textContent = 'Invalid email';
+        hasError = true;
+      }
+
+      if (!password || password.length < 6) {
+        document.getElementById('password-error').textContent = 'Password must be at least 6 characters';
+        hasError = true;
+      }
+
+      if (password !== confirmPassword) {
+        document.getElementById('confirmPassword-error').textContent = 'Passwords must match';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      document.getElementById('email-sent').textContent = email;
+      const modal = document.getElementById('success-modal');
+      modal.style.display = 'flex';
+    });
+
+    function goToLogin() {
+      window.location.href = '/Account/Login';
+    }
+
+    document.getElementById('success-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        goToLogin();
+      }
+    });
+    </script>
+}
+
+

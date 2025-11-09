@@ -1,0 +1,184 @@
+﻿@model ShoeStore.Models.Products
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="product-details-container">
+    <div class="product-gallery">
+        <div class="product-gallery-main" id="gallery-main">
+        </div>
+        <div class="product-gallery-thumbnails" id="gallery-thumbnails">
+        </div>
+    </div>
+
+    <div class="product-details-info" id="product-info">
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    let currentProduct = null;
+    let gallery = null;
+    let selectedSize = null;
+
+    async function loadProductDetails() {
+      const productId = getUrlParameter('id');
+      if (!productId) {
+        window.location.href = '/Products/Index';
+        return;
+      }
+
+      const data = await loadProducts();
+      currentProduct = data.products.find(p => p.id === productId);
+
+      if (!currentProduct) {
+          window.location.href = '/Products/Index';
+        return;
+      }
+
+      displayProduct();
+    }
+
+    function displayProduct() {
+      document.title = `${currentProduct.name} - Sport Shop`;
+
+      const galleryMain = document.getElementById('gallery-main');
+      const galleryThumbnails = document.getElementById('gallery-thumbnails');
+
+      galleryMain.innerHTML = currentProduct.images.map((img, index) => `
+        <img
+          src="${img}"
+          alt="${currentProduct.name} - Image ${index + 1}"
+          class="product-gallery-image ${index === 0 ? 'active' : ''}"
+        >
+      `).join('') + `
+        <button class="product-gallery-nav prev" onclick="gallery.prev()" aria-label="Previous">
+          &#8249;
+        </button>
+        <button class="product-gallery-nav next" onclick="gallery.next()" aria-label="Next">
+          &#8250;
+        </button>
+      `;
+
+      galleryThumbnails.innerHTML = currentProduct.images.map((img, index) => `
+        <img
+          src="${img}"
+          alt="Thumbnail ${index + 1}"
+          class="product-gallery-thumbnail ${index === 0 ? 'active' : ''}"
+          onclick="gallery.goTo(${index})"
+        >
+      `).join('');
+
+      gallery = new ProductGallery(currentProduct.images);
+
+      const productInfo = document.getElementById('product-info');
+      productInfo.innerHTML = `
+        <h1>${currentProduct.name}</h1>
+        <p class="category">${currentProduct.category.charAt(0).toUpperCase() + currentProduct.category.slice(1)}</p>
+
+        <div class="product-details-price">
+          €${currentProduct.promotionPrice || currentProduct.price}
+          ${currentProduct.promotionPrice ? `<span class="original">€${currentProduct.price}</span>` : ''}
+        </div>
+
+        <div class="product-details-description">
+          ${currentProduct.description}
+        </div>
+
+        <div class="product-size-selector">
+          <h3>Select Size</h3>
+          <div class="product-sizes" id="size-options">
+            ${currentProduct.sizes.map(size => `
+              <button class="product-size" onclick="selectSize('${size}')">
+                ${size}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <button class="btn add-to-cart" onclick="addToCart()" id="add-to-cart-btn">
+          Add to Cart
+        </button>
+
+        <div class="product-reviews">
+          <h3>Reviews (${currentProduct.reviews.length})</h3>
+          ${currentProduct.reviews.length > 0 ? `
+            <div style="margin-bottom: 1.5rem;">
+              <span class="review-rating">
+                ${'★'.repeat(Math.round(currentProduct.rating))}${'☆'.repeat(5 - Math.round(currentProduct.rating))}
+              </span>
+              <span style="margin-left: 0.5rem; color: #6b7280;">
+                ${currentProduct.rating} out of 5
+              </span>
+            </div>
+            ${currentProduct.reviews.map(review => `
+              <div class="review">
+                <div class="review-header">
+                  <span class="review-author">${review.author}</span>
+                  <span class="review-rating">${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span>
+                </div>
+                <p class="review-comment">${review.comment}</p>
+              </div>
+            `).join('')}
+          ` : '<p style="color: #6b7280;">No reviews yet.</p>'}
+        </div>
+      `;
+
+      const { animate } = window.Motion;
+
+      animate(galleryMain,
+        { opacity: [0, 1], x: [-20, 0] },
+        { duration: 0.6, ease: [0.6, 0.01, -0.05, 0.9] }
+      );
+
+      animate(productInfo,
+        { opacity: [0, 1], x: [20, 0] },
+        { duration: 0.6, delay: 0.2, ease: [0.6, 0.01, -0.05, 0.9] }
+      );
+    }
+
+    function selectSize(size) {
+      selectedSize = size;
+
+      const sizeButtons = document.querySelectorAll('.product-size');
+      sizeButtons.forEach(btn => {
+        btn.classList.toggle('selected', btn.textContent.trim() === size);
+      });
+    }
+
+    function addToCart() {
+      if (!selectedSize) {
+        alert('Please select a size');
+        return;
+      }
+
+      cart.addItem(currentProduct, selectedSize);
+
+      const btn = document.getElementById('add-to-cart-btn');
+      const { animate } = window.Motion;
+
+      animate(btn,
+        { scale: [1, 0.95, 1] },
+        { duration: 0.3 }
+      );
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadProductDetails();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (!gallery) return;
+
+      if (e.key === 'ArrowLeft') {
+        gallery.prev();
+      } else if (e.key === 'ArrowRight') {
+        gallery.next();
+      }
+    });
+    </script>
+}
+
+

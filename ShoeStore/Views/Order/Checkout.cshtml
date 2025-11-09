@@ -1,0 +1,246 @@
+﻿
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="checkout-container">
+    <div class="checkout-form">
+        <h2>Customer Details</h2>
+        <form id="checkout-form">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" class="input" required>
+                <div class="form-error" id="email-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" class="input" required>
+                <div class="form-error" id="name-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" class="input" required>
+                <div class="form-error" id="phone-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address *</label>
+                <input type="text" id="address" name="address" class="input" required>
+                <div class="form-error" id="address-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="city">City *</label>
+                <input type="text" id="city" name="city" class="input" required>
+                <div class="form-error" id="city-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="postCode">Postal Code *</label>
+                <input type="text" id="postCode" name="postCode" class="input" required>
+                <div class="form-error" id="postCode-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="country">Country *</label>
+                <input type="text" id="country" name="country" class="input" required>
+                <div class="form-error" id="country-error"></div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="checkout-summary">
+        <h2>Order Summary</h2>
+
+        <div id="order-items" style="margin-bottom: 1.5rem;">
+            <!-- Xy ly danh sach order  -->
+        </div>
+
+        <div class="summary-item">
+            <span>Subtotal:</span>
+            <span id="subtotal">€0</span>
+        </div>
+
+        <div class="summary-item">
+            <span>Shipping:</span>
+            <span style="color: #10b981;">FREE</span>
+        </div>
+
+        <div class="summary-item" id="discount-row" style="display: none;">
+            <span>Discount:</span>
+            <span id="discount-amount" style="color: #10b981;">-€0</span>
+        </div>
+
+        <div class="summary-total">
+            <span>Total:</span>
+            <span id="total">€0</span>
+        </div>
+
+        <div class="discount-code">
+            <input type="text" id="discount-code-input" class="input" placeholder="Discount code">
+            <button class="btn" onclick="applyDiscount()" style="width: 100%; margin-top: 0.5rem;">
+                Apply Code
+            </button>
+            <div id="discount-message" style="margin-top: 0.5rem; font-size: 0.875rem;"></div>
+        </div>
+
+        <button class="btn" onclick="proceedToPayment()" style="width: 100%; margin-top: 1.5rem; padding: 1rem;">
+            Proceed to Payment
+        </button>
+    </div>
+</div>
+
+<div id="confirmation-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 2.5rem; border-radius: 0.5rem; max-width: 500px; margin: 2rem; position: relative;">
+        <button onclick="closeModal()" style="position: absolute; top: 1.25rem; right: 1.25rem;" class="btn-icon">
+            ✕
+        </button>
+        <h1 style="text-align: center; font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">
+            Are you sure?
+        </h1>
+        <p style="margin-bottom: 1.5rem;">
+            Your cart will be cleared and you will be redirected to the order confirmation page.
+        </p>
+        <button class="btn" onclick="confirmPayment()" style="width: 100%; padding: 0.75rem;">
+            Confirm Payment
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    let discountApplied = false;
+    let discountAmount = 0;
+
+    function loadOrderSummary() {
+      if (cart.items.length === 0) {
+        window.location.href = '/Home/Index';
+        return;
+      }
+
+      const orderItems = document.getElementById('order-items');
+      const subtotalEl = document.getElementById('subtotal');
+      const totalEl = document.getElementById('total');
+
+      orderItems.innerHTML = cart.items.map(item => `
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;">
+          <img src="${item.images[0]}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;">
+          <div style="flex: 1;">
+            <h4 style="font-weight: 600; margin: 0;">${item.name}</h4>
+            <p style="font-size: 0.875rem; color: #6b7280; margin: 0.25rem 0;">Size: ${item.size}</p>
+            <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">Qty: ${item.quantity}</p>
+          </div>
+          <div style="text-align: right;">
+            <p style="font-weight: 600; margin: 0;">€${(item.promotionPrice || item.price) * item.quantity}</p>
+          </div>
+        </div>
+      `).join('');
+
+      updateTotals();
+    }
+
+    function updateTotals() {
+      const subtotal = cart.getTotal();
+      const total = subtotal - discountAmount;
+
+      document.getElementById('subtotal').textContent = `€${subtotal}`;
+      document.getElementById('total').textContent = `€${total}`;
+
+      if (discountApplied) {
+        document.getElementById('discount-row').style.display = 'flex';
+        document.getElementById('discount-amount').textContent = `-€${discountAmount}`;
+      }
+    }
+
+    function applyDiscount() {
+      const code = document.getElementById('discount-code-input').value.trim();
+      const messageEl = document.getElementById('discount-message');
+
+      if (!code) {
+        messageEl.textContent = 'Please enter a discount code';
+        messageEl.style.color = '#ef4444';
+        return;
+      }
+
+      if (code.toUpperCase() === 'SAVE10') {
+        discountApplied = true;
+        discountAmount = Math.round(cart.getTotal() * 0.1);
+        messageEl.textContent = 'Discount applied successfully!';
+        messageEl.style.color = '#10b981';
+        updateTotals();
+      } else {
+        messageEl.textContent = 'Invalid discount code';
+        messageEl.style.color = '#ef4444';
+      }
+    }
+
+    function proceedToPayment() {
+      if (!validateForm('checkout-form')) {
+        alert('Please fill in all required fields correctly');
+        return;
+      }
+
+      const modal = document.getElementById('confirmation-modal');
+      modal.style.display = 'flex';
+
+      const { animate } = window.Motion;
+      const modalContent = modal.querySelector('div');
+      animate(modalContent,
+        { scale: [0.9, 1], opacity: [0, 1] },
+        { duration: 0.3 }
+      );
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('confirmation-modal');
+      modal.style.display = 'none';
+    }
+
+    function confirmPayment() {
+      const formData = new FormData(document.getElementById('checkout-form'));
+      const orderData = {
+        customer: Object.fromEntries(formData),
+        items: cart.items,
+        subtotal: cart.getTotal(),
+        discount: discountAmount,
+        total: cart.getTotal() - discountAmount,
+        date: new Date().toISOString()
+      };
+
+      sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
+
+      cart.items = [];
+      cart.saveCart();
+
+      window.location.href = '/Order/Success';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadOrderSummary();
+
+      const { animate } = window.Motion;
+
+      animate('.checkout-form',
+        { opacity: [0, 1], x: [-20, 0] },
+        { duration: 0.6, ease: [0.6, 0.01, -0.05, 0.9] }
+      );
+
+      animate('.checkout-summary',
+        { opacity: [0, 1], x: [20, 0] },
+        { duration: 0.6, delay: 0.2, ease: [0.6, 0.01, -0.05, 0.9] }
+      );
+    });
+
+    document.getElementById('confirmation-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+    </script>
+}
+
+

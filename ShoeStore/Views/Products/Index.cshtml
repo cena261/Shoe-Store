@@ -1,0 +1,200 @@
+﻿@model ShoeStore.Models.Products
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="product-list-container">
+    <aside class="filter-sidebar">
+        <div class="filter-section">
+            <h3>Gender</h3>
+            <div class="filter-options">
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-men" onchange="applyFilters()">
+                    <label for="filter-men">Men</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-women" onchange="applyFilters()">
+                    <label for="filter-women">Women</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-unisex" onchange="applyFilters()">
+                    <label for="filter-unisex">Unisex</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h3>Category</h3>
+            <div class="filter-options">
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-kids" onchange="applyFilters()">
+                    <label for="filter-kids">Kids</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h3>Colors</h3>
+            <div class="filter-options">
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-black" value="black" onchange="applyFilters()">
+                    <label for="filter-black">Black</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-white" value="white" onchange="applyFilters()">
+                    <label for="filter-white">White</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-blue" value="blue" onchange="applyFilters()">
+                    <label for="filter-blue">Blue</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-red" value="red" onchange="applyFilters()">
+                    <label for="filter-red">Red</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-pink" value="pink" onchange="applyFilters()">
+                    <label for="filter-pink">Pink</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="filter-green" value="green" onchange="applyFilters()">
+                    <label for="filter-green">Green</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h3>Sort By</h3>
+            <div class="filter-options">
+                <select id="sort-select" class="input" onchange="applyFilters()" style="width: 100%;">
+                    <option value="newest">Newest</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn" onclick="resetFilters()" style="width: 100%; margin-top: 1rem;">Reset Filters</button>
+    </aside>
+
+    <div class="product-grid" id="product-grid">
+        <!-- Danh sach san pham -->
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    let allProducts = [];
+    const filterManager = new FilterManager();
+
+    async function loadAndDisplayProducts() {
+      const data = await loadProducts();
+      allProducts = data.products;
+
+      const storedFilter = localStorage.getItem('activeFilter');
+      if (storedFilter) {
+        const filter = JSON.parse(storedFilter);
+        if (filter.type === 'gender') {
+          const checkbox = document.getElementById(`filter-${filter.value}`);
+          if (checkbox) {
+            checkbox.checked = true;
+            filterManager.filters.gender[filter.value] = true;
+          }
+        }
+        localStorage.removeItem('activeFilter');
+      }
+
+      applyFilters();
+    }
+
+    function applyFilters() {
+      filterManager.filters.gender.men = document.getElementById('filter-men').checked;
+      filterManager.filters.gender.women = document.getElementById('filter-women').checked;
+      filterManager.filters.gender.unisex = document.getElementById('filter-unisex').checked;
+
+      filterManager.filters.kids = document.getElementById('filter-kids').checked;
+
+      filterManager.filters.colors = [];
+      ['black', 'white', 'blue', 'red', 'pink', 'green'].forEach(color => {
+        const checkbox = document.getElementById(`filter-${color}`);
+        if (checkbox && checkbox.checked) {
+          filterManager.filters.colors.push(color);
+        }
+      });
+
+      const sortSelect = document.getElementById('sort-select');
+      if (sortSelect) {
+        filterManager.filters.sortBy = sortSelect.value;
+      }
+
+      const filteredProducts = filterManager.applyFilters(allProducts);
+      displayProducts(filteredProducts);
+    }
+
+    function displayProducts(products) {
+      const container = document.getElementById('product-grid');
+      if (!container) return;
+
+      if (products.length === 0) {
+        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #6b7280;">No products found matching your filters.</p>';
+        return;
+      }
+
+      container.innerHTML = products.map(product => `
+        <a href="product-details.html?id=${product.id}" class="product-card">
+          <div class="product-image-container">
+            <img src="${product.images[0]}" alt="${product.name}" class="product-image">
+          </div>
+          <div class="product-info">
+            <div class="product-info-left">
+              <h4>${product.name}</h4>
+              <h5>${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</h5>
+            </div>
+            <div class="product-info-right">
+              <h4>€${product.promotionPrice || product.price}</h4>
+              ${product.promotionPrice ? `<h5>€${product.price}</h5>` : ''}
+            </div>
+          </div>
+        </a>
+      `).join('');
+
+      const { animate } = window.Motion;
+      const productCards = document.querySelectorAll('.product-card');
+      productCards.forEach((card, index) => {
+        animate(card,
+          {
+            opacity: [0, 1],
+            y: [20, 0]
+          },
+          {
+            duration: 0.4,
+            delay: index * 0.05,
+            ease: [0.6, 0.01, -0.05, 0.9]
+          }
+        );
+      });
+    }
+
+    function resetFilters() {
+      // Uncheck all checkboxes
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+      // Reset sort
+      document.getElementById('sort-select').value = 'newest';
+
+      // Reset filter manager
+      filterManager.reset();
+
+      // Reapply filters (which will show all products)
+      applyFilters();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAndDisplayProducts();
+    });
+    </script>
+}
+

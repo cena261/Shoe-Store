@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Sport Shop</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontSize: {
+                        'extra': '7rem'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="~/Content/css/styles.css">
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div id="app">
+        <!-- Navbar -->
+        @Html.Partial("_Header")
+
+        <!-- Mobile Menu -->
+        @Html.Partial("_MobileMenu")
+
+        <!-- Main Content -->
+        @RenderBody()
+
+        <!-- Footer -->
+        @Html.Partial("_Footer")
+
+        <!-- Cart -->
+        @Html.Partial("_Cart")
+    </div>
+
+    <script src="~/Script/main.js"></script>
+    <script src="~/Script/components.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
