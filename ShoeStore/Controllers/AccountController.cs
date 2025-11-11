@@ -313,6 +313,56 @@ namespace ShoeStore.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult ChangePassword(ChangePasswordRequest model)
+        {
+            try
+            {
+                if (Session["UserId"] == null)
+                {
+                    return Json(new { Status = false, Message = "Not authenticated" });
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                                  .Select(e => e.ErrorMessage)
+                                                  .ToList();
+                    return Json(new { Status = false, Message = string.Join(", ", errors) });
+                }
+
+                int userId = (int)Session["UserId"];
+                var user = db.Users.FirstOrDefault(u => u.userId == userId);
+
+                if (user == null)
+                {
+                    return Json(new { Status = false, Message = "User not found" });
+                }
+
+                bool isCurrentPasswordValid = BCrypt.Net.BCrypt.Verify(model.CurrentPassword, user.PasswordHash);
+                if (!isCurrentPasswordValid)
+                {
+                    return Json(new { Status = false, Message = "Current password is incorrect" });
+                }
+
+                string newHashedPassword = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+                user.PasswordHash = newHashedPassword;
+                db.SaveChanges();
+
+                return Json(new { Status = true, Message = "Password changed successfully" });
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+
+                return Json(new { Status = false, Message = "An error occurred: " + innerException.Message });
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

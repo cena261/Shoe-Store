@@ -77,6 +77,8 @@
                         <div class="h-4 text-xs italic text-red-500" id="password-error"></div>
                     </label>
 
+                    <div class="h-4 text-xs italic text-red-500 text-center" id="login-error"></div>
+
                     <button type="submit" class="btn mt-1 rounded-md py-2 h-10">
                         Login
                     </button>
@@ -106,6 +108,7 @@
 
       document.getElementById('email-error').textContent = '';
       document.getElementById('password-error').textContent = '';
+      document.getElementById('login-error').textContent = '';
 
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
@@ -149,12 +152,12 @@
           localStorage.removeItem('user');
           window.location.href = '/Account/Dashboard';
         } else {
-          alert('Login failed: ' + result.Message);
+          document.getElementById('login-error').textContent = result.Message;
           submitBtn.disabled = false;
           submitBtn.textContent = 'Login';
         }
       } catch (error) {
-        alert('An error occurred. Please try again.');
+        document.getElementById('login-error').textContent = 'An error occurred. Please try again.';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Login';
       }

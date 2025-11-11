@@ -165,6 +165,7 @@
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Categories.cs" />
+    <Compile Include="Models\DTOs\ChangePasswordRequest.cs" />
     <Compile Include="Models\DTOs\LoginRequest.cs" />
     <Compile Include="Models\DTOs\LoginResponse.cs" />
     <Compile Include="Models\DTOs\RegisterRequest.cs" />
