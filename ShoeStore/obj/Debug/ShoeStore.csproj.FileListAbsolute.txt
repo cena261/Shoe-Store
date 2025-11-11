@@ -76,3 +76,7 @@ C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.dll
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.pdb
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.InitDatabase.resources
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.csproj.GenerateResource.cache
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.TenMigrationMoi.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.UpdateSKU.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.UpdateImages.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.AddUniqueKeys.resources

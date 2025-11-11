@@ -30,7 +30,7 @@ namespace ShoeStore.Models
         public int CategoryID { get; set; }
 
         [Column(TypeName = "decimal")]
-        public decimal Rating { get; set; }
+        public decimal? Rating { get; set; }
 
         public bool IsActive { get; set; }
 

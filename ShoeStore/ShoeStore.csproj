@@ -121,6 +121,22 @@
     <Compile Include="Migrations\202511090816199_InitDatabase.Designer.cs">
       <DependentUpon>202511090816199_InitDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202511100719350_TenMigrationMoi.cs" />
+    <Compile Include="Migrations\202511100719350_TenMigrationMoi.Designer.cs">
+      <DependentUpon>202511100719350_TenMigrationMoi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202511100734011_UpdateSKU.cs" />
+    <Compile Include="Migrations\202511100734011_UpdateSKU.Designer.cs">
+      <DependentUpon>202511100734011_UpdateSKU.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202511101211177_UpdateImages.cs" />
+    <Compile Include="Migrations\202511101211177_UpdateImages.Designer.cs">
+      <DependentUpon>202511101211177_UpdateImages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202511101229020_AddUniqueKeys.cs" />
+    <Compile Include="Migrations\202511101229020_AddUniqueKeys.Designer.cs">
+      <DependentUpon>202511101229020_AddUniqueKeys.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -167,6 +183,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202511090816199_InitDatabase.resx">
       <DependentUpon>202511090816199_InitDatabase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511100719350_TenMigrationMoi.resx">
+      <DependentUpon>202511100719350_TenMigrationMoi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511100734011_UpdateSKU.resx">
+      <DependentUpon>202511100734011_UpdateSKU.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511101211177_UpdateImages.resx">
+      <DependentUpon>202511101211177_UpdateImages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511101229020_AddUniqueKeys.resx">
+      <DependentUpon>202511101229020_AddUniqueKeys.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

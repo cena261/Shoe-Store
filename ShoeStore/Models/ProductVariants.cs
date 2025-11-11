@@ -16,13 +16,13 @@ namespace ShoeStore.Models
         [Required, MaxLength(10)]
         public string SizeValue { get; set; }
 
-        [Required, MaxLength(50)]
+        [Required, MaxLength(250)]
         public string ColorName { get; set; }
 
-        [MaxLength(7)]
-        public string HexCode { get; set; }
+        [MaxLength(50)]
+        public string StyleColor { get; set; }
 
-        [Required, MaxLength(64)]
+        [Required, MaxLength(250)]
         [Index(IsUnique = true)]
         public string SKU { get; set; }
 
