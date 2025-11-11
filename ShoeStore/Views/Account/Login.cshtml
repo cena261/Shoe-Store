@@ -101,7 +101,7 @@
       }
     }
 
-    document.getElementById('login-form').addEventListener('submit', function(e) {
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
       e.preventDefault();
 
       document.getElementById('email-error').textContent = '';
@@ -127,15 +127,46 @@
 
       if (hasError) return;
 
-      const user = {
-        email: email,
-        name: email.split('@@')[0],
-        loggedIn: true
-      };
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Logging in...';
 
-      localStorage.setItem('user', JSON.stringify(user));
-      alert('Login successful!');
-      window.location.href = '/Account/Dashboard';
+      try {
+        const response = await fetch('/Account/Login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            Email: email,
+            Password: password
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.Status) {
+          const user = {
+            userId: result.User.UserId,
+            email: result.User.Email,
+            name: result.User.FullName,
+            phone: result.User.Phone,
+            roles: result.User.Roles,
+            loggedIn: true
+          };
+
+          localStorage.setItem('user', JSON.stringify(user));
+          window.location.href = '/Account/Dashboard';
+        } else {
+          alert('Login failed: ' + result.Message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Login';
+        }
+      } catch (error) {
+        alert('An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Login';
+      }
     });
 
     </script>

@@ -24,6 +24,21 @@ namespace ShoeStore.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Users>()
+                .Property(u => u.createdAt).HasColumnType("datetime");
+            modelBuilder.Entity<Users>()
+                .Property(u => u.lastLogin).HasColumnType("datetime");
+            modelBuilder.Entity<UserRoles>()
+                .Property(ur => ur.AssignedAt).HasColumnType("datetime");
+            modelBuilder.Entity<Orders>()
+                .Property(o => o.OrderDate).HasColumnType("datetime");
+            modelBuilder.Entity<Reviews>()
+                .Property(r => r.ReviewDate).HasColumnType("datetime");
+            modelBuilder.Entity<Cart>()
+                .Property(c => c.AddedAt).HasColumnType("datetime");
+            modelBuilder.Entity<Products>()
+                .Property(p => p.CreatedAt).HasColumnType("datetime");
+
             modelBuilder.Entity<Products>()
                 .Property(p => p.Price).HasPrecision(12, 2);
             modelBuilder.Entity<Products>()

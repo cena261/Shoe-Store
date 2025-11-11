@@ -172,6 +172,18 @@
                         <div class="h-4 text-xs italic text-red-500" id="confirmPassword-error"></div>
                     </label>
 
+                    <!-- Phone (Optional) -->
+                    <label class="flex flex-col">
+                        <span class="text-lg font-semibold">Phone (Optional)</span>
+                        <input type="text"
+                               class="input border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
+                               placeholder="Enter your phone number..."
+                               id="phone"
+                               name="phone"
+                               value="" />
+                        <div class="h-4 text-xs italic text-red-500" id="phone-error"></div>
+                    </label>
+
                     <!-- Submit Button -->
                     <button type="submit"
                             class="btn mt-1 h-10 rounded-md bg-white py-0 font-semibold text-black disabled:cursor-not-allowed disabled:bg-white/75">
@@ -211,7 +223,7 @@
       }
     }
 
-    document.getElementById('register-form').addEventListener('submit', function(e) {
+    document.getElementById('register-form').addEventListener('submit', async function(e) {
       e.preventDefault();
 
       document.querySelectorAll('.text-red-500').forEach(el => el.textContent = '');
@@ -220,6 +232,7 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
+      const phone = document.getElementById('phone').value;
 
       let hasError = false;
 
@@ -246,11 +259,47 @@
         hasError = true;
       }
 
+      if (phone && !/^[0-9]{10,11}$/.test(phone)) {
+        document.getElementById('phone-error').textContent = 'Phone must be 10-11 digits';
+        hasError = true;
+      }
+
       if (hasError) return;
 
-      document.getElementById('email-sent').textContent = email;
-      const modal = document.getElementById('success-modal');
-      modal.style.display = 'flex';
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Registering...';
+
+      try {
+        const response = await fetch('/Account/Register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            Email: email,
+            Password: password,
+            FullName: username,
+            Phone: phone || null
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.Status) {
+          document.getElementById('email-sent').textContent = email;
+          const modal = document.getElementById('success-modal');
+          modal.style.display = 'flex';
+        } else {
+          alert('Registration failed: ' + result.Message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Register';
+        }
+      } catch (error) {
+        alert('An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register';
+      }
     });
 
     function goToLogin() {

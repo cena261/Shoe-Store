@@ -80,3 +80,15 @@ C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.TenMi
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.UpdateSKU.resources
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.UpdateImages.resources
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.AddUniqueKeys.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\BCrypt.Net-Next.dll
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\System.Buffers.dll
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\System.Memory.dll
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\System.Numerics.Vectors.dll
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\BCrypt.Net-Next.xml
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\System.Buffers.xml
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\System.Memory.xml
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\System.Numerics.Vectors.xml
+C:\Users\cena\Documents\ShoeStore\ShoeStore\bin\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.UpdateCreatedAt.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.UpdateSt.resources

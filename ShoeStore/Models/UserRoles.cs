@@ -14,7 +14,7 @@ namespace ShoeStore.Models
         [Key, Column(Order = 1)]
         public int RoleID { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public DateTime AssignedAt { get; set; }
 
         [ForeignKey("UserID")]

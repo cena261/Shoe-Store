@@ -27,7 +27,7 @@ namespace ShoeStore.Models
         [MaxLength(20)]
         public string Phone { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public DateTime createdAt { get; set; }
 
         public DateTime? lastLogin { get; set; }
