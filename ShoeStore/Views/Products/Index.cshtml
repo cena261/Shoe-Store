@@ -488,11 +488,7 @@
     }
 
     async function loadProducts() {
-        const loading = document.getElementById('loading');
         const productGrid = document.getElementById('product-grid');
-
-        loading.style.display = 'block';
-        productGrid.style.display = 'none';
 
         try {
             const params = new URLSearchParams({
@@ -525,9 +521,6 @@
         } catch (error) {
             console.error('Error loading products:', error);
             productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #ef4444;">Error loading products.</p>';
-        } finally {
-            loading.style.display = 'none';
-            productGrid.style.display = 'grid';
         }
     }
 
@@ -641,7 +634,12 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function applyFilters() {
+    function applyFilters(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
         currentFilters.gender = [];
         currentFilters.price = [];
         currentFilters.size = [];
@@ -665,7 +663,18 @@
     }
 
     document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', applyFilters);
+        checkbox.addEventListener('change', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            applyFilters();
+        });
+    });
+
+    // Also prevent label clicks from propagating
+    document.querySelectorAll('.filter-item').forEach(label => {
+        label.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
     });
 
     document.addEventListener('DOMContentLoaded', function() {
