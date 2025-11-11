@@ -290,6 +290,8 @@
           document.getElementById('email-sent').textContent = email;
           const modal = document.getElementById('success-modal');
           modal.style.display = 'flex';
+
+          localStorage.removeItem('user');
         } else {
           alert('Registration failed: ' + result.Message);
           submitBtn.disabled = false;

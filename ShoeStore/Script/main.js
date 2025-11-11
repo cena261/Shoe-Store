@@ -107,11 +107,16 @@ class Cart {
   updateCartSidebar() {
     const cartProducts = document.getElementById('cart-products');
     const cartTotal = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
 
     if (!cartProducts || !cartTotal) return;
 
     if (this.items.length === 0) {
       cartProducts.innerHTML = '<p style="text-align: center; color: #6b7280;">Your cart is empty</p>';
+      if (checkoutBtn) {
+        checkoutBtn.style.pointerEvents = 'none';
+        checkoutBtn.style.opacity = '0.5';
+      }
     } else {
       cartProducts.innerHTML = this.items.map(item => `
         <div class="cart-product">
@@ -131,6 +136,10 @@ class Cart {
           </button>
         </div>
       `).join('');
+      if (checkoutBtn) {
+        checkoutBtn.style.pointerEvents = 'auto';
+        checkoutBtn.style.opacity = '1';
+      }
     }
 
     cartTotal.textContent = `€${this.getTotal()}`;

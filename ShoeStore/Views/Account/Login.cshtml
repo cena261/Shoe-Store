@@ -146,16 +146,7 @@
         const result = await response.json();
 
         if (result.Status) {
-          const user = {
-            userId: result.User.UserId,
-            email: result.User.Email,
-            name: result.User.FullName,
-            phone: result.User.Phone,
-            roles: result.User.Roles,
-            loggedIn: true
-          };
-
-          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.removeItem('user');
           window.location.href = '/Account/Dashboard';
         } else {
           alert('Login failed: ' + result.Message);

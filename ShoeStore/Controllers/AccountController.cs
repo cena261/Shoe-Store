@@ -95,6 +95,22 @@ namespace ShoeStore.Controllers
                 Session["UserName"] = newUser.FullName;
                 Session["UserRoles"] = new string[] { "User" };
 
+                var authCookie = new HttpCookie("AuthToken")
+                {
+                    Value = "authenticated",
+                    Expires = DateTime.Now.AddDays(7),
+                    HttpOnly = true,
+                    Secure = Request.IsSecureConnection
+                };
+                Response.Cookies.Add(authCookie);
+
+                var userCookie = new HttpCookie("UserInfo")
+                {
+                    Value = newUser.userId.ToString(),
+                    Expires = DateTime.Now.AddDays(7)
+                };
+                Response.Cookies.Add(userCookie);
+
                 return Json(new RegisterResponse
                 {
                     Status = true,
@@ -193,6 +209,22 @@ namespace ShoeStore.Controllers
                 Session["UserName"] = user.FullName;
                 Session["UserRoles"] = userRoles;
 
+                var authCookie = new HttpCookie("AuthToken")
+                {
+                    Value = "authenticated",
+                    Expires = DateTime.Now.AddDays(7),
+                    HttpOnly = true,
+                    Secure = Request.IsSecureConnection
+                };
+                Response.Cookies.Add(authCookie);
+
+                var userCookie = new HttpCookie("UserInfo")
+                {
+                    Value = user.userId.ToString(),
+                    Expires = DateTime.Now.AddDays(7)
+                };
+                Response.Cookies.Add(userCookie);
+
                 return Json(new LoginResponse
                 {
                     Status = true,
@@ -227,7 +259,58 @@ namespace ShoeStore.Controllers
         // GET: Account/Dashboard
         public ActionResult Dashboard()
         {
+            if (Session["UserId"] == null)
+            {
+                Response.Cookies["AuthToken"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["UserInfo"].Expires = DateTime.Now.AddDays(-1);
+                return RedirectToAction("Login");
+            }
+
+            int userId = (int)Session["UserId"];
+            var user = db.Users.FirstOrDefault(u => u.userId == userId);
+
+            if (user == null || !user.IsActive)
+            {
+                Session.Clear();
+                Response.Cookies["AuthToken"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["UserInfo"].Expires = DateTime.Now.AddDays(-1);
+                return RedirectToAction("Login");
+            }
+
             return View();
+        }
+
+        [HttpGet]
+        public JsonResult GetUserInfo()
+        {
+            if (Session["UserId"] == null)
+            {
+                return Json(new { Status = false, Message = "Not authenticated" }, JsonRequestBehavior.AllowGet);
+            }
+
+            int userId = (int)Session["UserId"];
+            var user = db.Users.FirstOrDefault(u => u.userId == userId);
+
+            if (user == null)
+            {
+                return Json(new { Status = false, Message = "User not found" }, JsonRequestBehavior.AllowGet);
+            }
+
+            var userRoles = db.UserRoles
+                .Where(ur => ur.UserID == userId)
+                .Select(ur => ur.Role.RoleName)
+                .ToArray();
+
+            return Json(new
+            {
+                Status = true,
+                UserId = user.userId,
+                Email = user.Email,
+                FullName = user.FullName,
+                Phone = user.Phone,
+                CreatedAt = user.createdAt,
+                Roles = userRoles
+            }, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
