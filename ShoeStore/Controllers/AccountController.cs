@@ -363,6 +363,120 @@ namespace ShoeStore.Controllers
             }
         }
 
+        [HttpGet]
+        public JsonResult GetUserAddresses()
+        {
+            try
+            {
+                if (Session["UserId"] == null)
+                {
+                    return Json(new { Status = false, Message = "Not authenticated" }, JsonRequestBehavior.AllowGet);
+                }
+
+                int userId = (int)Session["UserId"];
+                var addresses = db.Addresses
+                    .Where(a => a.UserID == userId)
+                    .OrderByDescending(a => a.IsDefault)
+                    .Select(a => new AddressData
+                    {
+                        AddressID = a.AddressID,
+                        FullName = a.FullName,
+                        Phone = a.Phone,
+                        TenDuong = a.TenDuong,
+                        XaQuan = a.XaQuan,
+                        TinhThanh = a.TinhThanh,
+                        IsDefault = a.IsDefault
+                    })
+                    .ToList();
+
+                return Json(new { Status = true, Addresses = addresses }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+
+                return Json(new { Status = false, Message = "An error occurred: " + innerException.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult AddAddress(AddressRequest model)
+        {
+            try
+            {
+                if (Session["UserId"] == null)
+                {
+                    return Json(new { Status = false, Message = "Not authenticated" });
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                                  .Select(e => e.ErrorMessage)
+                                                  .ToList();
+                    return Json(new { Status = false, Message = string.Join(", ", errors) });
+                }
+
+                int userId = (int)Session["UserId"];
+
+                if (model.IsDefault)
+                {
+                    var existingDefaultAddress = db.Addresses
+                        .Where(a => a.UserID == userId && a.IsDefault)
+                        .ToList();
+
+                    foreach (var address in existingDefaultAddress)
+                    {
+                        address.IsDefault = false;
+                    }
+                }
+
+                var newAddress = new Address
+                {
+                    UserID = userId,
+                    FullName = model.FullName,
+                    Phone = model.Phone,
+                    TenDuong = model.TenDuong,
+                    XaQuan = model.XaQuan,
+                    TinhThanh = model.TinhThanh,
+                    IsDefault = model.IsDefault
+                };
+
+                db.Addresses.Add(newAddress);
+                db.SaveChanges();
+
+                return Json(new
+                {
+                    Status = true,
+                    Message = "Address added successfully",
+                    Address = new AddressData
+                    {
+                        AddressID = newAddress.AddressID,
+                        FullName = newAddress.FullName,
+                        Phone = newAddress.Phone,
+                        TenDuong = newAddress.TenDuong,
+                        XaQuan = newAddress.XaQuan,
+                        TinhThanh = newAddress.TinhThanh,
+                        IsDefault = newAddress.IsDefault
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+
+                return Json(new { Status = false, Message = "An error occurred: " + innerException.Message });
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

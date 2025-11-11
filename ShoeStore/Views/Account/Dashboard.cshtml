@@ -32,9 +32,8 @@
             <!-- Saved Addresses Card -->
             <article class="rounded-3xl border border-zinc-200 p-6 shadow-sm">
                 <h2 class="text-lg font-semibold">Saved addresses</h2>
-                <p class="mt-3 text-sm text-zinc-500">123 Runner Street, Portland, OR</p>
-                <p class="text-sm text-zinc-500">76 Sneakers Ave, New York, NY</p>
-                <button class="mt-4 rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white">Manage</button>
+                <div id="address-list" class="mt-3"></div>
+                <button class="mt-4 rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white" onclick="openAddressModal()">Manage</button>
             </article>
 
             <!-- Recent Orders Card -->
@@ -78,6 +77,91 @@
 
             <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; font-weight: 600;">
                 Update Password
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="address-modal" class="change-password-modal">
+    <div id="address-modal-content" class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: black;">Add Address</h2>
+            <button onclick="closeAddressModal()" style="font-size: 1.5rem; color: #6b7280; border: none; background: none; cursor: pointer;">&times;</button>
+        </div>
+        <form id="address-form">
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Full Name</span>
+                <input type="text" id="address-fullname" class="input" placeholder="Enter full name" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-fullname-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Phone Number</span>
+                <input type="text" id="address-phone" class="input" placeholder="Enter phone number (10 digits, start with 0)" style="width: 100%;" maxlength="10" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-phone-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Tên đường</span>
+                <input type="text" id="address-street" class="input" placeholder="Enter street name" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-street-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Xã / Quận</span>
+                <input type="text" id="address-ward" class="input" placeholder="Enter ward/district" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-ward-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Tỉnh Thành</span>
+                <select id="address-province" class="input" style="width: 100%;">
+                    <option value="">Select province/city</option>
+                    <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+                    <option value="Bắc Giang">Bắc Giang</option>
+                    <option value="Bắc Ninh">Bắc Ninh</option>
+                    <option value="Bình Định">Bình Định</option>
+                    <option value="Bình Thuận">Bình Thuận</option>
+                    <option value="Cao Bằng">Cao Bằng</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                    <option value="Điện Biên">Điện Biên</option>
+                    <option value="Đồng Nai">Đồng Nai</option>
+                    <option value="Hà Giang">Hà Giang</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Hà Tĩnh">Hà Tĩnh</option>
+                    <option value="Hòa Bình">Hòa Bình</option>
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                    <option value="Huế">Huế</option>
+                    <option value="Khánh Hòa">Khánh Hòa</option>
+                    <option value="Lai Châu">Lai Châu</option>
+                    <option value="Lạng Sơn">Lạng Sơn</option>
+                    <option value="Long An">Long An</option>
+                    <option value="Nghệ An">Nghệ An</option>
+                    <option value="Ninh Thuận">Ninh Thuận</option>
+                    <option value="Phú Yên">Phú Yên</option>
+                    <option value="Quảng Bình">Quảng Bình</option>
+                    <option value="Quảng Nam">Quảng Nam</option>
+                    <option value="Quảng Ngãi">Quảng Ngãi</option>
+                    <option value="Quảng Ninh">Quảng Ninh</option>
+                    <option value="Quảng Trị">Quảng Trị</option>
+                    <option value="Sơn La">Sơn La</option>
+                    <option value="Thái Nguyên">Thái Nguyên</option>
+                    <option value="Thanh Hóa">Thanh Hóa</option>
+                    <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+                    <option value="Tiền Giang">Tiền Giang</option>
+                    <option value="Tuyên Quang">Tuyên Quang</option>
+                    <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+                </select>
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-province-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: row; align-items: center; margin-bottom: 1.5rem; cursor: pointer;">
+                <input type="checkbox" id="address-default" style="position: static; width: 1rem; height: 1rem; margin-right: 0.5rem; cursor: pointer; clip: auto; clip-path: none; overflow: visible;" />
+                <span style="font-size: 0.875rem; font-weight: 600; color: black;">Set as default address</span>
+            </label>
+
+            <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; font-weight: 600;">
+                Add Address
             </button>
         </form>
     </div>
@@ -188,6 +272,34 @@
         console.error('Error loading user info:', error);
       }
 
+      loadAddresses();
+    }
+
+    async function loadAddresses() {
+      try {
+        const response = await fetch('/Account/GetUserAddresses');
+        const result = await response.json();
+
+        const addressList = document.getElementById('address-list');
+
+        if (result.Status && result.Addresses && result.Addresses.length > 0) {
+          addressList.innerHTML = result.Addresses.map(address => `
+            <p class="text-sm text-zinc-500">
+              ${address.FullName}, ${address.Phone}<br/>
+              ${address.TenDuong}, ${address.XaQuan}, ${address.TinhThanh}
+              ${address.IsDefault ? '<span style="color: #10b981; font-weight: 600;">(Default)</span>' : ''}
+            </p>
+          `).join('');
+        } else {
+          addressList.innerHTML = '<p class="text-sm text-zinc-500">No saved addresses</p>';
+        }
+      } catch (error) {
+        console.error('Error loading addresses:', error);
+        document.getElementById('address-list').innerHTML = '<p class="text-sm text-zinc-500">No saved addresses</p>';
+      }
+    }
+
+    function loadOrders() {
       const lastOrder = sessionStorage.getItem('lastOrder');
       const orderList = document.getElementById('order-list');
 
@@ -331,6 +443,118 @@
       }
     });
 
+    function openAddressModal() {
+      const modal = document.getElementById('address-modal');
+      const content = document.getElementById('address-modal-content');
+
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      setTimeout(() => {
+        content.classList.add('modal-animate');
+      }, 10);
+    }
+
+    function closeAddressModal() {
+      const modal = document.getElementById('address-modal');
+      const content = document.getElementById('address-modal-content');
+
+      content.classList.remove('modal-animate');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.getElementById('address-form').reset();
+        document.querySelectorAll('[id^="address-"][id$="-error"]').forEach(el => el.textContent = '');
+      }, 300);
+    }
+
+    document.getElementById('address-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeAddressModal();
+      }
+    });
+
+    document.getElementById('address-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      document.querySelectorAll('[id^="address-"][id$="-error"]').forEach(el => el.textContent = '');
+
+      const fullname = document.getElementById('address-fullname').value.trim();
+      const phone = document.getElementById('address-phone').value.trim();
+      const street = document.getElementById('address-street').value.trim();
+      const ward = document.getElementById('address-ward').value.trim();
+      const province = document.getElementById('address-province').value;
+      const isDefault = document.getElementById('address-default').checked;
+
+      let hasError = false;
+
+      if (!fullname) {
+        document.getElementById('address-fullname-error').textContent = 'Full name is required';
+        hasError = true;
+      }
+
+      if (!phone) {
+        document.getElementById('address-phone-error').textContent = 'Phone number is required';
+        hasError = true;
+      } else if (!/^0[0-9]{9}$/.test(phone)) {
+        document.getElementById('address-phone-error').textContent = 'Phone must be 10 digits and start with 0';
+        hasError = true;
+      }
+
+      if (!street) {
+        document.getElementById('address-street-error').textContent = 'Street name is required';
+        hasError = true;
+      }
+
+      if (!ward) {
+        document.getElementById('address-ward-error').textContent = 'Ward/District is required';
+        hasError = true;
+      }
+
+      if (!province) {
+        document.getElementById('address-province-error').textContent = 'Province/City is required';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Adding...';
+
+      try {
+        const response = await fetch('/Account/AddAddress', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            FullName: fullname,
+            Phone: phone,
+            TenDuong: street,
+            XaQuan: ward,
+            TinhThanh: province,
+            IsDefault: isDefault
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.Status) {
+          closeAddressModal();
+          loadAddresses();
+          showNotification('Address added successfully!');
+        } else {
+          showNotification(result.Message, false);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Add Address';
+        }
+      } catch (error) {
+        showNotification('An error occurred. Please try again.', false);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Add Address';
+      }
+    });
+
     function showNotification(message, isSuccess = true) {
       const notification = document.createElement('div');
       notification.style.cssText = `
@@ -359,6 +583,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       loadAccountInfo();
+      loadOrders();
     });
     </script>
 }

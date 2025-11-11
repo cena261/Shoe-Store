@@ -24,6 +24,21 @@
       animation-fill-mode: forwards;
       opacity: 0;
     }
+
+    #password::-ms-reveal,
+    #password::-ms-clear {
+      display: none;
+    }
+
+    #password::-webkit-credentials-auto-fill-button,
+    #password::-webkit-contacts-auto-fill-button {
+      visibility: hidden;
+      display: none !important;
+      pointer-events: none;
+      height: 0;
+      width: 0;
+      margin: 0;
+    }
     </style>
 }
 
@@ -60,7 +75,9 @@
                                    placeholder="Enter your password..."
                                    id="password"
                                    name="password"
-                                   value="" />
+                                   value=""
+                                   autocomplete="current-password"
+                                   style="padding-right: 2.5rem;" />
                             <button class="btn-icon absolute right-0 h-full px-2" type="button" onclick="togglePassword()">
                                 <svg stroke="currentColor"
                                      fill="currentColor"
