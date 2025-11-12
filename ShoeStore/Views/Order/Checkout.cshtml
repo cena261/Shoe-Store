@@ -7,6 +7,15 @@
 <div class="checkout-container">
     <div class="checkout-form">
         <h2>Customer Details</h2>
+
+        <!-- Address Selector (only for logged-in users with saved addresses) -->
+        <div id="address-selector" style="display: none; margin-bottom: 1.5rem;">
+            <label for="saved-addresses" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Saved Addresses</label>
+            <select id="saved-addresses" class="input" onchange="fillAddressForm(this.value)">
+                <option value="">Select an address</option>
+            </select>
+        </div>
+
         <form id="checkout-form">
             <div class="form-group">
                 <label for="email">Email *</label>
@@ -15,9 +24,9 @@
             </div>
 
             <div class="form-group">
-                <label for="name">Full Name *</label>
-                <input type="text" id="name" name="name" class="input" required>
-                <div class="form-error" id="name-error"></div>
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="fullName" name="fullName" class="input" required>
+                <div class="form-error" id="fullName-error"></div>
             </div>
 
             <div class="form-group">
@@ -27,27 +36,52 @@
             </div>
 
             <div class="form-group">
-                <label for="address">Address *</label>
-                <input type="text" id="address" name="address" class="input" required>
-                <div class="form-error" id="address-error"></div>
+                <label for="tenDuong">Street Address *</label>
+                <input type="text" id="tenDuong" name="tenDuong" class="input" required>
+                <div class="form-error" id="tenDuong-error"></div>
             </div>
 
             <div class="form-group">
-                <label for="city">City *</label>
-                <input type="text" id="city" name="city" class="input" required>
-                <div class="form-error" id="city-error"></div>
+                <label for="xaQuan">Ward/District *</label>
+                <input type="text" id="xaQuan" name="xaQuan" class="input" required>
+                <div class="form-error" id="xaQuan-error"></div>
             </div>
 
             <div class="form-group">
-                <label for="postCode">Postal Code *</label>
-                <input type="text" id="postCode" name="postCode" class="input" required>
-                <div class="form-error" id="postCode-error"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="country">Country *</label>
-                <input type="text" id="country" name="country" class="input" required>
-                <div class="form-error" id="country-error"></div>
+                <label for="tinhThanh">Province/City *</label>
+                <select id="tinhThanh" name="tinhThanh" class="input" required>
+                    <option value="">Select province/city</option>
+                    <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+                    <option value="Bắc Giang">Bắc Giang</option>
+                    <option value="Bắc Ninh">Bắc Ninh</option>
+                    <option value="Bình Định">Bình Định</option>
+                    <option value="Bình Thuận">Bình Thuận</option>
+                    <option value="Cao Bằng">Cao Bằng</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                    <option value="Điện Biên">Điện Biên</option>
+                    <option value="Đồng Nai">Đồng Nai</option>
+                    <option value="Hà Giang">Hà Giang</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Hà Tĩnh">Hà Tĩnh</option>
+                    <option value="Hòa Bình">Hòa Bình</option>
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                    <option value="Huế">Huế</option>
+                    <option value="Khánh Hòa">Khánh Hòa</option>
+                    <option value="Lai Châu">Lai Châu</option>
+                    <option value="Lạng Sơn">Lạng Sơn</option>
+                    <option value="Long An">Long An</option>
+                    <option value="Nghệ An">Nghệ An</option>
+                    <option value="Ninh Thuận">Ninh Thuận</option>
+                    <option value="Phú Yên">Phú Yên</option>
+                    <option value="Quảng Bình">Quảng Bình</option>
+                    <option value="Quảng Nam">Quảng Nam</option>
+                    <option value="Quảng Ngãi">Quảng Ngãi</option>
+                    <option value="Quảng Ninh">Quảng Ninh</option>
+                    <option value="Quảng Trị">Quảng Trị</option>
+                    <option value="Sơn La">Sơn La</option>
+                    <option value="Thái Nguyên">Thái Nguyên</option>
+                </select>
+                <div class="form-error" id="tinhThanh-error"></div>
             </div>
         </form>
     </div>
@@ -62,7 +96,7 @@
 
         <div class="summary-item">
             <span>Subtotal:</span>
-            <span id="subtotal">€0</span>
+            <span id="subtotal">0₫</span>
         </div>
 
         <div class="summary-item">
@@ -72,12 +106,12 @@
 
         <div class="summary-item" id="discount-row" style="display: none;">
             <span>Discount:</span>
-            <span id="discount-amount" style="color: #10b981;">-€0</span>
+            <span id="discount-amount" style="color: #10b981;">-0₫</span>
         </div>
 
         <div class="summary-total">
             <span>Total:</span>
-            <span id="total">€0</span>
+            <span id="total">0₫</span>
         </div>
 
         <div class="discount-code">
@@ -115,27 +149,93 @@
     <script>
     let discountApplied = false;
     let discountAmount = 0;
+    let userAddresses = [];
+    let isLoggedIn = false;
 
-    function loadOrderSummary() {
+    async function loadUserData() {
+      const user = cart.getUser();
+      isLoggedIn = user && user.loggedIn === true;
+
+      if (isLoggedIn) {
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('fullName').value = user.fullName || '';
+        document.getElementById('phone').value = user.phone || '';
+
+        await loadUserAddresses();
+      }
+    }
+
+    async function loadUserAddresses() {
+      try {
+        const response = await fetch('/Account/GetUserAddresses');
+        const result = await response.json();
+
+        if (result.Status && result.Addresses && result.Addresses.length > 0) {
+          userAddresses = result.Addresses;
+
+          const selector = document.getElementById('saved-addresses');
+          const addressSelectorDiv = document.getElementById('address-selector');
+
+          userAddresses.forEach(addr => {
+            const option = document.createElement('option');
+            option.value = addr.AddressID;
+            option.textContent = `${addr.FullName} - ${addr.TenDuong}, ${addr.XaQuan}, ${addr.TinhThanh}${addr.IsDefault ? ' (Default)' : ''}`;
+            selector.appendChild(option);
+          });
+
+          addressSelectorDiv.style.display = 'block';
+
+          const defaultAddress = userAddresses.find(a => a.IsDefault);
+          if (defaultAddress) {
+            fillAddressForm(defaultAddress.AddressID);
+            selector.value = defaultAddress.AddressID;
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load addresses:', error);
+      }
+    }
+
+    function fillAddressForm(addressId) {
+      if (!addressId) {
+        document.getElementById('fullName').value = cart.getUser()?.fullName || '';
+        document.getElementById('phone').value = cart.getUser()?.phone || '';
+        document.getElementById('tenDuong').value = '';
+        document.getElementById('xaQuan').value = '';
+        document.getElementById('tinhThanh').value = '';
+        return;
+      }
+
+      const address = userAddresses.find(a => a.AddressID == addressId);
+      if (address) {
+        document.getElementById('fullName').value = address.FullName;
+        document.getElementById('phone').value = address.Phone;
+        document.getElementById('tenDuong').value = address.TenDuong;
+        document.getElementById('xaQuan').value = address.XaQuan;
+        document.getElementById('tinhThanh').value = address.TinhThanh;
+      }
+    }
+
+    async function loadOrderSummary() {
+      await cart.waitReady();
+
       if (cart.items.length === 0) {
         window.location.href = '/Home/Index';
         return;
       }
 
       const orderItems = document.getElementById('order-items');
-      const subtotalEl = document.getElementById('subtotal');
-      const totalEl = document.getElementById('total');
 
       orderItems.innerHTML = cart.items.map(item => `
         <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;">
           <img src="${item.images[0]}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover;">
           <div style="flex: 1;">
             <h4 style="font-weight: 600; margin: 0;">${item.name}</h4>
-            <p style="font-size: 0.875rem; color: #6b7280; margin: 0.25rem 0;">Size: ${item.size}</p>
+            <p style="font-size: 0.875rem; color: #6b7280; margin: 0.25rem 0;">${item.colorName} - Size: EU ${item.size}</p>
             <p style="font-size: 0.875rem; color: #6b7280; margin: 0;">Qty: ${item.quantity}</p>
           </div>
           <div style="text-align: right;">
-            <p style="font-weight: 600; margin: 0;">€${(item.promotionPrice || item.price) * item.quantity}</p>
+            <p style="font-weight: 600; margin: 0;">${formatCurrency((item.promotionPrice || item.price) * item.quantity)}</p>
           </div>
         </div>
       `).join('');
@@ -147,12 +247,12 @@
       const subtotal = cart.getTotal();
       const total = subtotal - discountAmount;
 
-      document.getElementById('subtotal').textContent = `€${subtotal}`;
-      document.getElementById('total').textContent = `€${total}`;
+      document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+      document.getElementById('total').textContent = formatCurrency(total);
 
       if (discountApplied) {
         document.getElementById('discount-row').style.display = 'flex';
-        document.getElementById('discount-amount').textContent = `-€${discountAmount}`;
+        document.getElementById('discount-amount').textContent = `-${formatCurrency(discountAmount)}`;
       }
     }
 
@@ -200,27 +300,67 @@
       modal.style.display = 'none';
     }
 
-    function confirmPayment() {
+    async function confirmPayment() {
       const formData = new FormData(document.getElementById('checkout-form'));
-      const orderData = {
-        customer: Object.fromEntries(formData),
-        items: cart.items,
-        subtotal: cart.getTotal(),
-        discount: discountAmount,
-        total: cart.getTotal() - discountAmount,
-        date: new Date().toISOString()
+      const customer = Object.fromEntries(formData);
+
+      const orderRequest = {
+        RequireAuth: false,
+        TotalAmount: cart.getTotal() - discountAmount,
+        ShippingName: customer.fullName,
+        ShippingPhone: customer.phone,
+        ShippingTenDuong: customer.tenDuong,
+        ShippingXaQuan: customer.xaQuan,
+        ShippingTinhThanh: customer.tinhThanh,
+        Items: cart.items.map(item => ({
+          VariantID: item.variantId,
+          Quantity: item.quantity,
+          UnitPrice: item.promotionPrice || item.price
+        }))
       };
 
-      sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
+      try {
+        const response = await fetch('/api/Order/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderRequest)
+        });
 
-      cart.items = [];
-      cart.saveCart();
+        const result = await response.json();
 
-      window.location.href = '/Order/Success';
+        if (result.Status) {
+          const orderData = {
+            orderId: result.OrderID,
+            customer: customer,
+            items: cart.items,
+            subtotal: cart.getTotal(),
+            discount: discountAmount,
+            total: cart.getTotal() - discountAmount,
+            date: new Date().toISOString()
+          };
+
+          sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
+
+          cart.clearCart();
+
+          window.location.href = '/Order/Success';
+        } else {
+          toast.error(result.Message || 'Failed to create order');
+          closeModal();
+        }
+      } catch (error) {
+        console.error('Order creation failed:', error);
+        toast.error('An error occurred. Please try again.');
+        closeModal();
+      }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-      loadOrderSummary();
+    document.addEventListener('DOMContentLoaded', async function() {
+      await cart.waitReady();
+      await loadUserData();
+      await loadOrderSummary();
 
       const { animate } = window.Motion;
 

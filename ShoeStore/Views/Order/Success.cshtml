@@ -44,10 +44,9 @@
         <div style="margin-bottom: 1rem;">
           <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Shipping Address:</h3>
           <p style="color: #6b7280; line-height: 1.6;">
-            ${order.customer.name}<br>
-            ${order.customer.address}<br>
-            ${order.customer.city}, ${order.customer.postCode}<br>
-            ${order.customer.country}
+            ${order.customer.fullName}<br>
+            ${order.customer.tenDuong}<br>
+            ${order.customer.xaQuan}, ${order.customer.tinhThanh}
           </p>
         </div>
 
@@ -58,10 +57,10 @@
               <img src="${item.images[0]}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
               <div style="flex: 1;">
                 <div style="font-weight: 500;">${item.name}</div>
-                <div style="font-size: 0.875rem; color: #6b7280;">Size: ${item.size}</div>
+                <div style="font-size: 0.875rem; color: #6b7280;">${item.colorName} - Size: EU ${item.size}</div>
                 <div style="font-size: 0.875rem; color: #6b7280;">Quantity: ${item.quantity}</div>
               </div>
-              <div style="font-weight: 600; text-align: right;">€${(item.promotionPrice || item.price) * item.quantity}</div>
+              <div style="font-weight: 600; text-align: right;">${formatCurrency((item.promotionPrice || item.price) * item.quantity)}</div>
             </div>
           `).join('')}
         </div>
@@ -69,12 +68,12 @@
         <div style="border-top: 2px solid #e5e7eb; padding-top: 1rem;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
             <span>Subtotal:</span>
-            <span>€${order.subtotal}</span>
+            <span>${formatCurrency(order.subtotal)}</span>
           </div>
           ${order.discount > 0 ? `
             <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #10b981;">
               <span>Discount:</span>
-              <span>-€${order.discount}</span>
+              <span>-${formatCurrency(order.discount)}</span>
             </div>
           ` : ''}
           <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #10b981;">
@@ -83,13 +82,13 @@
           </div>
           <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e5e7eb;">
             <span>Total:</span>
-            <span>€${order.total}</span>
+            <span>${formatCurrency(order.total)}</span>
           </div>
         </div>
 
         <div style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.375rem; text-align: center;">
           <p style="color: #15803d; font-weight: 500;">
-            Order Number: #${Math.random().toString(36).substr(2, 9).toUpperCase()}
+            Order Number: #${order.orderId || 'PENDING'}
           </p>
           <p style="color: #15803d; font-size: 0.875rem; margin-top: 0.25rem;">
             Confirmation email sent to ${order.customer.email}

@@ -287,11 +287,20 @@
         const result = await response.json();
 
         if (result.Status) {
+          localStorage.setItem('user', JSON.stringify({
+            userId: result.User.UserId,
+            email: result.User.Email,
+            fullName: result.User.FullName,
+            phone: result.User.Phone,
+            roles: result.User.Roles,
+            loggedIn: true
+          }));
+
+          await cart.migrateGuestCart();
+
           document.getElementById('email-sent').textContent = email;
           const modal = document.getElementById('success-modal');
           modal.style.display = 'flex';
-
-          localStorage.removeItem('user');
         } else {
           toast.error('Registration failed: ' + result.Message);
           submitBtn.disabled = false;

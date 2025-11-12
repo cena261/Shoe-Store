@@ -146,9 +146,12 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiControllers\CartController.cs" />
+    <Compile Include="ApiControllers\OrderController.cs" />
     <Compile Include="ApiControllers\ProductsController.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="App_Start\WebApiSessionModule.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -185,12 +188,33 @@
     <Compile Include="Migrations\202511110528148_UpdateSt.Designer.cs">
       <DependentUpon>202511110528148_UpdateSt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202511120914088_updateCart.cs" />
+    <Compile Include="Migrations\202511120914088_updateCart.Designer.cs">
+      <DependentUpon>202511120914088_updateCart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202511121136404_updateOrders.cs" />
+    <Compile Include="Migrations\202511121136404_updateOrders.Designer.cs">
+      <DependentUpon>202511121136404_updateOrders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202511121144412_updateNullableForUserID.cs" />
+    <Compile Include="Migrations\202511121144412_updateNullableForUserID.Designer.cs">
+      <DependentUpon>202511121144412_updateNullableForUserID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202511121228550_updateNullableForUserIDAgain.cs" />
+    <Compile Include="Migrations\202511121228550_updateNullableForUserIDAgain.Designer.cs">
+      <DependentUpon>202511121228550_updateNullableForUserIDAgain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202511121245024_updateOrderItems.cs" />
+    <Compile Include="Migrations\202511121245024_updateOrderItems.Designer.cs">
+      <DependentUpon>202511121245024_updateOrderItems.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Categories.cs" />
     <Compile Include="Models\DTOs\AddressData.cs" />
     <Compile Include="Models\DTOs\AddressRequest.cs" />
+    <Compile Include="Models\DTOs\CartDTO.cs" />
     <Compile Include="Models\DTOs\ChangePasswordRequest.cs" />
     <Compile Include="Models\DTOs\LoginRequest.cs" />
     <Compile Include="Models\DTOs\LoginResponse.cs" />
@@ -263,6 +287,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202511110528148_UpdateSt.resx">
       <DependentUpon>202511110528148_UpdateSt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511120914088_updateCart.resx">
+      <DependentUpon>202511120914088_updateCart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511121136404_updateOrders.resx">
+      <DependentUpon>202511121136404_updateOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511121144412_updateNullableForUserID.resx">
+      <DependentUpon>202511121144412_updateNullableForUserID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511121228550_updateNullableForUserIDAgain.resx">
+      <DependentUpon>202511121228550_updateNullableForUserIDAgain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511121245024_updateOrderItems.resx">
+      <DependentUpon>202511121245024_updateOrderItems.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

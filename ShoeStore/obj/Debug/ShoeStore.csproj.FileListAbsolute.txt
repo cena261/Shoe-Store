@@ -105,3 +105,8 @@ C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.csproj.CoreCompi
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.csproj.Up2Date
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.dll
 C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.pdb
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.updateCart.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.updateOrders.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.updateNullableForUserID.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.updateNullableForUserIDAgain.resources
+C:\Users\cena\Documents\ShoeStore\ShoeStore\obj\Debug\ShoeStore.Migrations.updateOrderItems.resources

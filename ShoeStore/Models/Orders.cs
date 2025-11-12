@@ -12,9 +12,8 @@ namespace ShoeStore.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int OrderID { get; set; }
 
-        public int UserID { get; set; }
+        public int? UserID { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime OrderDate { get; set; }
 
         [Column(TypeName = "decimal")]

@@ -38,10 +38,7 @@
 
             <!-- Recent Orders Card -->
             <article class="rounded-3xl border border-zinc-200 p-6 shadow-sm md:col-span-2">
-                <div class="flex flex-wrap items-center justify-between gap-3">
-                    <h2 class="text-lg font-semibold">Recent orders</h2>
-                    <a href="/Order/Success" class="text-sm font-semibold text-zinc-900 hover:underline">View order history</a>
-                </div>
+                <h2 class="text-lg font-semibold">Recent orders</h2>
                 <div class="mt-5 space-y-4" id="order-list">
                     <!-- Xy ly danh sach order -->
                 </div>
@@ -299,52 +296,62 @@
       }
     }
 
-    function loadOrders() {
-      const lastOrder = sessionStorage.getItem('lastOrder');
+    async function loadOrders() {
       const orderList = document.getElementById('order-list');
 
-      if (lastOrder) {
-        const order = JSON.parse(lastOrder);
-        orderList.innerHTML = `
-          <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-zinc-100/80 p-4">
-            <div>
-              <p class="text-sm font-semibold">Order #SNEAK-${Math.random().toString(36).substr(2, 4).toUpperCase()}</p>
-              <p class="text-xs text-zinc-500">Placed on ${new Date(order.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} • ${order.items.length} item${order.items.length > 1 ? 's' : ''}</p>
-            </div>
-            <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Delivered</span>
-          </div>
-          <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-zinc-100/80 p-4">
-            <div>
-              <p class="text-sm font-semibold">Order #SNEAK-1921</p>
-              <p class="text-xs text-zinc-500">Placed on 02 Jul 2025 • 1 item</p>
-            </div>
-            <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">In transit</span>
-          </div>
-        `;
-      } else {
-        orderList.innerHTML = `
-          <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-zinc-100/80 p-4">
-            <div>
-              <p class="text-sm font-semibold">Order #SNEAK-2045</p>
-              <p class="text-xs text-zinc-500">Placed on 12 Aug 2025 • 2 items</p>
-            </div>
-            <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Delivered</span>
-          </div>
-          <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-zinc-100/80 p-4">
-            <div>
-              <p class="text-sm font-semibold">Order #SNEAK-1921</p>
-              <p class="text-xs text-zinc-500">Placed on 02 Jul 2025 • 1 item</p>
-            </div>
-            <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">In transit</span>
-          </div>
-        `;
+      try {
+        const response = await fetch('/api/Order/history');
+        const result = await response.json();
+
+        if (result.Status && result.Orders && result.Orders.length > 0) {
+          const recentOrders = result.Orders.slice(0, 3);
+
+          orderList.innerHTML = recentOrders.map(order => {
+            const orderDate = new Date(order.OrderDate);
+            const formattedDate = orderDate.toLocaleDateString('en-GB', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric'
+            });
+
+            const statusConfig = getStatusConfig(order.OrderStatus);
+
+            return `
+              <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-zinc-100/80 p-4">
+                <div>
+                  <p class="text-sm font-semibold">Order #${order.OrderID}</p>
+                  <p class="text-xs text-zinc-500">Placed on ${formattedDate} • ${order.ItemCount} item${order.ItemCount > 1 ? 's' : ''} • ${formatCurrency(order.TotalAmount)}</p>
+                </div>
+                <span class="rounded-full ${statusConfig.bgClass} px-3 py-1 text-xs font-semibold ${statusConfig.textClass}">${statusConfig.label}</span>
+              </div>
+            `;
+          }).join('');
+        } else {
+          orderList.innerHTML = '<p class="text-sm text-zinc-500">No orders yet</p>';
+        }
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        orderList.innerHTML = '<p class="text-sm text-zinc-500">Failed to load orders</p>';
       }
+    }
+
+    function getStatusConfig(status) {
+      const statusMap = {
+        'Pending': { label: 'Pending', bgClass: 'bg-amber-100', textClass: 'text-amber-700' },
+        'Processing': { label: 'Processing', bgClass: 'bg-blue-100', textClass: 'text-blue-700' },
+        'Shipped': { label: 'Shipped', bgClass: 'bg-indigo-100', textClass: 'text-indigo-700' },
+        'Delivered': { label: 'Delivered', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' },
+        'Cancelled': { label: 'Cancelled', bgClass: 'bg-red-100', textClass: 'text-red-700' }
+      };
+
+      return statusMap[status] || { label: status, bgClass: 'bg-gray-100', textClass: 'text-gray-700' };
     }
 
     function logout() {
       document.cookie = 'AuthToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       document.cookie = 'UserInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       localStorage.removeItem('user');
+      cart.onLogout();
       window.location.href = '/Account/Login';
     }
 

@@ -166,8 +166,18 @@
         const result = await response.json();
 
         if (result.Status) {
-          localStorage.removeItem('user');
-          window.location.href = '/Account/Dashboard';
+          localStorage.setItem('user', JSON.stringify({
+            userId: result.User.UserId,
+            email: result.User.Email,
+            fullName: result.User.FullName,
+            phone: result.User.Phone,
+            roles: result.User.Roles,
+            loggedIn: true
+          }));
+
+          await cart.migrateGuestCart();
+
+          window.location.href = '/Home/Index';
         } else {
           document.getElementById('login-error').textContent = result.Message;
           submitBtn.disabled = false;

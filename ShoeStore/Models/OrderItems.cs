@@ -19,7 +19,6 @@ namespace ShoeStore.Models
         [Column(TypeName = "decimal")]
         public decimal UnitPrice { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public decimal Subtotal { get; set; }
 
         [ForeignKey("OrderID")]

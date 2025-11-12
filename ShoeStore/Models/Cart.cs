@@ -15,7 +15,6 @@ namespace ShoeStore.Models
         public int VariantID { get; set; }
         public int Quantity { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime AddedAt { get; set; }
 
         [ForeignKey("UserID")]

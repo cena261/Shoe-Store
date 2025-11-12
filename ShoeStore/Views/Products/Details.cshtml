@@ -682,13 +682,28 @@
             return;
         }
 
-        console.log('Adding to bag:', {
-            productId: currentProduct.ProductID,
-            variantId: selectedSize,
-            quantity: 1
-        });
+        const selectedVariant = currentProduct.AvailableSizes.find(s => s.VariantID === selectedSize);
+        if (!selectedVariant) {
+            toast.error('Selected size not found');
+            return;
+        }
 
-        toast.success('Product added to bag!');
+        const cartItem = {
+            id: currentProduct.ProductID,
+            variantId: selectedSize,
+            name: currentProduct.ProductName,
+            slug: currentProduct.Slug,
+            styleColor: currentProduct.SelectedStyleColor,
+            colorName: currentProduct.SelectedColorName,
+            size: selectedVariant.SizeValue,
+            price: currentProduct.Price,
+            promotionPrice: currentProduct.PromotionPrice,
+            quantity: 1,
+            stockQty: selectedVariant.StockQty,
+            images: [currentProduct.Images[0].ImageURL]
+        };
+
+        cart.addItem(cartItem, selectedVariant.SizeValue);
     }
 
     function openSizeGuide() {

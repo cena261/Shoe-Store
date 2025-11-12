@@ -1,61 +1,235 @@
 
+function formatCurrency(amount) {
+  if (!amount && amount !== 0) return '0₫';
+  const rounded = Math.round(amount);
+  return rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '₫';
+}
+
 class Cart {
   constructor() {
-    this.items = this.loadCart();
+    this.items = [];
     this.isOpen = false;
+    this.isLoggedIn = false;
+    this.syncInProgress = false;
+    this.ready = false;
+    this.readyPromise = this.init();
   }
 
-  loadCart() {
+  async init() {
+    const user = this.getUser();
+
+    if (user && user.loggedIn === true) {
+      const sessionValid = await this.validateSession();
+
+      if (sessionValid) {
+        this.isLoggedIn = true;
+        await this.loadFromServer();
+      } else {
+        this.isLoggedIn = false;
+        localStorage.removeItem('user');
+        this.loadFromLocalStorage();
+      }
+    } else {
+      this.isLoggedIn = false;
+      this.loadFromLocalStorage();
+    }
+
+    this.updateUI();
+    this.ready = true;
+  }
+
+  async waitReady() {
+    await this.readyPromise;
+  }
+
+  async validateSession() {
+    try {
+      const response = await fetch('/Account/GetUserInfo');
+      const result = await response.json();
+      return result.Status === true;
+    } catch (error) {
+      console.error('Session validation failed:', error);
+      return false;
+    }
+  }
+
+  getUser() {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  }
+
+  loadFromLocalStorage() {
     const saved = localStorage.getItem('cart');
-    return saved ? JSON.parse(saved) : [];
+    this.items = saved ? JSON.parse(saved) : [];
   }
 
-  saveCart() {
+  async loadFromServer() {
+    try {
+      const user = this.getUser();
+      if (!user) return;
+
+      const response = await fetch('/api/Cart');
+
+      const result = await response.json();
+      if (result.Status && result.Cart) {
+        this.items = result.Cart.Items.map(item => ({
+          id: item.ProductID,
+          variantId: item.VariantID,
+          name: item.ProductName,
+          slug: item.Slug,
+          styleColor: item.StyleColor,
+          colorName: item.ColorName,
+          size: item.Size,
+          price: item.Price,
+          promotionPrice: item.PromotionPrice,
+          quantity: item.Quantity,
+          stockQty: item.StockQty,
+          images: [item.ImageURL]
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to load cart from server:', error);
+      this.loadFromLocalStorage();
+    }
+  }
+
+  async saveCart() {
     localStorage.setItem('cart', JSON.stringify(this.items));
+
+    if (this.isLoggedIn && !this.syncInProgress) {
+      await this.syncToServer();
+    }
+
+    this.updateUI();
+  }
+
+  async syncToServer() {
+    try {
+      const user = this.getUser();
+      if (!user) {
+        return;
+      }
+
+      this.syncInProgress = true;
+
+      const syncItems = this.items.map(item => ({
+        VariantID: item.variantId,
+        Quantity: item.quantity
+      }));
+
+      const response = await fetch('/api/Cart/sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(syncItems)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Sync failed:', response.status, errorText);
+      }
+
+      this.syncInProgress = false;
+    } catch (error) {
+      console.error('Failed to sync cart to server:', error);
+      this.syncInProgress = false;
+    }
+  }
+
+  async migrateGuestCart() {
+    const guestCart = localStorage.getItem('cart');
+    if (!guestCart) return;
+
+    const guestItems = JSON.parse(guestCart);
+    if (guestItems.length === 0) {
+      localStorage.removeItem('cart');
+      return;
+    }
+
+    const user = this.getUser();
+    if (!user) return;
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    try {
+      const syncItems = guestItems.map(item => ({
+        VariantID: item.variantId,
+        Quantity: item.quantity
+      }));
+
+      const response = await fetch('/api/Cart/sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(syncItems)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.Status) {
+          localStorage.removeItem('cart');
+          await this.loadFromServer();
+          toast.success('Your cart has been synced!');
+        }
+      }
+    } catch (error) {
+      console.error('Failed to migrate guest cart:', error);
+    }
+  }
+
+  onLogout() {
+    localStorage.removeItem('cart');
+    this.items = [];
+    this.isLoggedIn = false;
     this.updateUI();
   }
 
   addItem(product, size) {
     const existingIndex = this.items.findIndex(
-      item => item.id === product.id && item.size === size
+      item => item.variantId === product.variantId
     );
 
     if (existingIndex !== -1) {
-      this.items[existingIndex].quantity += 1;
+      if (this.items[existingIndex].quantity < product.stockQty) {
+        this.items[existingIndex].quantity += 1;
+      } else {
+        toast.warning('Cannot add more. Stock limit reached.');
+        return;
+      }
     } else {
-      this.items.push({
-        ...product,
-        size: size,
-        quantity: 1
-      });
+      this.items.push(product);
     }
 
     this.saveCart();
-    this.showNotification('Added to cart!');
+    toast.success('Product added to bag!');
   }
 
-  removeItem(productId, size) {
-    this.items = this.items.filter(
-      item => !(item.id === productId && item.size === size)
-    );
+  removeItem(variantId) {
+    this.items = this.items.filter(item => item.variantId !== variantId);
     this.saveCart();
   }
 
-  updateQuantity(productId, size, quantity) {
-    const item = this.items.find(
-      item => item.id === productId && item.size === size
-    );
+  updateQuantity(variantId, quantity) {
+    const item = this.items.find(item => item.variantId === variantId);
     if (item) {
-      item.quantity = Math.max(1, quantity);
-      this.saveCart();
+      if (quantity <= 0) {
+        this.removeItem(variantId);
+      } else if (quantity > item.stockQty) {
+        toast.warning('Stock limit reached');
+        item.quantity = item.stockQty;
+        this.saveCart();
+      } else {
+        item.quantity = quantity;
+        this.saveCart();
+      }
     }
   }
 
   clearCart() {
-    if (confirm('Are you sure you want to clear your cart?')) {
-      this.items = [];
-      this.saveCart();
-    }
+    this.items = [];
+    this.saveCart();
   }
 
   getTotal() {
@@ -123,15 +297,15 @@ class Cart {
           <img src="${item.images[0]}" alt="${item.name}" class="cart-product-image">
           <div class="cart-product-details">
             <h4 class="cart-product-name">${item.name}</h4>
-            <p class="cart-product-size">Size: ${item.size}</p>
-            <p class="cart-product-price">€${item.promotionPrice || item.price}</p>
+            <p class="cart-product-size">${item.colorName} - Size: EU ${item.size}</p>
+            <p class="cart-product-price">${formatCurrency(item.promotionPrice || item.price)}</p>
             <div class="cart-product-quantity">
-              <button onclick="cart.updateQuantity('${item.id}', '${item.size}', ${item.quantity - 1})">-</button>
+              <button onclick="cart.updateQuantity(${item.variantId}, ${item.quantity - 1})">-</button>
               <span>${item.quantity}</span>
-              <button onclick="cart.updateQuantity('${item.id}', '${item.size}', ${item.quantity + 1})">+</button>
+              <button onclick="cart.updateQuantity(${item.variantId}, ${item.quantity + 1})">+</button>
             </div>
           </div>
-          <button class="cart-product-remove" onclick="cart.removeItem('${item.id}', '${item.size}')" aria-label="Remove">
+          <button class="cart-product-remove" onclick="cart.removeItem(${item.variantId})" aria-label="Remove">
             ✕
           </button>
         </div>
@@ -142,7 +316,7 @@ class Cart {
       }
     }
 
-    cartTotal.textContent = `€${this.getTotal()}`;
+    cartTotal.textContent = formatCurrency(this.getTotal());
   }
 
   showNotification(message) {

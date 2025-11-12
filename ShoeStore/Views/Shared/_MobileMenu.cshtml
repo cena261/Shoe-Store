@@ -59,6 +59,7 @@
     document.cookie = 'AuthToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     document.cookie = 'UserInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     localStorage.removeItem('user');
+    cart.onLogout();
 
     window.location.href = '/Account/Login';
   }
