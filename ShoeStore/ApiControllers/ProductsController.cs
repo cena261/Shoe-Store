@@ -153,5 +153,123 @@ namespace ShoeStore.ApiControllers
                 }
             }
         }
+
+        [HttpGet]
+        [Route("api/Products/{slug}/{styleColor?}")]
+        public IHttpActionResult GetProductDetail(string slug, string styleColor = null)
+        {
+            using (var db = new ShoeStoreDBContext())
+            {
+                db.Configuration.ProxyCreationEnabled = false;
+                db.Configuration.LazyLoadingEnabled = false;
+
+                try
+                {
+                    var product = db.Products
+                        .Include(p => p.Category)
+                        .Include(p => p.ProductVariants)
+                        .Include(p => p.ProductImages)
+                        .AsNoTracking()
+                        .FirstOrDefault(p => p.Slug == slug && p.IsActive);
+
+                    if (product == null)
+                    {
+                        return Ok(new ProductDetailResponse
+                        {
+                            Status = false,
+                            Message = "Product not found",
+                            Product = null
+                        });
+                    }
+
+                    var availableColors = product.ProductVariants
+                        .Where(v => v.IsActive)
+                        .GroupBy(v => v.StyleColor)
+                        .Select(g => new ProductColorVariantDTO
+                        {
+                            StyleColor = g.Key,
+                            ColorName = g.First().ColorName,
+                            ThumbnailImage = product.ProductImages
+                                .Where(img => img.StyleColor == g.Key && img.DisplayOrder == 1)
+                                .Select(img => img.ImageURL)
+                                .FirstOrDefault() ?? "/Content/images/placeholder.png",
+                            IsAvailable = g.Any(v => v.StockQty > 0)
+                        })
+                        .ToList();
+
+                    if (string.IsNullOrEmpty(styleColor))
+                    {
+                        styleColor = availableColors.FirstOrDefault()?.StyleColor;
+                    }
+
+                    var selectedColor = availableColors.FirstOrDefault(c => c.StyleColor == styleColor);
+                    if (selectedColor == null)
+                    {
+                        return Ok(new ProductDetailResponse
+                        {
+                            Status = false,
+                            Message = "Color variant not found",
+                            Product = null
+                        });
+                    }
+
+                    var images = product.ProductImages
+                        .Where(img => img.StyleColor == styleColor)
+                        .OrderBy(img => img.DisplayOrder)
+                        .Select(img => new ProductImageDTO
+                        {
+                            ImageURL = img.ImageURL,
+                            DisplayOrder = img.DisplayOrder ?? 999
+                        })
+                        .ToList();
+
+                    var availableSizes = product.ProductVariants
+                        .Where(v => v.StyleColor == styleColor && v.IsActive)
+                        .OrderBy(v => v.SizeValue)
+                        .Select(v => new SizeVariantDTO
+                        {
+                            VariantID = v.VariantID,
+                            SizeValue = v.SizeValue,
+                            StockQty = v.StockQty,
+                            IsAvailable = v.StockQty > 0,
+                            PriceOverride = v.PriceOverride
+                        })
+                        .ToList();
+
+                    var productDetail = new ProductDetailDTO
+                    {
+                        ProductID = product.ProductID,
+                        ProductName = product.ProductName,
+                        Slug = product.Slug,
+                        CategoryName = product.Category.CategoryName,
+                        Description = product.Description,
+                        Price = product.Price,
+                        PromotionPrice = product.PromotionPrice,
+                        Rating = product.Rating,
+                        SelectedStyleColor = styleColor,
+                        SelectedColorName = selectedColor.ColorName,
+                        AvailableColors = availableColors,
+                        Images = images,
+                        AvailableSizes = availableSizes
+                    };
+
+                    return Ok(new ProductDetailResponse
+                    {
+                        Status = true,
+                        Message = "Success",
+                        Product = productDetail
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return Ok(new ProductDetailResponse
+                    {
+                        Status = false,
+                        Message = "An error occurred: " + ex.Message,
+                        Product = null
+                    });
+                }
+            }
+        }
     }
 }

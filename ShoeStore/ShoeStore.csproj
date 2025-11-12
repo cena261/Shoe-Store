@@ -130,6 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\toast.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\css\styles.css" />
     <Content Include="Content\images\kid.jpg" />
@@ -141,12 +142,14 @@
     <Content Include="Content\images\women.jpg" />
     <Content Include="Script\components.js" />
     <Content Include="Script\main.js" />
+    <Content Include="Script\toast.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\ProductsController.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -191,6 +194,7 @@
     <Compile Include="Models\DTOs\ChangePasswordRequest.cs" />
     <Compile Include="Models\DTOs\LoginRequest.cs" />
     <Compile Include="Models\DTOs\LoginResponse.cs" />
+    <Compile Include="Models\DTOs\ProductDetailDTO.cs" />
     <Compile Include="Models\DTOs\ProductListItemDTO.cs" />
     <Compile Include="Models\DTOs\ProductListResponse.cs" />
     <Compile Include="Models\DTOs\RegisterRequest.cs" />
@@ -209,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
+    <Content Include="Areas\Admin\Views\web.config" />
     <None Include="packages.config" />
     <Content Include="Views\Shared\_LayoutPage.cshtml" />
     <Content Include="Views\Shared\_Cart.cshtml" />
@@ -233,6 +238,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202511090816199_InitDatabase.resx">

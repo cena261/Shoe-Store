@@ -165,6 +165,19 @@
                             <option value="price-high">Price: High to Low</option>
                         </select>
                     </div>
+                    <div class="search-input-wrapper">
+                        <button class="search-icon-btn" type="button" aria-label="Search">
+                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" role="img" width="24px" height="24px" fill="none">
+                                <path stroke="currentColor" stroke-width="1.5" d="M13.962 16.296a6.716 6.716 0 01-3.462.954 6.728 6.728 0 01-4.773-1.977A6.728 6.728 0 013.75 10.5c0-1.864.755-3.551 1.977-4.773A6.728 6.728 0 0110.5 3.75c1.864 0 3.551.755 4.773 1.977A6.728 6.728 0 0117.25 10.5a6.726 6.726 0 01-.921 3.407c-.517.882-.434 1.988.289 2.711l3.853 3.853"></path>
+                            </svg>
+                        </button>
+                        <input type="search" id="search-input" class="search-input" placeholder="Search" autocomplete="off" aria-label="Search Products" />
+                        <button class="search-clear-btn" id="search-clear-btn" type="button" aria-label="Clear Search" style="display: none;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div id="product-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem; max-width: 1400px;">
@@ -183,6 +196,74 @@
 
 @section Styles {
     <style>
+        .search-input-wrapper {
+            position: relative;
+            width: 300px;
+            display: flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 100px;
+            padding: 6px 12px;
+            transition: background 0.2s;
+        }
+
+        .search-input-wrapper:focus-within {
+            background: #e5e5e5;
+        }
+
+        .search-icon-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #757575;
+            flex-shrink: 0;
+        }
+
+        .search-icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 6px 10px;
+            font-size: 14px;
+            outline: none;
+            color: #111;
+        }
+
+        .search-input::placeholder {
+            color: #8d8d8d;
+        }
+
+        .search-clear-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #757575;
+            flex-shrink: 0;
+            transition: color 0.2s;
+        }
+
+        .search-clear-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .search-clear-btn:hover {
+            color: #111;
+        }
+
         .filter-sidebar {
             border-right: 1px solid #e5e5e5;
             padding-right: 1.5rem;
@@ -413,15 +494,56 @@
             #product-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
             }
+
+            .filter-sidebar {
+                min-width: 200px !important;
+                width: 200px !important;
+            }
+
+            .search-input-wrapper {
+                width: 250px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .filter-sidebar {
+                display: none;
+            }
+
+            #product-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            .mb-4.flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1rem;
+            }
+
+            .search-input-wrapper {
+                width: 100%;
+                max-width: 100%;
+            }
         }
 
         @@media (max-width: 640px) {
             #product-grid {
                 grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
             }
 
-            .filter-sidebar {
-                display: none;
+            .search-input-wrapper {
+                width: 100%;
+            }
+
+            .px-4 {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            .py-8 {
+                padding-top: 2rem !important;
+                padding-bottom: 2rem !important;
             }
         }
     </style>
@@ -430,6 +552,7 @@
 @section Scripts {
     <script>
     let currentPage = 1;
+    let searchQuery = '';
     let currentFilters = {
         gender: [],
         price: [],
@@ -497,6 +620,7 @@
                 sortBy: currentFilters.sortBy
             });
 
+            if (searchQuery) params.append('search', searchQuery);
             if (currentFilters.gender.length > 0) params.append('gender', currentFilters.gender.join(','));
             if (currentFilters.size.length > 0) params.append('sizes', currentFilters.size.join(','));
 
@@ -548,7 +672,7 @@
             const hasPromotion = product.PromotionPrice !== null && product.PromotionPrice < product.Price;
 
             return `
-                <div class="product-card" onclick="navigateToProduct(${product.ProductID}, '${product.Slug}')">
+                <div class="product-card" onclick="navigateToProduct('${product.Slug}', '${mainVariant.StyleColor}')">
                     <div class="product-image-container">
                         <img src="${mainVariant.MainImageURL}" alt="${product.ProductName}" class="product-image" id="main-img-${product.ProductID}" />
                     </div>
@@ -557,7 +681,8 @@
                             ${product.ColorVariants.map((variant, idx) => `
                                 <div class="color-variant-thumbnail"
                                      onmouseover="changeMainImage(${product.ProductID}, '${variant.MainImageURL}')"
-                                     onmouseout="resetMainImage(${product.ProductID}, '${mainVariant.MainImageURL}')">
+                                     onmouseout="resetMainImage(${product.ProductID}, '${mainVariant.MainImageURL}')"
+                                     onclick="event.stopPropagation(); navigateToProduct('${product.Slug}', '${variant.StyleColor}')">
                                     <img src="${variant.MainImageURL}" alt="${variant.ColorName}" />
                                 </div>
                             `).join('')}
@@ -586,8 +711,8 @@
         if (img) img.src = originalUrl;
     }
 
-    function navigateToProduct(productId, slug) {
-        window.location.href = `/Products/Details/${productId}`;
+    function navigateToProduct(slug, styleColor) {
+        window.location.href = `/products/${slug}/${styleColor}`;
     }
 
     function displayPagination(currentPageNum, totalPages, totalProducts) {
@@ -675,6 +800,30 @@
         label.addEventListener('click', function(e) {
             e.stopPropagation();
         });
+    });
+
+    const searchInput = document.getElementById('search-input');
+    const searchClearBtn = document.getElementById('search-clear-btn');
+
+    searchInput.addEventListener('input', function() {
+        searchQuery = this.value;
+
+        if (searchQuery) {
+            searchClearBtn.style.display = 'flex';
+        } else {
+            searchClearBtn.style.display = 'none';
+        }
+
+        currentPage = 1;
+        loadProducts();
+    });
+
+    searchClearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        searchQuery = '';
+        searchClearBtn.style.display = 'none';
+        currentPage = 1;
+        loadProducts();
     });
 
     document.addEventListener('DOMContentLoaded', function() {

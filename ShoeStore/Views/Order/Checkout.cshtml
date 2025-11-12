@@ -180,7 +180,7 @@
 
     function proceedToPayment() {
       if (!validateForm('checkout-form')) {
-        alert('Please fill in all required fields correctly');
+        toast.warning('Please fill in all required fields correctly');
         return;
       }
 
