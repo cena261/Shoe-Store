@@ -243,44 +243,52 @@ namespace ShoeStore.ApiControllers
 
                 using (var db = new ShoeStoreDBContext())
                 {
-                    var existingCart = db.Cart.Where(c => c.UserID == userId).ToList();
-                    System.Diagnostics.Debug.WriteLine($"[Cart Sync] Removing {existingCart.Count} existing items");
-                    db.Cart.RemoveRange(existingCart);
-
                     foreach (var item in items)
                     {
-                        System.Diagnostics.Debug.WriteLine($"[Cart Sync] Processing VariantID: {item.VariantID}, Quantity: {item.Quantity}");
-
                         var variant = db.ProductVariants
                             .FirstOrDefault(v => v.VariantID == item.VariantID && v.IsActive);
 
                         if (variant == null)
                         {
-                            System.Diagnostics.Debug.WriteLine($"[Cart Sync] Variant {item.VariantID} not found or inactive");
                             continue;
                         }
 
-                        if (variant.StockQty < item.Quantity)
+                        var existingCartItem = db.Cart
+                            .FirstOrDefault(c => c.UserID == userId && c.VariantID == item.VariantID);
+
+                        if (existingCartItem != null)
                         {
-                            System.Diagnostics.Debug.WriteLine($"[Cart Sync] Insufficient stock for variant {item.VariantID}");
-                            continue;
+                            int newQuantity = existingCartItem.Quantity + item.Quantity;
+
+                            if (newQuantity > variant.StockQty)
+                            {
+                                existingCartItem.Quantity = variant.StockQty;
+                            }
+                            else
+                            {
+                                existingCartItem.Quantity = newQuantity;
+                            }
                         }
-
-                        var cartItem = new Cart
+                        else
                         {
-                            UserID = userId,
-                            VariantID = item.VariantID,
-                            Quantity = item.Quantity,
-                            AddedAt = DateTime.Now
-                        };
+                            if (variant.StockQty < item.Quantity)
+                            {
+                                continue;
+                            }
 
-                        System.Diagnostics.Debug.WriteLine($"[Cart Sync] Adding cart item - UserID: {cartItem.UserID}, VariantID: {cartItem.VariantID}, Qty: {cartItem.Quantity}");
-                        db.Cart.Add(cartItem);
+                            var cartItem = new Cart
+                            {
+                                UserID = userId,
+                                VariantID = item.VariantID,
+                                Quantity = item.Quantity,
+                                AddedAt = DateTime.Now
+                            };
+
+                            db.Cart.Add(cartItem);
+                        }
                     }
 
-                    System.Diagnostics.Debug.WriteLine("[Cart Sync] Calling SaveChanges...");
                     db.SaveChanges();
-                    System.Diagnostics.Debug.WriteLine("[Cart Sync] SaveChanges completed successfully");
 
                     return Ok(new { Status = true, Message = "Cart synced successfully" });
                 }

@@ -139,7 +139,7 @@
         <p style="margin-bottom: 1.5rem;">
             Your cart will be cleared and you will be redirected to the order confirmation page.
         </p>
-        <button class="btn" onclick="confirmPayment()" style="width: 100%; padding: 0.75rem;">
+        <button id="confirm-payment-btn" class="btn" onclick="confirmPayment()" style="width: 100%; padding: 0.75rem;">
             Confirm Payment
         </button>
     </div>
@@ -301,12 +301,19 @@
     }
 
     async function confirmPayment() {
+      const btn = document.getElementById('confirm-payment-btn');
+      const originalText = btn.textContent;
+
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+      btn.style.opacity = '0.6';
+      btn.style.cursor = 'not-allowed';
+
       const formData = new FormData(document.getElementById('checkout-form'));
       const customer = Object.fromEntries(formData);
 
       const orderRequest = {
         RequireAuth: false,
-        TotalAmount: cart.getTotal() - discountAmount,
         ShippingName: customer.fullName,
         ShippingPhone: customer.phone,
         ShippingTenDuong: customer.tenDuong,
@@ -314,8 +321,7 @@
         ShippingTinhThanh: customer.tinhThanh,
         Items: cart.items.map(item => ({
           VariantID: item.variantId,
-          Quantity: item.quantity,
-          UnitPrice: item.promotionPrice || item.price
+          Quantity: item.quantity
         }))
       };
 
@@ -348,11 +354,19 @@
           window.location.href = '/Order/Success';
         } else {
           toast.error(result.Message || 'Failed to create order');
+          btn.disabled = false;
+          btn.textContent = originalText;
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
           closeModal();
         }
       } catch (error) {
         console.error('Order creation failed:', error);
         toast.error('An error occurred. Please try again.');
+        btn.disabled = false;
+        btn.textContent = originalText;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
         closeModal();
       }
     }

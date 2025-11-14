@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Your App Name</title>
+
+    <link rel="stylesheet" href="~/Areas/Admin/Content/css/tabler.min.css">
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div class="page">
+        <!-- Navbar -->
+        @Html.Partial("_Navbar")
+
+        <!-- Page wrapper -->
+        <div class="page-wrapper">
+            @if (ViewData["PageTitle"] != null)
+            {
+                <div class="page-header d-print-none">
+                    <div class="container-xl">
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                <h2 class="page-title">@ViewData["PageTitle"]</h2>
+                                @if (ViewData["PageSubtitle"] != null)
+                                {
+                                    <div class="text-secondary mt-1">@ViewData["PageSubtitle"]</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Page body -->
+            <div class="page-body">
+                <div class="container-xl">
+                    @RenderBody()
+                </div>
+            </div>
+
+            <!-- Footer -->
+            @Html.Partial("_Footer")
+        </div>
+    </div>
+
+    <script src="~/Areas/Admin/Script/tabler.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

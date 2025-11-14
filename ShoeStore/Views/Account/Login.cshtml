@@ -177,7 +177,11 @@
 
           await cart.migrateGuestCart();
 
-          window.location.href = '/Home/Index';
+          if (result.User.Roles && result.User.Roles.includes('Admin')) {
+            window.location.href = '/Admin/Admin/Dashboard';
+          } else {
+            window.location.href = '/Home/Index';
+          }
         } else {
           document.getElementById('login-error').textContent = result.Message;
           submitBtn.disabled = false;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 using ShoeStore.Models;
@@ -96,23 +97,49 @@ namespace ShoeStore.ApiControllers
                     db.Orders.Add(order);
                     db.SaveChanges();
 
+                    var variantIds = request.Items.Select(i => i.VariantID).ToList();
+                    var variants = db.ProductVariants
+                        .Include(v => v.Product)
+                        .Where(v => variantIds.Contains(v.VariantID))
+                        .ToList();
+
                     decimal totalAmount = 0;
 
                     foreach (var item in request.Items)
                     {
-                        var subtotal = item.Quantity * item.UnitPrice;
+                        if (item.Quantity <= 0)
+                        {
+                            return Ok(new { Status = false, Message = $"Invalid quantity for variant {item.VariantID}" });
+                        }
+
+                        var variant = variants.FirstOrDefault(v => v.VariantID == item.VariantID);
+
+                        if (variant == null)
+                        {
+                            return Ok(new { Status = false, Message = $"Product variant {item.VariantID} not found" });
+                        }
+
+                        if (variant.StockQty < item.Quantity)
+                        {
+                            return Ok(new { Status = false, Message = $"Insufficient stock for {variant.Product.ProductName}. Available: {variant.StockQty}" });
+                        }
+
+                        decimal actualPrice = variant.PriceOverride ?? variant.Product.PromotionPrice ?? variant.Product.Price;
+                        decimal subtotal = item.Quantity * actualPrice;
 
                         var orderItem = new OrderItems
                         {
                             OrderID = order.OrderID,
                             VariantID = item.VariantID,
                             Quantity = item.Quantity,
-                            UnitPrice = item.UnitPrice,
+                            UnitPrice = actualPrice,
                             Subtotal = subtotal
                         };
 
                         db.OrderItems.Add(orderItem);
                         totalAmount += subtotal;
+
+                        variant.StockQty -= item.Quantity;
                     }
 
                     db.SaveChanges();
@@ -167,6 +194,5 @@ namespace ShoeStore.ApiControllers
     {
         public int VariantID { get; set; }
         public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; }
     }
 }

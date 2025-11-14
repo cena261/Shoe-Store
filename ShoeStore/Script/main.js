@@ -23,7 +23,16 @@ class Cart {
 
       if (sessionValid) {
         this.isLoggedIn = true;
-        await this.loadFromServer();
+        const guestCart = localStorage.getItem('cart');
+        const hasGuestItems = guestCart && JSON.parse(guestCart).length > 0;
+
+        if (hasGuestItems) {
+          this.loadFromLocalStorage();
+          await this.syncToServer();
+          await this.loadFromServer();
+        } else {
+          await this.loadFromServer();
+        }
       } else {
         this.isLoggedIn = false;
         localStorage.removeItem('user');
