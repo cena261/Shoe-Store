@@ -181,7 +181,7 @@
     <script>
     function deleteProduct(productId, productName) {
         showConfirm(
-            'Delete "' + productName + '"? This will also delete all variants and images.',
+            'Delete "' + productName + '"? Sẽ xóa toàn bộ biến thể và ảnh',
             'Delete Product',
             function() {
                 fetch('@Url.Action("Delete")', {

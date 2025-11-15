@@ -15,7 +15,7 @@
                 <div class="filter-group">
                     <button class="filter-group-header" onclick="toggleFilterGroup('gender-filter')">
                         <div>
-                            <span>Gender</span>
+                            <span>Giới tính</span>
                             <span id="gender-count" class="filter-count"></span>
                         </div>
                         <svg class="chevron" width="14" height="14" viewBox="0 0 14 14">
@@ -49,7 +49,7 @@
                 <div class="filter-group">
                     <button class="filter-group-header" onclick="toggleFilterGroup('price-filter')">
                         <div>
-                            <span>Price</span>
+                            <span>Giá tiền</span>
                             <span id="price-count" class="filter-count"></span>
                         </div>
                         <svg class="chevron" width="14" height="14" viewBox="0 0 14 14">
@@ -60,7 +60,7 @@
                         <label class="filter-item">
                             <input type="checkbox" class="filter-checkbox" value="0-1000000" data-group="price" />
                             <span class="checkmark"></span>
-                            <span>Under 1,000,000₫</span>
+                            <span>Dưới 1,000,000₫</span>
                         </label>
                         <label class="filter-item">
                             <input type="checkbox" class="filter-checkbox" value="1000000-2000000" data-group="price" />
@@ -75,7 +75,7 @@
                         <label class="filter-item">
                             <input type="checkbox" class="filter-checkbox" value="5000000-999999999" data-group="price" />
                             <span class="checkmark"></span>
-                            <span>Over 5,000,000₫</span>
+                            <span>Trên 5,000,000₫</span>
                         </label>
                     </div>
                 </div>
@@ -161,8 +161,8 @@
                         <label for="sort-select" style="margin-right: 0.5rem;">Sort By:</label>
                         <select id="sort-select" class="input" style="display: inline-block; width: auto; padding: 0.5rem;" onchange="applyFilters()">
                             <option value="newest">Newest</option>
-                            <option value="price-low">Price: Low to High</option>
-                            <option value="price-high">Price: High to Low</option>
+                            <option value="price-low">Giá: Thấp đến cao</option>
+                            <option value="price-high">Giá: Cao đến thấp</option>
                         </select>
                     </div>
                     <div class="search-input-wrapper">
@@ -171,8 +171,8 @@
                                 <path stroke="currentColor" stroke-width="1.5" d="M13.962 16.296a6.716 6.716 0 01-3.462.954 6.728 6.728 0 01-4.773-1.977A6.728 6.728 0 013.75 10.5c0-1.864.755-3.551 1.977-4.773A6.728 6.728 0 0110.5 3.75c1.864 0 3.551.755 4.773 1.977A6.728 6.728 0 0117.25 10.5a6.726 6.726 0 01-.921 3.407c-.517.882-.434 1.988.289 2.711l3.853 3.853"></path>
                             </svg>
                         </button>
-                        <input type="search" id="search-input" class="search-input" placeholder="Search" autocomplete="off" aria-label="Search Products" />
-                        <button class="search-clear-btn" id="search-clear-btn" type="button" aria-label="Clear Search" style="display: none;">
+                        <input type="search" id="search-input" class="search-input" placeholder="Tìm kiếm" autocomplete="off" aria-label="Tìm kiếm sản phẩm" />
+                        <button class="search-clear-btn" id="search-clear-btn" type="button" aria-label="Xóa tìm kiếm" style="display: none;">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
@@ -640,11 +640,11 @@
                 displayPagination(result.CurrentPage, result.TotalPages, result.TotalProducts);
                 updateFilterCounts();
             } else {
-                productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #6b7280;">No products found.</p>';
+                productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #6b7280;">Không tìm thấy sản phẩm nào.</p>';
             }
         } catch (error) {
             console.error('Error loading products:', error);
-            productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #ef4444;">Error loading products.</p>';
+            productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #ef4444;">Lỗi khi tải danh sách sản phẩm.</p>';
         }
     }
 
@@ -662,7 +662,7 @@
         const container = document.getElementById('product-grid');
 
         if (products.length === 0) {
-            container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #6b7280;">No products found.</p>';
+            container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #6b7280;">Không tìm thấy sản phẩm nào.</p>';
             return;
         }
 
@@ -719,7 +719,7 @@
         const paginationContainer = document.getElementById('pagination');
         const countContainer = document.getElementById('product-count');
 
-        countContainer.textContent = `${totalProducts} Results`;
+        countContainer.textContent = `${totalProducts} Kết quả`;
 
         if (totalPages <= 1) {
             paginationContainer.innerHTML = '';
@@ -728,7 +728,7 @@
 
         let paginationHTML = `
             <button class="pagination-btn" onclick="changePage(${currentPageNum - 1})" ${currentPageNum === 1 ? 'disabled' : ''}>
-                Previous
+                Trước
             </button>
         `;
 
@@ -746,7 +746,7 @@
 
         paginationHTML += `
             <button class="pagination-btn" onclick="changePage(${currentPageNum + 1})" ${currentPageNum === totalPages ? 'disabled' : ''}>
-                Next
+                Kế tiếp
             </button>
         `;
 

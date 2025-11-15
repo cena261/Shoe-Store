@@ -9,40 +9,40 @@
     <div class="mx-auto flex max-w-4xl flex-col gap-10">
         <div class="space-y-4">
             <p class="text-sm uppercase tracking-[0.35em] text-zinc-400">Dashboard</p>
-            <h1 class="text-5xl font-bold">Hello <span id="user-name">Guest</span>!</h1>
+            <h1 class="text-5xl font-bold">Xin chào <span id="user-name">Khách</span>!</h1>
             <p class="text-base text-zinc-500">
-                Manage your profile, view saved addresses, and check order status. Personalisation features will be wired up to live services later.
+                Quản lý thông tin cá nhân, địa chỉ, trạng thái đơn hàng. Các tính năng về thông tin cá nhân sẽ bổ sung sau
             </p>
             <div class="flex flex-wrap gap-4">
-                <button class="btn rounded-full px-6 py-3" onclick="logout()">Logout</button>
-                <a href="/Products" class="rounded-full border border-zinc-900 px-6 py-3 font-semibold transition hover:bg-zinc-900 hover:text-white">Browse sneakers</a>
+                <button class="btn rounded-full px-6 py-3" onclick="logout()">Đăng xuất</button>
+                <a href="/Products" class="rounded-full border border-zinc-900 px-6 py-3 font-semibold transition hover:bg-zinc-900 hover:text-white">Xem danh sách các sản phẩm</a>
             </div>
         </div>
 
         <div class="grid gap-6 md:grid-cols-2">
             <!-- Profile Card -->
             <article class="rounded-3xl border border-zinc-200 p-6 shadow-sm">
-                <h2 class="text-lg font-semibold">Profile</h2>
-                <p class="mt-3 text-sm text-zinc-500">Name: <span id="profile-name">Guest</span></p>
+                <h2 class="text-lg font-semibold">Trang cá nhân</h2>
+                <p class="mt-3 text-sm text-zinc-500">Tên: <span id="profile-name">Khách</span></p>
                 <p class="text-sm text-zinc-500">Email: <span id="profile-email">guest@example.com</span></p>
-                <p class="text-sm text-zinc-500">Membership: Gold Runner</p>
-                <button class="mt-4 rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white" onclick="openChangePasswordModal()">Change Password</button>
+                <p class="text-sm text-zinc-500">Hạng thành viên: Bạc</p>
+                <button class="mt-4 rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white" onclick="openChangePasswordModal()">Đổi mật khẩu</button>
             </article>
 
             <!-- Saved Addresses Card -->
             <article class="rounded-3xl border border-zinc-200 p-6 shadow-sm">
-                <h2 class="text-lg font-semibold">Saved addresses</h2>
+                <h2 class="text-lg font-semibold">Địa chỉ đã lưu</h2>
                 <div id="address-list" class="mt-3">
-                    <p class="text-sm text-zinc-500">Loading addresses...</p>
+                    <p class="text-sm text-zinc-500">Đang tải địa chỉ...</p>
                 </div>
-                <button class="mt-4 rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white" onclick="openAddressModal()">Manage</button>
+                <button class="mt-4 rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white" onclick="openAddressModal()">Quản lý địa chỉ</button>
             </article>
 
             <!-- Recent Orders Card -->
             <article class="rounded-3xl border border-zinc-200 p-6 shadow-sm md:col-span-2">
-                <h2 class="text-lg font-semibold">Recent orders</h2>
+                <h2 class="text-lg font-semibold">Các đơn hàng gần đây</h2>
                 <div class="mt-5 space-y-4" id="order-list">
-                    <p class="text-sm text-zinc-500">Loading orders...</p>
+                    <p class="text-sm text-zinc-500">Đang tải đơn hàng...</p>
                 </div>
             </article>
         </div>
@@ -52,30 +52,30 @@
 <div id="change-password-modal" class="change-password-modal">
     <div id="modal-content" class="modal-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 700; color: black;">Change Password</h2>
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: black;">Đổi mật khẩu</h2>
             <button onclick="closeChangePasswordModal()" style="font-size: 1.5rem; color: #6b7280; border: none; background: none; cursor: pointer;">&times;</button>
         </div>
         <form id="change-password-form">
             <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
-                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Current Password</span>
-                <input type="password" id="current-password" class="input" placeholder="Enter current password" style="width: 100%;" />
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Mật khẩu hiện tại</span>
+                <input type="password" id="current-password" class="input" placeholder="Nhập mật khẩu hiện tại" style="width: 100%;" />
                 <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="current-password-error"></div>
             </label>
 
             <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
-                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">New Password</span>
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Mật khẩu mới</span>
                 <input type="password" id="new-password" class="input" placeholder="Enter new password" style="width: 100%;" />
                 <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="new-password-error"></div>
             </label>
 
             <label style="display: flex; flex-direction: column; margin-bottom: 1.5rem;">
-                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Confirm New Password</span>
-                <input type="password" id="confirm-password" class="input" placeholder="Confirm new password" style="width: 100%;" />
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Xác nhận mật khẩu mới</span>
+                <input type="password" id="confirm-password" class="input" placeholder="Xác nhận mật khẩu mới" style="width: 100%;" />
                 <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="confirm-password-error"></div>
             </label>
 
             <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; font-weight: 600;">
-                Update Password
+                Cập nhật mật khẩu
             </button>
         </form>
     </div>
@@ -84,38 +84,38 @@
 <div id="address-modal" class="change-password-modal">
     <div id="address-modal-content" class="modal-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <h2 style="font-size: 1.5rem; font-weight: 700; color: black;">Add Address</h2>
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: black;">Thêm địa chỉ</h2>
             <button onclick="closeAddressModal()" style="font-size: 1.5rem; color: #6b7280; border: none; background: none; cursor: pointer;">&times;</button>
         </div>
         <form id="address-form">
             <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
-                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Full Name</span>
-                <input type="text" id="address-fullname" class="input" placeholder="Enter full name" style="width: 100%;" />
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Họ và Tên</span>
+                <input type="text" id="address-fullname" class="input" placeholder="Nhập họ và tên" style="width: 100%;" />
                 <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-fullname-error"></div>
             </label>
 
             <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
-                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Phone Number</span>
-                <input type="text" id="address-phone" class="input" placeholder="Enter phone number (10 digits, start with 0)" style="width: 100%;" maxlength="10" />
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Số điện thoại</span>
+                <input type="text" id="address-phone" class="input" placeholder="Nhập số điện thoại (bắt đầu bằng số 0)" style="width: 100%;" maxlength="10" />
                 <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-phone-error"></div>
             </label>
 
             <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
-                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Tên đường</span>
-                <input type="text" id="address-street" class="input" placeholder="Enter street name" style="width: 100%;" />
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Tên đường / Tòa nhà</span>
+                <input type="text" id="address-street" class="input" placeholder="Nhập tên đường / tòa nhà" style="width: 100%;" />
                 <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-street-error"></div>
             </label>
 
             <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
                 <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Xã / Quận</span>
-                <input type="text" id="address-ward" class="input" placeholder="Enter ward/district" style="width: 100%;" />
+                <input type="text" id="address-ward" class="input" placeholder="Nhập xã / quận" style="width: 100%;" />
                 <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-ward-error"></div>
             </label>
 
             <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
                 <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Tỉnh Thành</span>
                 <select id="address-province" class="input" style="width: 100%;">
-                    <option value="">Select province/city</option>
+                    <option value="">Chọn tỉnh / thành phố</option>
                     <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
                     <option value="Bắc Giang">Bắc Giang</option>
                     <option value="Bắc Ninh">Bắc Ninh</option>
@@ -156,11 +156,11 @@
 
             <label style="display: flex; flex-direction: row; align-items: center; margin-bottom: 1.5rem; cursor: pointer;">
                 <input type="checkbox" id="address-default" style="position: static; width: 1rem; height: 1rem; margin-right: 0.5rem; cursor: pointer; clip: auto; clip-path: none; overflow: visible;" />
-                <span style="font-size: 0.875rem; font-weight: 600; color: black;">Set as default address</span>
+                <span style="font-size: 0.875rem; font-weight: 600; color: black;">Chọn làm địa chỉ mặc định</span>
             </label>
 
             <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; font-weight: 600;">
-                Add Address
+                Thêm địa chỉ
             </button>
         </form>
     </div>
@@ -263,8 +263,8 @@
 
         if (response.ok) {
           const user = await response.json();
-          document.getElementById('user-name').textContent = user.FullName || 'Guest';
-          document.getElementById('profile-name').textContent = user.FullName || 'Guest';
+          document.getElementById('user-name').textContent = user.FullName || 'Khách';
+          document.getElementById('profile-name').textContent = user.FullName || 'Khách';
           document.getElementById('profile-email').textContent = user.Email || 'guest@example.com';
         }
       } catch (error) {
@@ -286,15 +286,15 @@
             <p class="text-sm text-zinc-500">
               ${address.FullName}, ${address.Phone}<br/>
               ${address.TenDuong}, ${address.XaQuan}, ${address.TinhThanh}
-              ${address.IsDefault ? '<span style="color: #10b981; font-weight: 600;">(Default)</span>' : ''}
+              ${address.IsDefault ? '<span style="color: #10b981; font-weight: 600;">(Mặc định)</span>' : ''}
             </p>
           `).join('');
         } else {
-          addressList.innerHTML = '<p class="text-sm text-zinc-500">No saved addresses</p>';
+          addressList.innerHTML = '<p class="text-sm text-zinc-500">Chưa có địa chỉ nào</p>';
         }
       } catch (error) {
         console.error('Error loading addresses:', error);
-        document.getElementById('address-list').innerHTML = '<p class="text-sm text-zinc-500">No saved addresses</p>';
+        document.getElementById('address-list').innerHTML = '<p class="text-sm text-zinc-500">Chưa có địa chỉ nào</p>';
       }
     }
 
@@ -321,29 +321,29 @@
             return `
               <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-zinc-100/80 p-4">
                 <div>
-                  <p class="text-sm font-semibold">Order #${order.OrderID}</p>
-                  <p class="text-xs text-zinc-500">Placed on ${formattedDate} • ${order.ItemCount} item${order.ItemCount > 1 ? 's' : ''} • ${formatCurrency(order.TotalAmount)}</p>
+                  <p class="text-sm font-semibold">Đơn hàng #${order.OrderID}</p>
+                  <p class="text-xs text-zinc-500">Đặt vào lúc ${formattedDate} • ${order.ItemCount} món • ${formatCurrency(order.TotalAmount)}</p>
                 </div>
                 <span class="rounded-full ${statusConfig.bgClass} px-3 py-1 text-xs font-semibold ${statusConfig.textClass}">${statusConfig.label}</span>
               </div>
             `;
           }).join('');
         } else {
-          orderList.innerHTML = '<p class="text-sm text-zinc-500">No orders yet</p>';
+          orderList.innerHTML = '<p class="text-sm text-zinc-500">Chưa có đơn hàng nào</p>';
         }
       } catch (error) {
         console.error('Error loading orders:', error);
-        orderList.innerHTML = '<p class="text-sm text-zinc-500">Failed to load orders</p>';
+        orderList.innerHTML = '<p class="text-sm text-zinc-500">Lỗi khi tải đơn hàng</p>';
       }
     }
 
     function getStatusConfig(status) {
       const statusMap = {
-        'Pending': { label: 'Pending', bgClass: 'bg-amber-100', textClass: 'text-amber-700' },
-        'Processing': { label: 'Processing', bgClass: 'bg-blue-100', textClass: 'text-blue-700' },
-        'Shipped': { label: 'Shipped', bgClass: 'bg-indigo-100', textClass: 'text-indigo-700' },
-        'Delivered': { label: 'Delivered', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' },
-        'Cancelled': { label: 'Cancelled', bgClass: 'bg-red-100', textClass: 'text-red-700' }
+        'Pending': { label: 'Chờ xác nhận', bgClass: 'bg-amber-100', textClass: 'text-amber-700' },
+        'Processing': { label: 'Chờ lấy hàng', bgClass: 'bg-blue-100', textClass: 'text-blue-700' },
+        'Shipped': { label: 'Đã lấy hàng', bgClass: 'bg-indigo-100', textClass: 'text-indigo-700' },
+        'Delivered': { label: 'Đang giao hàng', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' },
+        'Cancelled': { label: 'Đã hủy', bgClass: 'bg-red-100', textClass: 'text-red-700' }
       };
 
       return statusMap[status] || { label: status, bgClass: 'bg-gray-100', textClass: 'text-gray-700' };
@@ -393,12 +393,12 @@
       let hasError = false;
 
       if (!currentPassword) {
-        document.getElementById('current-password-error').textContent = 'Current password is required';
+        document.getElementById('current-password-error').textContent = 'Phải có mật khẩu hiện tại';
         hasError = true;
       }
 
       if (!newPassword || newPassword.length < 6) {
-        document.getElementById('new-password-error').textContent = 'New password must be at least 6 characters';
+        document.getElementById('new-password-error').textContent = 'Mật khẩu mới phải có ít nhất 6 ký tự';
         hasError = true;
       }
 
@@ -411,7 +411,7 @@
 
       const submitBtn = e.target.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Updating...';
+      submitBtn.textContent = 'Đang cập nhật...';
 
       try {
         const response = await fetch('/Account/ChangePassword', {
@@ -429,7 +429,7 @@
 
         if (result.Status) {
           closeChangePasswordModal();
-          showNotification('Password changed successfully!');
+          showNotification('Đổi mật khẩu thành công!');
         } else {
           if (result.Message.includes('incorrect')) {
             document.getElementById('current-password-error').textContent = result.Message;
@@ -437,12 +437,12 @@
             showNotification(result.Message, false);
           }
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Update Password';
+          submitBtn.textContent = 'Cập nhật mật khẩu';
         }
       } catch (error) {
-        showNotification('An error occurred. Please try again.', false);
+        showNotification('Có lỗi xảy ra. Vui lòng thử lại.', false);
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Update Password';
+        submitBtn.textContent = 'Cập nhật mật khẩu';
       }
     });
 
@@ -497,30 +497,30 @@
       let hasError = false;
 
       if (!fullname) {
-        document.getElementById('address-fullname-error').textContent = 'Full name is required';
+        document.getElementById('address-fullname-error').textContent = 'Phải có họ và tên';
         hasError = true;
       }
 
       if (!phone) {
-        document.getElementById('address-phone-error').textContent = 'Phone number is required';
+        document.getElementById('address-phone-error').textContent = 'Phải có số điện thoại';
         hasError = true;
       } else if (!/^0[0-9]{9}$/.test(phone)) {
-        document.getElementById('address-phone-error').textContent = 'Phone must be 10 digits and start with 0';
+        document.getElementById('address-phone-error').textContent = 'Số điện thoại phải có 10 ký tự và bắt đầu bằng số 0';
         hasError = true;
       }
 
       if (!street) {
-        document.getElementById('address-street-error').textContent = 'Street name is required';
+        document.getElementById('address-street-error').textContent = 'Phải có tên đường / tòa nhà';
         hasError = true;
       }
 
       if (!ward) {
-        document.getElementById('address-ward-error').textContent = 'Ward/District is required';
+        document.getElementById('address-ward-error').textContent = 'Phải có thông tin xã / quận';
         hasError = true;
       }
 
       if (!province) {
-        document.getElementById('address-province-error').textContent = 'Province/City is required';
+        document.getElementById('address-province-error').textContent = 'Phải có tỉnh / thành phố';
         hasError = true;
       }
 
@@ -528,7 +528,7 @@
 
       const submitBtn = e.target.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Adding...';
+      submitBtn.textContent = 'Đang thêm...';
 
       try {
         const response = await fetch('/Account/AddAddress', {
@@ -551,16 +551,16 @@
         if (result.Status) {
           closeAddressModal();
           loadAddresses();
-          showNotification('Address added successfully!');
+          showNotification('Thêm địa chỉ thành công!');
         } else {
           showNotification(result.Message, false);
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Add Address';
+          submitBtn.textContent = 'Thêm địa chỉ';
         }
       } catch (error) {
-        showNotification('An error occurred. Please try again.', false);
+        showNotification('Có lỗi xảy ra. Vui lòng thử lại.', false);
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Add Address';
+        submitBtn.textContent = 'Thêm địa chỉ';
       }
     });
 

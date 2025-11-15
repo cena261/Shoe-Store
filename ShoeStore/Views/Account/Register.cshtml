@@ -83,15 +83,15 @@
 <div class="flex flex-col items-center justify-center" style="min-height: 80vh;">
     <div class="mt-10 w-full p-4 sm:mt-16 sm:p-7 2xl:mt-0" id="register-content">
         <h1 class="text-center text-4xl font-semibold leading-tight xl:text-6xl">
-            Join us and rock the world.
+            Cùng chúng tôi tạo nên sự khác biệt.
         </h1>
 
         <h4 class="hidden text-center text-xl sm:block xl:text-2xl">
-            Join us to get our newsletters, discount codes and more!
+            Đăng ký để nhận thông báo về sản phẩm, giảm giá và nhiều ưu đãi khác!
         </h4>
 
         <div class="w-full text-center">
-            <a class="underline" href="/Account/Login">Already has account? Login here!</a>
+            <a class="underline" href="/Account/Login">Đã có tài khoản? Đăng nhập ngay!</a>
         </div>
 
         <div class="mt-5">
@@ -103,7 +103,7 @@
                         <span class="text-lg font-semibold">Name</span>
                         <input type="text"
                                class="input border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
-                               placeholder="Enter your name..."
+                               placeholder="Chúng tôi nên gọi bạn là gì..."
                                id="username"
                                name="username"
                                value="" />
@@ -115,7 +115,7 @@
                         <span class="text-lg font-semibold">Email</span>
                         <input type="text"
                                class="input border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
-                               placeholder="Enter your email..."
+                               placeholder="Email đăng nhập..."
                                id="email"
                                name="email"
                                value="" />
@@ -149,11 +149,11 @@
 
                     <!-- Confirm Password -->
                     <label class="flex flex-col">
-                        <span class="text-lg font-semibold">Confirm password</span>
+                        <span class="text-lg font-semibold">Xác nhận mật khẩu</span>
                         <div class="relative w-full">
                             <input type="password"
                                    class="input w-full border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
-                                   placeholder="Confirm your password..."
+                                   placeholder="Xác nhận mật khẩu của bạn..."
                                    id="confirmPassword"
                                    name="confirmPassword"
                                    value="" />
@@ -174,10 +174,10 @@
 
                     <!-- Phone (Optional) -->
                     <label class="flex flex-col">
-                        <span class="text-lg font-semibold">Phone (Optional)</span>
+                        <span class="text-lg font-semibold">Số điện thoại (Không bắt buộc)</span>
                         <input type="text"
                                class="input border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
-                               placeholder="Enter your phone number..."
+                               placeholder="Điền số điện thoại..."
                                id="phone"
                                name="phone"
                                value="" />
@@ -187,7 +187,7 @@
                     <!-- Submit Button -->
                     <button type="submit"
                             class="btn mt-1 h-10 rounded-md bg-white py-0 font-semibold text-black disabled:cursor-not-allowed disabled:bg-white/75">
-                        Register
+                        Đăng ký
                     </button>
 
                 </form>
@@ -201,13 +201,13 @@
     <div style="background: white; padding: 2.5rem; border-radius: 0.5rem; max-width: 400px; margin: 2rem; text-align: center; color: black;">
         <div style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;">✓</div>
         <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
-            Registration Successful!
+            Đăng ký thành công!
         </h1>
         <p style="margin-bottom: 1.5rem; color: #6b7280;">
-            A verification email has been sent to <strong id="email-sent"></strong>
+            Mã xác thực đã được gửi tới địa chỉ <strong id="email-sent"></strong>
         </p>
         <button class="btn" onclick="goToLogin()" style="width: 100%; padding: 0.75rem;">
-            Go to Login
+            Tới trang đăng nhập
         </button>
     </div>
 </div>
@@ -237,30 +237,30 @@
       let hasError = false;
 
       if (!username || username.length <= 2) {
-        document.getElementById('username-error').textContent = 'Name must be at least 3 characters';
+        document.getElementById('username-error').textContent = 'Tên ít nhất phải có 3 ký tự';
         hasError = true;
       }
 
       if (!email) {
-        document.getElementById('email-error').textContent = 'Required';
+        document.getElementById('email-error').textContent = 'Bắt buộc';
         hasError = true;
       } else if (!validateEmail(email)) {
-        document.getElementById('email-error').textContent = 'Invalid email';
+        document.getElementById('email-error').textContent = 'Email không hợp lệ';
         hasError = true;
       }
 
       if (!password || password.length < 6) {
-        document.getElementById('password-error').textContent = 'Password must be at least 6 characters';
+        document.getElementById('password-error').textContent = 'Mật khẩu phải có ít nhất 6 ký tự';
         hasError = true;
       }
 
       if (password !== confirmPassword) {
-        document.getElementById('confirmPassword-error').textContent = 'Passwords must match';
+        document.getElementById('confirmPassword-error').textContent = 'Mật khẩu phải trùng khớp';
         hasError = true;
       }
 
       if (phone && !/^[0-9]{10,11}$/.test(phone)) {
-        document.getElementById('phone-error').textContent = 'Phone must be 10-11 digits';
+        document.getElementById('phone-error').textContent = 'Số điện thoại phải có 10-11 ký tự';
         hasError = true;
       }
 
@@ -302,12 +302,12 @@
           const modal = document.getElementById('success-modal');
           modal.style.display = 'flex';
         } else {
-          toast.error('Registration failed: ' + result.Message);
+          toast.error('Đăng ký thất bại: ' + result.Message);
           submitBtn.disabled = false;
           submitBtn.textContent = 'Register';
         }
       } catch (error) {
-        toast.error('An error occurred. Please try again.');
+        toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Register';
       }

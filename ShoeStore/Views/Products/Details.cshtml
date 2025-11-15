@@ -8,12 +8,12 @@
         <div class="product-gallery">
             <div class="main-image-container">
                 <img id="main-image" src="" alt="Product Image" />
-                <button class="gallery-nav prev" onclick="previousImage()" aria-label="Previous image">
+                <button class="gallery-nav prev" onclick="previousImage()" aria-label="Ảnh trước">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
                 </button>
-                <button class="gallery-nav next" onclick="nextImage()" aria-label="Next image">
+                <button class="gallery-nav next" onclick="nextImage()" aria-label="Ảnh kế tiếp">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
@@ -32,7 +32,7 @@
 
             <div class="color-selection">
                 <div class="color-header">
-                    <span>Select Color</span>
+                    <span>Chọn màu</span>
                     <span id="selected-color-name" class="selected-color-name"></span>
                 </div>
                 <div id="color-options" class="color-options"></div>
@@ -40,24 +40,24 @@
 
             <div class="size-selection">
                 <div class="size-header">
-                    <span>Select Size</span>
+                    <span>Chọn Size</span>
                     <button class="size-guide-btn" onclick="openSizeGuide()">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <path d="M10 2C14.4183 2 18 5.58172 18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2Z" stroke="currentColor" stroke-width="1.5"/>
                             <path d="M10 6V10L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                         </svg>
-                        Size Guide
+                        Hướng dẫn chọn Size
                     </button>
                 </div>
                 <div id="size-options" class="size-options"></div>
             </div>
 
             <button id="add-to-bag-btn" class="add-to-bag-btn" onclick="addToBag()" disabled>
-                Add to Bag
+                Thêm vào giỏ hàng
             </button>
 
             <div class="product-description">
-                <h3>Product Description</h3>
+                <h3>Mô tả sản phẩm</h3>
                 <p id="product-description-text"></p>
             </div>
         </div>
@@ -67,7 +67,7 @@
 <div id="size-guide-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>Size chart</h2>
+            <h2>Bảng Size</h2>
             <button class="modal-close" onclick="closeSizeGuide()">&times;</button>
         </div>
         <div class="modal-body">
@@ -558,7 +558,7 @@
         }
 
         // Set description
-        document.getElementById('product-description-text').textContent = product.Description || 'No description available.';
+        document.getElementById('product-description-text').textContent = product.Description || 'Không có mô tả.';
 
         // Display color name
         document.getElementById('selected-color-name').textContent = product.SelectedColorName;
@@ -678,13 +678,13 @@
 
     function addToBag() {
         if (!selectedSize) {
-            toast.warning('Please select a size');
+            toast.warning('Vui lòng chọn Size');
             return;
         }
 
         const selectedVariant = currentProduct.AvailableSizes.find(s => s.VariantID === selectedSize);
         if (!selectedVariant) {
-            toast.error('Selected size not found');
+            toast.error('Không có size đã chọn');
             return;
         }
 

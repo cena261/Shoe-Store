@@ -45,11 +45,11 @@
 <div class="flex flex-col items-center justify-center" style="min-height: 80vh;">
     <div class="-mt-24 w-full p-4 sm:mt-0 sm:p-7 2xl:-mt-36" id="login-content">
         <h1 class="text-center text-4xl font-semibold leading-tight xl:text-6xl">
-            Login to enjoy full services.
+            Đăng nhập để tận hưởng nhiều ưu đãi hấp dẫn.
         </h1>
 
         <div class="w-full text-center">
-            <a class="underline" href="/Account/Register">Don't have account? Register here!</a>
+            <a class="underline" href="/Account/Register">Chưa có tài khoản? Đăng ký ngay!</a>
         </div>
 
         <div class="mt-10">
@@ -70,7 +70,7 @@
                     <label class="flex flex-col">
                         <div class="flex justify-between items-center">
                             <span class="text-lg font-semibold">Password</span>
-                            <a href="/Account/ForgotPassword" class="text-sm underline text-gray-600 hover:text-black">Forgot Password?</a>
+                            <a href="/Account/ForgotPassword" class="text-sm underline text-gray-600 hover:text-black">Quên mật khẩu?</a>
                         </div>
                         <div class="relative w-full">
                             <input type="password"
@@ -136,15 +136,15 @@
       let hasError = false;
 
       if (!email) {
-        document.getElementById('email-error').textContent = 'Required';
+        document.getElementById('email-error').textContent = 'Bắt buộc';
         hasError = true;
       } else if (!validateEmail(email)) {
-        document.getElementById('email-error').textContent = 'Invalid email';
+        document.getElementById('email-error').textContent = 'Email không hợp lệ';
         hasError = true;
       }
 
       if (!password) {
-        document.getElementById('password-error').textContent = 'Required';
+        document.getElementById('password-error').textContent = 'Bắt buộc';
         hasError = true;
       }
 
@@ -191,7 +191,7 @@
           submitBtn.textContent = 'Login';
         }
       } catch (error) {
-        document.getElementById('login-error').textContent = 'An error occurred. Please try again.';
+        document.getElementById('login-error').textContent = 'Có lỗi xảy ra. Vui lòng thử lại.';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Login';
       }

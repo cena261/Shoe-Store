@@ -258,15 +258,13 @@ namespace ShoeStore.ApiControllers
 
                         if (existingCartItem != null)
                         {
-                            int newQuantity = existingCartItem.Quantity + item.Quantity;
-
-                            if (newQuantity > variant.StockQty)
+                            if (item.Quantity > variant.StockQty)
                             {
                                 existingCartItem.Quantity = variant.StockQty;
                             }
                             else
                             {
-                                existingCartItem.Quantity = newQuantity;
+                                existingCartItem.Quantity = item.Quantity;
                             }
                         }
                         else
