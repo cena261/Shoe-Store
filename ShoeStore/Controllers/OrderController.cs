@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace ShoeStore.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController : BaseUserController
     {
         // GET: Order
         public ActionResult Checkout()

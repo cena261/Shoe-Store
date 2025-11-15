@@ -1,0 +1,189 @@
+@model ShoeStore.Areas.Admin.Models.DTOs.UserDetailDTO
+@{
+    ViewBag.Title = "User Details";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayoutPage.cshtml";
+    ViewData["PageTitle"] = ViewBag.PageTitle;
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <span class="avatar avatar-xl mb-3" style="background-image: url(https://ui-avatars.com/api/?name=@Uri.EscapeDataString(Model.FullName)&background=066fd1&color=fff&size=128)"></span>
+                <h3 class="m-0 mb-1">@Model.FullName</h3>
+                <div class="text-secondary mb-3">@Model.Email</div>
+                <div class="mb-3">
+                    @if (Model.Roles != null && Model.Roles.Any())
+                    {
+                        foreach (var role in Model.Roles)
+                        {
+                            <span class="badge @(role == "Admin" ? "bg-red" : "bg-blue") me-1">@role</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-secondary">No roles assigned</span>
+                    }
+                </div>
+                <div class="mb-3">
+                    <span class="badge @(Model.IsActive ? "bg-success" : "bg-danger") badge-lg">
+                        @(Model.IsActive ? "Active" : "Inactive")
+                    </span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col">
+                        <a href="@Url.Action("Edit", new { id = Model.UserId })" class="btn btn-primary w-100">Edit User</a>
+                    </div>
+                    <div class="col">
+                        <a href="@Url.Action("ManageRoles", new { id = Model.UserId })" class="btn btn-warning w-100">Manage Roles</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h3 class="card-title">User Information</h3>
+            </div>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col text-secondary">User ID</div>
+                        <div class="col-auto"><strong>@Model.UserId</strong></div>
+                    </div>
+                </div>
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col text-secondary">Phone</div>
+                        <div class="col-auto"><strong>@(Model.Phone ?? "-")</strong></div>
+                    </div>
+                </div>
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col text-secondary">Joined</div>
+                        <div class="col-auto"><strong>@Model.CreatedAt.ToString("MMM dd, yyyy")</strong></div>
+                    </div>
+                </div>
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col text-secondary">Last Login</div>
+                        <div class="col-auto">
+                            <strong>
+                                @if (Model.LastLogin.HasValue)
+                                {
+                                    @Model.LastLogin.Value.ToString("MMM dd, yyyy HH:mm")
+                                }
+                                else
+                                {
+                                    <span class="text-secondary">Never</span>
+                                }
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Order History</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Orders != null && Model.Orders.Any())
+                        {
+                            foreach (var order in Model.Orders)
+                            {
+                                <tr>
+                                    <td>#@order.OrderID</td>
+                                    <td>@order.OrderDate.ToString("MMM dd, yyyy")</td>
+                                    <td>@order.TotalItems</td>
+                                    <td><strong>@order.TotalAmount.ToString("N0")₫</strong></td>
+                                    <td>
+                                        <span class="badge bg-info">@order.OrderStatus</span>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Details", "Order", new { id = order.OrderID, area = "Admin" })" class="btn btn-sm btn-primary">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="text-secondary">No orders yet</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h3 class="card-title">Addresses</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Addresses != null && Model.Addresses.Any())
+                {
+                    <div class="row">
+                        @foreach (var address in Model.Addresses)
+                        {
+                            <div class="col-md-6 mb-3">
+                                <div class="card @(address.IsDefault ? "border-primary" : "")">
+                                    <div class="card-body">
+                                        @if (address.IsDefault)
+                                        {
+                                            <span class="badge bg-primary mb-2">Default</span>
+                                        }
+                                        <div><strong>@address.FullName</strong></div>
+                                        <div class="text-secondary">@address.Phone</div>
+                                        <div class="mt-2">
+                                            @address.TenDuong<br />
+                                            @address.XaQuan<br />
+                                            @address.TinhThanh
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-secondary py-4">
+                        No addresses saved
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        <a href="@Url.Action("Index")" class="btn btn-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                <path d="M15 6l-6 6l6 6"></path>
+            </svg>
+            Back to Users List
+        </a>
+    </div>
+</div>

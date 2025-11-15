@@ -21,6 +21,7 @@ namespace ShoeStore.Models
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderItems> OrderItems { get; set; }
         public DbSet<Cart> Cart { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -38,6 +39,12 @@ namespace ShoeStore.Models
                 .Property(c => c.AddedAt).HasColumnType("datetime");
             modelBuilder.Entity<Products>()
                 .Property(p => p.CreatedAt).HasColumnType("datetime");
+            modelBuilder.Entity<PasswordResetToken>()
+                .Property(t => t.CreatedAt).HasColumnType("datetime");
+            modelBuilder.Entity<PasswordResetToken>()
+                .Property(t => t.ExpiresAt).HasColumnType("datetime");
+            modelBuilder.Entity<PasswordResetToken>()
+                .Property(t => t.UsedAt).HasColumnType("datetime");
 
             modelBuilder.Entity<Products>()
                 .Property(p => p.Price).HasPrecision(12, 2);

@@ -6,9 +6,8 @@ using System.Web.Mvc;
 
 namespace ShoeStore.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseUserController
     {
-        // GET: Home
         public ActionResult Index()
         {
             return View();

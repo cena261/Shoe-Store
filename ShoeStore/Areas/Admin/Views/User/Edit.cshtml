@@ -1,0 +1,54 @@
+@model ShoeStore.Areas.Admin.Models.DTOs.UserEditDTO
+@{
+    ViewBag.Title = "Edit User";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayoutPage.cshtml";
+    ViewData["PageTitle"] = ViewBag.PageTitle;
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "card" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.UserId)
+
+            <div class="card-body">
+                <h3 class="card-title">User Information</h3>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Email, new { @class = "form-label required" })
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "user@example.com" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "invalid-feedback d-block" })
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.FullName, new { @class = "form-label required" })
+                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Enter full name" })
+                    @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "invalid-feedback d-block" })
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Phone, new { @class = "form-label" })
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "0123456789" })
+                    @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "invalid-feedback d-block" })
+                    <small class="form-hint">Phone must be 10-11 digits starting with 0</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-check form-switch">
+                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
+                        <span class="form-check-label">Active</span>
+                    </label>
+                    <small class="form-hint">Inactive users cannot login</small>
+                </div>
+            </div>
+
+            <div class="card-footer text-end">
+                <div class="d-flex">
+                    <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
+                    <button type="submit" class="btn btn-primary ms-auto">Update User</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

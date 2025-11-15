@@ -7,6 +7,7 @@ using ShoeStore.Models;
 using ShoeStore.Models.DTOs;
 using System.Data.Entity;
 using BCrypt.Net;
+using ShoeStore.Services;
 
 namespace ShoeStore.Controllers
 {
@@ -474,6 +475,237 @@ namespace ShoeStore.Controllers
                 }
 
                 return Json(new { Status = false, Message = "An error occurred: " + innerException.Message });
+            }
+        }
+
+        // GET: Account/ForgotPassword
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        // POST: Account/ForgotPassword
+        [HttpPost]
+        [ActionName("ForgotPassword")]
+        public JsonResult ForgotPasswordPost(ForgotPasswordRequest model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                                  .Select(e => e.ErrorMessage)
+                                                  .ToList();
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = string.Join(", ", errors)
+                    });
+                }
+
+                var user = db.Users.FirstOrDefault(u => u.Email == model.Email);
+                if (user == null)
+                {
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = "Email not found."
+                    });
+                }
+
+                if (!user.IsActive)
+                {
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = "This account is inactive. Please contact support."
+                    });
+                }
+
+                string verificationCode = EmailService.GenerateVerificationCode();
+
+                var resetToken = new PasswordResetToken
+                {
+                    Email = model.Email,
+                    Code = verificationCode,
+                    CreatedAt = DateTime.Now,
+                    ExpiresAt = DateTime.Now.AddMinutes(15),
+                    IsUsed = false
+                };
+
+                db.PasswordResetTokens.Add(resetToken);
+                db.SaveChanges();
+
+                var emailService = new EmailService();
+                bool emailSent = emailService.SendPasswordResetCode(model.Email, verificationCode, user.FullName);
+
+                if (!emailSent)
+                {
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = "Failed to send email. Please try again later."
+                    });
+                }
+
+                return Json(new ForgotPasswordResponse
+                {
+                    Status = true,
+                    Message = "Verification code sent to your email. Please check your inbox."
+                });
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+
+                return Json(new ForgotPasswordResponse
+                {
+                    Status = false,
+                    Message = "An error occurred: " + innerException.Message
+                });
+            }
+        }
+
+        // POST: Account/VerifyResetCode
+        [HttpPost]
+        public JsonResult VerifyResetCode(VerifyResetCodeRequest model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                                  .Select(e => e.ErrorMessage)
+                                                  .ToList();
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = string.Join(", ", errors)
+                    });
+                }
+
+                // Find valid token
+                var token = db.PasswordResetTokens
+                    .Where(t => t.Email == model.Email
+                             && t.Code == model.Code
+                             && !t.IsUsed
+                             && t.ExpiresAt > DateTime.Now)
+                    .OrderByDescending(t => t.CreatedAt)
+                    .FirstOrDefault();
+
+                if (token == null)
+                {
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = "Invalid or expired verification code."
+                    });
+                }
+
+                return Json(new ForgotPasswordResponse
+                {
+                    Status = true,
+                    Message = "Code verified successfully. You can now reset your password."
+                });
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+
+                return Json(new ForgotPasswordResponse
+                {
+                    Status = false,
+                    Message = "An error occurred: " + innerException.Message
+                });
+            }
+        }
+
+        // POST: Account/ResetPassword
+        [HttpPost]
+        public JsonResult ResetPassword(ResetPasswordRequest model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                                  .Select(e => e.ErrorMessage)
+                                                  .ToList();
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = string.Join(", ", errors)
+                    });
+                }
+
+                // Find valid token
+                var token = db.PasswordResetTokens
+                    .Where(t => t.Email == model.Email
+                             && t.Code == model.Code
+                             && !t.IsUsed
+                             && t.ExpiresAt > DateTime.Now)
+                    .OrderByDescending(t => t.CreatedAt)
+                    .FirstOrDefault();
+
+                if (token == null)
+                {
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = "Invalid or expired verification code."
+                    });
+                }
+
+                // Get user
+                var user = db.Users.FirstOrDefault(u => u.Email == model.Email);
+                if (user == null)
+                {
+                    return Json(new ForgotPasswordResponse
+                    {
+                        Status = false,
+                        Message = "User not found."
+                    });
+                }
+
+                // Hash new password using BCrypt (same as registration)
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+
+                // Update user password
+                user.PasswordHash = hashedPassword;
+
+                // Mark token as used
+                token.IsUsed = true;
+                token.UsedAt = DateTime.Now;
+
+                db.SaveChanges();
+
+                return Json(new ForgotPasswordResponse
+                {
+                    Status = true,
+                    Message = "Password reset successfully. You can now login with your new password."
+                });
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+
+                return Json(new ForgotPasswordResponse
+                {
+                    Status = false,
+                    Message = "An error occurred: " + innerException.Message
+                });
             }
         }
 

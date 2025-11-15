@@ -9,7 +9,7 @@ using System.Data.Entity;
 
 namespace ShoeStore.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductsController : BaseUserController
     {
         private ShoeStoreDBContext db = new ShoeStoreDBContext();
 

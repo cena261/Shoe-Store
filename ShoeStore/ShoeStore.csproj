@@ -156,7 +156,21 @@
     <Compile Include="App_Start\WebApiSessionModule.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\ProductColorGroupDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\ProductFormDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\ProductImageDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\ProductListItemDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\ProductResponseDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\ProductVariantDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\UserDetailDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\UserEditDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\UserListItemDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\UserResponseDTO.cs" />
+    <Compile Include="Areas\Admin\Models\DTOs\UserRoleDTO.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -219,6 +233,10 @@
     <Compile Include="Migrations\202511121422252_ValidBackToNormal.Designer.cs">
       <DependentUpon>202511121422252_ValidBackToNormal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202511140850172_AddPasswordResetToken.cs" />
+    <Compile Include="Migrations\202511140850172_AddPasswordResetToken.Designer.cs">
+      <DependentUpon>202511140850172_AddPasswordResetToken.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -227,6 +245,8 @@
     <Compile Include="Models\DTOs\AddressRequest.cs" />
     <Compile Include="Models\DTOs\CartDTO.cs" />
     <Compile Include="Models\DTOs\ChangePasswordRequest.cs" />
+    <Compile Include="Models\DTOs\ForgotPasswordRequest.cs" />
+    <Compile Include="Models\DTOs\ForgotPasswordResponse.cs" />
     <Compile Include="Models\DTOs\LoginRequest.cs" />
     <Compile Include="Models\DTOs\LoginResponse.cs" />
     <Compile Include="Models\DTOs\ProductDetailDTO.cs" />
@@ -234,8 +254,11 @@
     <Compile Include="Models\DTOs\ProductListResponse.cs" />
     <Compile Include="Models\DTOs\RegisterRequest.cs" />
     <Compile Include="Models\DTOs\RegisterResponse.cs" />
+    <Compile Include="Models\DTOs\ResetPasswordRequest.cs" />
+    <Compile Include="Models\DTOs\VerifyResetCodeRequest.cs" />
     <Compile Include="Models\OrderItems.cs" />
     <Compile Include="Models\Orders.cs" />
+    <Compile Include="Models\PasswordResetToken.cs" />
     <Compile Include="Models\ProductImages.cs" />
     <Compile Include="Models\Products.cs" />
     <Compile Include="Models\ProductVariants.cs" />
@@ -245,6 +268,7 @@
     <Compile Include="Models\UserRoles.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\EmailService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -253,13 +277,19 @@
     <Content Include="Areas\Admin\Views\Shared\_Navbar.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Footer.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\Dashboard.cshtml" />
+    <Content Include="Areas\Admin\Views\Product\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Product\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Product\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\User\ManageRoles.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Shared\_LayoutPage.cshtml" />
     <Content Include="Views\Shared\_Cart.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_MobileMenu.cshtml" />
-    <Content Include="Content\images\DHL.webp" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\Products\Details.cshtml" />
@@ -268,6 +298,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Dashboard.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -321,6 +352,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202511121422252_ValidBackToNormal.resx">
       <DependentUpon>202511121422252_ValidBackToNormal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202511140850172_AddPasswordResetToken.resx">
+      <DependentUpon>202511140850172_AddPasswordResetToken.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
