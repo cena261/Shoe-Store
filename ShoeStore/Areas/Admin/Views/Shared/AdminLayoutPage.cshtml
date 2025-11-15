@@ -17,17 +17,17 @@
         @Html.Partial("_Navbar")
 
         <!-- Page wrapper -->
-        <div class="page-wrapper">
+        <div class="page-wrapper" style="color: white;">
             @if (ViewData["PageTitle"] != null)
             {
                 <div class="page-header d-print-none">
                     <div class="container-xl">
                         <div class="row g-2 align-items-center">
                             <div class="col">
-                                <h2 class="page-title">@ViewData["PageTitle"]</h2>
+                                <h2 class="page-title" style="color: white;">@ViewData["PageTitle"]</h2>
                                 @if (ViewData["PageSubtitle"] != null)
                                 {
-                                    <div class="text-secondary mt-1">@ViewData["PageSubtitle"]</div>
+                                    <div class="text-secondary mt-1" style="color: rgba(255,255,255,0.7) !important;">@ViewData["PageSubtitle"]</div>
                                 }
                             </div>
                         </div>
