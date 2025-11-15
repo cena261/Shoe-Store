@@ -7,7 +7,8 @@
     <title>@ViewData["Title"] - Your App Name</title>
 
     <link rel="stylesheet" href="~/Areas/Admin/Content/css/tabler.min.css">
-
+    <link rel="stylesheet" href="~/Content/bootstrap.css">
+    <link rel="stylesheet" href="~/Content/css/toast.css">
     @RenderSection("Styles", required: false)
 </head>
 <body>
@@ -46,7 +47,47 @@
         </div>
     </div>
 
+    <div class="modal modal-blur fade" id="confirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-title mb-3" id="confirmModalTitle">Confirm Action</div>
+                    <div id="confirmModalMessage">Are you sure?</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmModalButton">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="~/Areas/Admin/Script/tabler.js"></script>
+    <script src="~/Script/toast.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+
+    <script>
+        let confirmCallback = null;
+
+        function showConfirm(message, title = 'Confirm Action', callback) {
+            document.getElementById('confirmModalTitle').textContent = title;
+            document.getElementById('confirmModalMessage').textContent = message;
+            confirmCallback = callback;
+
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+        }
+
+        document.getElementById('confirmModalButton').addEventListener('click', function() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
+            modal.hide();
+
+            if (confirmCallback) {
+                confirmCallback();
+                confirmCallback = null;
+            }
+        });
+    </script>
 
     @RenderSection("Scripts", required: false)
 </body>

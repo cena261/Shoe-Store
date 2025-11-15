@@ -16,7 +16,6 @@ namespace ShoeStore.Services
 
         public EmailService()
         {
-            // Read SMTP settings from Web.config
             _smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
             _smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"] ?? "587");
             _smtpUsername = ConfigurationManager.AppSettings["SmtpUsername"];
@@ -36,7 +35,6 @@ namespace ShoeStore.Services
                     message.Subject = "Password Reset Verification Code - ShoeStore";
                     message.IsBodyHtml = true;
 
-                    // HTML email body
                     message.Body = $@"
                         <!DOCTYPE html>
                         <html>
@@ -84,7 +82,7 @@ namespace ShoeStore.Services
                     {
                         smtpClient.EnableSsl = true;
                         smtpClient.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
-                        smtpClient.Timeout = 10000; // 10 seconds
+                        smtpClient.Timeout = 10000; 
 
                         smtpClient.Send(message);
                     }
@@ -94,7 +92,6 @@ namespace ShoeStore.Services
             }
             catch (Exception ex)
             {
-                // Log the error (you can add logging here)
                 System.Diagnostics.Debug.WriteLine($"Email send error: {ex.Message}");
                 return false;
             }
@@ -103,7 +100,7 @@ namespace ShoeStore.Services
         public static string GenerateVerificationCode()
         {
             Random random = new Random();
-            return random.Next(100000, 999999).ToString(); // 6-digit code
+            return random.Next(100000, 999999).ToString(); 
         }
     }
 }

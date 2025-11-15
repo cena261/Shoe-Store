@@ -67,67 +67,59 @@
 @section Scripts {
     <script>
     function assignRole(userId, roleId, roleName) {
-        if (!confirm('Assign role "' + roleName + '" to this user?')) {
-            return;
-        }
-
-        fetch('@Url.Action("AssignRole")', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userId: userId, roleId: roleId })
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.Status) {
-                showMessage(result.Message, 'success');
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                showMessage(result.Message, 'danger');
+        showConfirm(
+            'Assign role "' + roleName + '" to this user?',
+            'Assign Role',
+            function() {
+                fetch('@Url.Action("AssignRole")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: userId, roleId: roleId })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.Status) {
+                        toast.success(result.Message);
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        toast.error(result.Message);
+                    }
+                })
+                .catch(error => {
+                    toast.error('Error assigning role');
+                });
             }
-        })
-        .catch(error => {
-            showMessage('Error assigning role', 'danger');
-        });
+        );
     }
 
     function removeRole(userId, roleId, roleName) {
-        if (!confirm('Remove role "' + roleName + '" from this user?')) {
-            return;
-        }
-
-        fetch('@Url.Action("RemoveRole")', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userId: userId, roleId: roleId })
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.Status) {
-                showMessage(result.Message, 'success');
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                showMessage(result.Message, 'danger');
+        showConfirm(
+            'Remove role "' + roleName + '" from this user?',
+            'Remove Role',
+            function() {
+                fetch('@Url.Action("RemoveRole")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: userId, roleId: roleId })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.Status) {
+                        toast.success(result.Message);
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        toast.error(result.Message);
+                    }
+                })
+                .catch(error => {
+                    toast.error('Error removing role');
+                });
             }
-        })
-        .catch(error => {
-            showMessage('Error removing role', 'danger');
-        });
-    }
-
-    function showMessage(message, type) {
-        const container = document.getElementById('message-container');
-        container.innerHTML = `
-            <div class="alert alert-${type} alert-dismissible" role="alert">
-                <div class="d-flex">
-                    <div>${message}</div>
-                </div>
-                <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
-            </div>
-        `;
+        );
     }
     </script>
 }

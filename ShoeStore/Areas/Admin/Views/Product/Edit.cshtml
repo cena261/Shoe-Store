@@ -256,9 +256,14 @@
     }
 
     function removeVariant(button) {
-        if (confirm('Are you sure you want to remove this variant?')) {
-            button.closest('tr').remove();
-        }
+        showConfirm(
+            'Remove this variant?',
+            'Remove Variant',
+            function() {
+                button.closest('tr').remove();
+                toast.success('Variant removed');
+            }
+        );
     }
     </script>
 }

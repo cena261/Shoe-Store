@@ -180,28 +180,31 @@
 @section Scripts {
     <script>
     function deleteProduct(productId, productName) {
-        if (!confirm('Are you sure you want to delete "' + productName + '"? This will also delete all variants and images.')) {
-            return;
-        }
-
-        fetch('@Url.Action("Delete")', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: productId })
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.Status) {
-                window.location.reload();
-            } else {
-                alert('Error: ' + result.Message);
+        showConfirm(
+            'Delete "' + productName + '"? This will also delete all variants and images.',
+            'Delete Product',
+            function() {
+                fetch('@Url.Action("Delete")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: productId })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.Status) {
+                        toast.success('Product deleted successfully');
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        toast.error(result.Message);
+                    }
+                })
+                .catch(error => {
+                    toast.error('Error deleting product');
+                });
             }
-        })
-        .catch(error => {
-            alert('Error deleting product');
-        });
+        );
     }
     </script>
 }

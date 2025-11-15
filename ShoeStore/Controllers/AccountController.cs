@@ -709,6 +709,32 @@ namespace ShoeStore.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult Logout()
+        {
+            try
+            {
+                Session.Clear();
+                Session.Abandon();
+
+                if (Response.Cookies["AuthToken"] != null)
+                {
+                    Response.Cookies["AuthToken"].Expires = DateTime.Now.AddDays(-1);
+                }
+
+                if (Response.Cookies["UserInfo"] != null)
+                {
+                    Response.Cookies["UserInfo"].Expires = DateTime.Now.AddDays(-1);
+                }
+
+                return Json(new { Status = true, Message = "Logged out successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = false, Message = "Logout error: " + ex.Message });
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
