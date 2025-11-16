@@ -45,7 +45,7 @@
 <div class="flex flex-col items-center justify-center" style="min-height: 80vh;">
     <div class="-mt-24 w-full p-4 sm:mt-0 sm:p-7 2xl:-mt-36" id="login-content">
         <h1 class="text-center text-4xl font-semibold leading-tight xl:text-6xl">
-            Đăng nhập để tận hưởng nhiều ưu đãi hấp dẫn.
+            Đăng nhập để nhận nhiều ưu đãi hấp dẫn.
         </h1>
 
         <div class="w-full text-center">
@@ -181,7 +181,7 @@
           await cart.migrateGuestCart();
 
           if (result.User.Roles && result.User.Roles.includes('Admin')) {
-            window.location.href = '/Admin/Admin/Dashboard';
+            window.location.href = '/Admin/Product/Index';
           } else {
             window.location.href = '/Home/Index';
           }

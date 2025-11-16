@@ -536,7 +536,9 @@
                 }, 2000);
             }
         } catch (error) {
-            console.error('Error loading product:', error);
+            if (typeof logger !== 'undefined') {
+                logger.error('Error loading product', { error: error.message });
+            }
             toast.error('Error loading product details');
         }
     }
@@ -648,7 +650,9 @@
                 document.title = `${result.Product.ProductName} - ${result.Product.SelectedColorName}`;
             }
         } catch (error) {
-            console.error('Error changing color:', error);
+            if (typeof logger !== 'undefined') {
+                logger.error('Error changing color', { error: error.message });
+            }
         }
     }
 

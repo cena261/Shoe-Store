@@ -57,7 +57,9 @@ class Cart {
       const result = await response.json();
       return result.Status === true;
     } catch (error) {
-      console.error('Session validation failed:', error);
+      if (typeof logger !== 'undefined') {
+        logger.error('Session validation failed', { error: error.message });
+      }
       return false;
     }
   }
@@ -97,7 +99,9 @@ class Cart {
         }));
       }
     } catch (error) {
-      console.error('Failed to load cart from server:', error);
+      if (typeof logger !== 'undefined') {
+        logger.error('Failed to load cart from server', { error: error.message });
+      }
       this.loadFromLocalStorage();
     }
   }
@@ -136,12 +140,16 @@ class Cart {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Sync failed:', response.status, errorText);
+        if (typeof logger !== 'undefined') {
+          logger.error('Sync failed', { status: response.status, error: errorText });
+        }
       }
 
       this.syncInProgress = false;
     } catch (error) {
-      console.error('Failed to sync cart to server:', error);
+      if (typeof logger !== 'undefined') {
+        logger.error('Failed to sync cart to server', { error: error.message });
+      }
       this.syncInProgress = false;
     }
   }
@@ -184,7 +192,9 @@ class Cart {
         }
       }
     } catch (error) {
-      console.error('Failed to migrate guest cart:', error);
+      if (typeof logger !== 'undefined') {
+        logger.error('Failed to migrate guest cart', { error: error.message });
+      }
     }
   }
 
@@ -327,159 +337,15 @@ class Cart {
 
     cartTotal.textContent = formatCurrency(this.getTotal());
   }
-
-  showNotification(message) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #10b981;
-      color: white;
-      padding: 1rem 1.5rem;
-      border-radius: 0.5rem;
-      z-index: 9999;
-      animation: slideIn 0.3s ease;
-    `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-      notification.style.animation = 'slideOut 0.3s ease';
-      setTimeout(() => notification.remove(), 300);
-    }, 2000);
-  }
 }
 
 const cart = new Cart();
-
-class FilterManager {
-  constructor() {
-    this.filters = {
-      gender: { men: false, women: false, unisex: false },
-      kids: false,
-      colors: [],
-      priceRange: { min: 0, max: 1000 },
-      sortBy: 'newest'
-    };
-  }
-
-  applyFilters(products) {
-    let filtered = [...products];
-
-    const activeGenders = Object.keys(this.filters.gender).filter(
-      key => this.filters.gender[key]
-    );
-    if (activeGenders.length > 0) {
-      filtered = filtered.filter(p => activeGenders.includes(p.gender));
-    }
-
-    if (this.filters.kids) {
-      filtered = filtered.filter(p => p.category === 'kids');
-    }
-
-    if (this.filters.colors.length > 0) {
-      filtered = filtered.filter(p =>
-        p.colors.some(color => this.filters.colors.includes(color))
-      );
-    }
-
-    filtered = filtered.filter(p => {
-      const price = p.promotionPrice || p.price;
-      return price >= this.filters.priceRange.min && price <= this.filters.priceRange.max;
-    });
-
-    filtered = this.sortProducts(filtered);
-
-    return filtered;
-  }
-
-  sortProducts(products) {
-    const sorted = [...products];
-    switch (this.filters.sortBy) {
-      case 'price-low':
-        return sorted.sort((a, b) => (a.promotionPrice || a.price) - (b.promotionPrice || b.price));
-      case 'price-high':
-        return sorted.sort((a, b) => (b.promotionPrice || b.price) - (a.promotionPrice || a.price));
-      case 'name':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      default:
-        return sorted;
-    }
-  }
-
-  toggleGender(gender) {
-    this.filters.gender[gender] = !this.filters.gender[gender];
-  }
-
-  toggleColor(color) {
-    const index = this.filters.colors.indexOf(color);
-    if (index > -1) {
-      this.filters.colors.splice(index, 1);
-    } else {
-      this.filters.colors.push(color);
-    }
-  }
-
-  setKidsFilter(value) {
-    this.filters.kids = value;
-  }
-
-  setSortBy(sortBy) {
-    this.filters.sortBy = sortBy;
-  }
-
-  reset() {
-    this.filters = {
-      gender: { men: false, women: false, unisex: false },
-      kids: false,
-      colors: [],
-      priceRange: { min: 0, max: 1000 },
-      sortBy: 'newest'
-    };
-  }
-}
 
 function toggleMobileMenu() {
   const menu = document.getElementById('mobile-menu');
   if (menu) {
     menu.classList.toggle('open');
     document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
-  }
-}
-
-class ProductGallery {
-  constructor(images) {
-    this.images = images;
-    this.currentIndex = 0;
-  }
-
-  next() {
-    this.currentIndex = (this.currentIndex + 1) % this.images.length;
-    this.updateGallery();
-  }
-
-  prev() {
-    this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
-    this.updateGallery();
-  }
-
-  goTo(index) {
-    this.currentIndex = index;
-    this.updateGallery();
-  }
-
-  updateGallery() {
-    const galleryImages = document.querySelectorAll('.product-gallery-image');
-    const thumbnails = document.querySelectorAll('.product-gallery-thumbnail');
-
-    galleryImages.forEach((img, i) => {
-      img.classList.toggle('active', i === this.currentIndex);
-    });
-
-    thumbnails.forEach((thumb, i) => {
-      thumb.classList.toggle('active', i === this.currentIndex);
-    });
   }
 }
 
@@ -515,52 +381,6 @@ function validateForm(formId) {
   return isValid;
 }
 
-function smoothScroll(target) {
-  const element = document.querySelector(target);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-async function loadProducts() {
-  try {
-    const response = await fetch('data/products.json');
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error loading products:', error);
-    return { products: [], collections: [] };
-  }
-}
-
-function renderProducts(products, containerId) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-
-  container.innerHTML = products.map(product => `
-    <a href="product-details.html?id=${product.id}" class="product-card">
-      <div class="product-image-container">
-        <img src="${product.images[0]}" alt="${product.name}" class="product-image">
-      </div>
-      <div class="product-info">
-        <div class="product-info-left">
-          <h4>${product.name}</h4>
-          <h5>${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</h5>
-        </div>
-        <div class="product-info-right">
-          <h4>€${product.promotionPrice || product.price}</h4>
-          ${product.promotionPrice ? `<h5>€${product.price}</h5>` : ''}
-        </div>
-      </div>
-    </a>
-  `).join('');
-}
-
-function getUrlParameter(name) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(name);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
   cart.updateUI();
 
@@ -578,29 +398,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideIn {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideOut {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-  }
-`;
-document.head.appendChild(style);

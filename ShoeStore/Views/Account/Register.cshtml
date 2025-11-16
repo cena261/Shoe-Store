@@ -19,6 +19,48 @@
         transform: translateY(0);
       }
     }
+    .success-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+    .success-modal-overlay.active {
+        display: flex;
+    }
+    .success-modal-content {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 0.5rem;
+        max-width: 400px;
+        margin: 2rem;
+        text-align: center;
+        color: black;
+    }
+    .success-modal-icon {
+        font-size: 3rem;
+        color: #10b981;
+        margin-bottom: 1rem;
+    }
+    .success-modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .success-modal-text {
+        margin-bottom: 1.5rem;
+        color: #6b7280;
+    }
+    .success-modal-button {
+        width: 100%;
+        padding: 0.75rem;
+    }
 
     #register-content {
       animation-name: slideDown;
@@ -128,7 +170,7 @@
                         <div class="relative w-full">
                             <input type="password"
                                    class="input w-full border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
-                                   placeholder="Enter your password..."
+                                   placeholder="Mật khẩu đăng nhập với ít nhất 6 ký tự..."
                                    id="password"
                                    name="password"
                                    value="" />
@@ -196,17 +238,14 @@
     </div>
 </div>
 
-<!-- Success Modal -->
-<div id="success-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
-    <div style="background: white; padding: 2.5rem; border-radius: 0.5rem; max-width: 400px; margin: 2rem; text-align: center; color: black;">
-        <div style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;">✓</div>
-        <h1 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
-            Đăng ký thành công!
-        </h1>
-        <p style="margin-bottom: 1.5rem; color: #6b7280;">
-            Mã xác thực đã được gửi tới địa chỉ <strong id="email-sent"></strong>
+<div id="success-modal" class="success-modal-overlay">
+    <div class="success-modal-content">
+        <div class="success-modal-icon">✓</div>
+        <h1 class="success-modal-title">Đăng ký thành công!</h1>
+        <p class="success-modal-text">
+            Chào mừng đến với ShoeStore
         </p>
-        <button class="btn" onclick="goToLogin()" style="width: 100%; padding: 0.75rem;">
+        <button class="btn success-modal-button" onclick="goToLogin()">
             Tới trang đăng nhập
         </button>
     </div>
@@ -296,17 +335,27 @@
             loggedIn: true
           }));
 
-          await cart.migrateGuestCart();
+          if (typeof cart !== 'undefined' && cart.migrateGuestCart) {
+            try {
+              await cart.migrateGuestCart();
+            } catch (cartError) {
+              if (typeof logger !== 'undefined') {
+                logger.error('Cart migration failed during registration', { error: cartError.message });
+              }
+            }
+          }
 
-          document.getElementById('email-sent').textContent = email;
           const modal = document.getElementById('success-modal');
-          modal.style.display = 'flex';
+          modal.classList.add('active');
         } else {
           toast.error('Đăng ký thất bại: ' + result.Message);
           submitBtn.disabled = false;
           submitBtn.textContent = 'Register';
         }
       } catch (error) {
+        if (typeof logger !== 'undefined') {
+          logger.error('Registration error', { error: error.message });
+        }
         toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Register';

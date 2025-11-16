@@ -15,10 +15,10 @@
     <add key="UnobtrusiveJavaScriptEnabled" value="true" />
     <add key="SmtpHost" value="smtp.gmail.com" />
     <add key="SmtpPort" value="587" />
-    <add key="SmtpUsername" value="khanhtu261@gmail.com" />
-    <add key="SmtpPassword" value="xbgq sxgh bxmp siik" />
-    <add key="SmtpFromEmail" value="khanhtu261@gmail.com" />
-    <add key="SmtpFromName" value="ShoeStore" />
+    <add key="SmtpUsername" value="youremail@gmail.com" />
+    <add key="SmtpPassword" value="your_16_keycode" />
+    <add key="SmtpFromEmail" value="youremail@gmail.com" />
+    <add key="SmtpFromName" value="yourname" />
   </appSettings>
   <system.web>
     <compilation debug="true" targetFramework="4.7.2" />
@@ -99,7 +99,7 @@
     </compilers>
   </system.codedom>
   <connectionStrings>
-	  <add name="MyConnectionString" connectionString="Server=localhost,1433;Database=NikeShopDB;User Id=sa;Password=P@ssw0rd123!;MultipleActiveResultSets=True;" providerName="System.Data.SqlClient" />
+	  <add name="MyConnectionString" connectionString="Server=localhost,yourPort;Database=yourDBname;User Id=yourUser;Password=yourPassword;MultipleActiveResultSets=True;" providerName="System.Data.SqlClient" />
   </connectionStrings>
   <entityFramework>
     <providers>

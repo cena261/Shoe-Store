@@ -178,7 +178,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Error updating user: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine($"Update user error: {ex}");
+
+                ModelState.AddModelError("", "An error occurred while updating user. Please try again.");
                 return View(model);
             }
         }
@@ -207,7 +209,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new UserResponseDTO { Status = false, Message = "Error deleting user: " + ex.Message });
+                System.Diagnostics.Debug.WriteLine($"Delete user error: {ex}");
+
+                return Json(new UserResponseDTO { Status = false, Message = "An error occurred while deactivating user. Please try again." });
             }
         }
 
@@ -269,7 +273,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new UserResponseDTO { Status = false, Message = "Error assigning role: " + ex.Message });
+                System.Diagnostics.Debug.WriteLine($"Assign role error: {ex}");
+
+                return Json(new UserResponseDTO { Status = false, Message = "An error occurred while assigning role. Please try again." });
             }
         }
 
@@ -301,7 +307,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new UserResponseDTO { Status = false, Message = "Error removing role: " + ex.Message });
+                System.Diagnostics.Debug.WriteLine($"Remove role error: {ex}");
+
+                return Json(new UserResponseDTO { Status = false, Message = "An error occurred while removing role. Please try again." });
             }
         }
 
@@ -329,7 +337,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new UserResponseDTO { Status = false, Message = "Error: " + ex.Message }, JsonRequestBehavior.AllowGet);
+                System.Diagnostics.Debug.WriteLine($"Get user roles error: {ex}");
+
+                return Json(new UserResponseDTO { Status = false, Message = "An error occurred while retrieving user roles. Please try again." }, JsonRequestBehavior.AllowGet);
             }
         }
 

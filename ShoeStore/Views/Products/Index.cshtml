@@ -643,7 +643,9 @@
                 productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #6b7280;">Không tìm thấy sản phẩm nào.</p>';
             }
         } catch (error) {
-            console.error('Error loading products:', error);
+            if (typeof logger !== 'undefined') {
+                logger.error('Error loading products', { error: error.message });
+            }
             productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #ef4444;">Lỗi khi tải danh sách sản phẩm.</p>';
         }
     }

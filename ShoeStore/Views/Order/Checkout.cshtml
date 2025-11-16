@@ -192,7 +192,9 @@
           }
         }
       } catch (error) {
-        console.error('Failed to load addresses:', error);
+        if (typeof logger !== 'undefined') {
+          logger.error('Failed to load addresses', { error: error.message });
+        }
       }
     }
 
@@ -361,7 +363,9 @@
           closeModal();
         }
       } catch (error) {
-        console.error('Order creation failed:', error);
+        if (typeof logger !== 'undefined') {
+          logger.error('Order creation failed', { error: error.message });
+        }
         toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
         btn.disabled = false;
         btn.textContent = originalText;

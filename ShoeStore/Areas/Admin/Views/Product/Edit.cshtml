@@ -204,11 +204,91 @@
     let variantCounter = @Model.ColorGroups.Sum(cg => cg.Variants.Count);
 
     function addSizeToColor(styleColor, colorName, colorIndex) {
-        const size = prompt('Enter size (e.g., 40, 41, 42):');
-        if (!size) return;
+        showAddVariantModal(styleColor, colorName, colorIndex);
+    }
 
-        const sku = prompt('Enter SKU for this variant:');
-        if (!sku) return;
+    function showAddVariantModal(styleColor, colorName, colorIndex) {
+        const modalHtml = `
+            <div class="modal fade" id="addVariantModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Size Variant</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label required">Size</label>
+                                <input type="text" class="form-control" id="variantSize" placeholder="e.g., 40, 41, 42" />
+                                <div class="invalid-feedback" id="sizeError"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required">SKU</label>
+                                <input type="text" class="form-control" id="variantSku" placeholder="Enter unique SKU" />
+                                <div class="invalid-feedback" id="skuError"></div>
+                            </div>
+                            <div class="alert alert-info mb-0">
+                                <strong>Color:</strong> ${colorName} (${styleColor})
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="confirmAddVariant">Add Variant</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const existingModal = document.getElementById('addVariantModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        const modal = new bootstrap.Modal(document.getElementById('addVariantModal'));
+        modal.show();
+
+        document.getElementById('confirmAddVariant').addEventListener('click', function() {
+            const size = document.getElementById('variantSize').value.trim();
+            const sku = document.getElementById('variantSku').value.trim();
+
+            let isValid = true;
+
+            if (!size) {
+                document.getElementById('variantSize').classList.add('is-invalid');
+                document.getElementById('sizeError').textContent = 'Size is required';
+                isValid = false;
+            } else {
+                document.getElementById('variantSize').classList.remove('is-invalid');
+            }
+
+            if (!sku) {
+                document.getElementById('variantSku').classList.add('is-invalid');
+                document.getElementById('skuError').textContent = 'SKU is required';
+                isValid = false;
+            } else {
+                document.getElementById('variantSku').classList.remove('is-invalid');
+            }
+
+            if (!isValid) return;
+
+            addVariantRow(size, sku, styleColor, colorName, colorIndex);
+
+            modal.hide();
+            toast.success('Variant added successfully');
+        });
+
+        document.getElementById('variantSize').addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+        });
+        document.getElementById('variantSku').addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+        });
+    }
+
+    function addVariantRow(size, sku, styleColor, colorName, colorIndex) {
 
         const tbody = document.querySelectorAll('.table tbody')[colorIndex];
         const newRow = document.createElement('tr');

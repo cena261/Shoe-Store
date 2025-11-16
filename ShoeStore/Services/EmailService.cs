@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Mail;
 using System.Configuration;
@@ -32,7 +32,7 @@ namespace ShoeStore.Services
                 {
                     message.From = new MailAddress(_fromEmail, _fromName);
                     message.To.Add(new MailAddress(toEmail));
-                    message.Subject = "Password Reset Verification Code - ShoeStore";
+                    message.Subject = "Mã xác thực để lấy lại mật khẩu - ShoeStore";
                     message.IsBodyHtml = true;
 
                     message.Body = $@"
@@ -59,20 +59,20 @@ namespace ShoeStore.Services
                                 <div class='content'>
                                     <h2>Password Reset Request</h2>
                                     <p>Hi {userName},</p>
-                                    <p>We received a request to reset your password. Use the verification code below to complete the process:</p>
+                                    <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu của bạn. Sử dụng mã bên dưới để xác thực:</p>
 
                                     <div class='code'>{code}</div>
 
-                                    <p>This code will expire in <strong>15 minutes</strong>.</p>
+                                    <p>Mã sẽ hết hạn trong <strong>15 phút</strong>.</p>
 
                                     <div class='warning'>
-                                        <strong>Did not request this?</strong><br>
-                                        If you did not request a password reset, please ignore this email. Your password will remain unchanged.
+                                        <strong>Bạn không yêu cầu?</strong><br>
+                                        Nếu bạn không yêu cầu đặt lại mật khẩu. Hãy bỏ qua email này. Mật khẩu của bạn sẽ không bị thay đổi.
                                     </div>
                                 </div>
                                 <div class='footer'>
                                     <p>&copy; {DateTime.Now.Year} ShoeStore. All rights reserved.</p>
-                                    <p>This is an automated email. Please do not reply.</p>
+                                    <p>Đây là tin nhắn tự động. Vui lòng không phản hồi lại.</p>
                                 </div>
                             </div>
                         </body>

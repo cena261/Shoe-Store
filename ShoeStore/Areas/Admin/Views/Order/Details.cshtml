@@ -197,7 +197,7 @@
         })
         .then(response => response.json())
         .then(result => {
-            if (result.Success) {
+            if (result.Status) {
                 toast.success(result.Message);
                 setTimeout(() => window.location.reload(), 1000);
             } else {
@@ -206,7 +206,9 @@
         })
         .catch(error => {
             toast.error('Error updating order status');
-            console.error(error);
+            if (typeof logger !== 'undefined') {
+                logger.error('Error updating order status', { error: error.message });
+            }
         });
     }
     </script>

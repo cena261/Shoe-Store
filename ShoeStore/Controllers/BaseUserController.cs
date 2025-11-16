@@ -12,7 +12,7 @@ namespace ShoeStore.Controllers
                 var userRoles = Session["UserRoles"] as string[];
                 if (userRoles != null && userRoles.Contains("Admin"))
                 {
-                    filterContext.Result = new RedirectResult("/Admin/Admin/Dashboard");
+                    filterContext.Result = new RedirectResult("/Admin/Product/Index");
                     return;
                 }
             }

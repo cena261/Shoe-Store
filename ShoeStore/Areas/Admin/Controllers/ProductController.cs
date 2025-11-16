@@ -165,7 +165,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Error creating product: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine($"Create product error: {ex}");
+
+                ModelState.AddModelError("", "An error occurred while creating product. Please try again.");
                 ViewBag.Categories = db.Categories.OrderBy(c => c.CategoryName).ToList();
                 return View(model);
             }
@@ -345,7 +347,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Error updating product: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine($"Update product error: {ex}");
+
+                ModelState.AddModelError("", "An error occurred while updating product. Please try again.");
                 ViewBag.Categories = db.Categories.OrderBy(c => c.CategoryName).ToList();
                 return View(model);
             }
@@ -373,7 +377,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new ProductResponseDTO { Status = false, Message = "Error deleting product: " + ex.Message });
+                System.Diagnostics.Debug.WriteLine($"Delete product error: {ex}");
+
+                return Json(new ProductResponseDTO { Status = false, Message = "An error occurred while deleting product. Please try again." });
             }
         }
 
@@ -395,7 +401,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new ProductResponseDTO { Status = false, Message = "Error deleting variant: " + ex.Message });
+                System.Diagnostics.Debug.WriteLine($"Delete variant error: {ex}");
+
+                return Json(new ProductResponseDTO { Status = false, Message = "An error occurred while deleting variant. Please try again." });
             }
         }
 
@@ -417,7 +425,9 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new ProductResponseDTO { Status = false, Message = "Error deleting image: " + ex.Message });
+                System.Diagnostics.Debug.WriteLine($"Delete image error: {ex}");
+
+                return Json(new ProductResponseDTO { Status = false, Message = "An error occurred while deleting image. Please try again." });
             }
         }
 

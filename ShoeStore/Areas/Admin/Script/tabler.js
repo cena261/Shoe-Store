@@ -349,8 +349,6 @@
     initKeyboardNavigation();
     initSmoothScroll();
     initResponsiveHandlers();
-
-    console.log('Tabler initialized successfully');
   }
 
   // Initialize when DOM is ready

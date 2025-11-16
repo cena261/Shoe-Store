@@ -164,17 +164,9 @@ namespace ShoeStore.ApiControllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[Order Create] ERROR: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"[Order Create] Stack trace: {ex.StackTrace}");
+                System.Diagnostics.Debug.WriteLine($"[Order Create] ERROR: {ex}");
 
-                var innerEx = ex.InnerException;
-                while (innerEx != null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[Order Create] Inner Exception: {innerEx.Message}");
-                    innerEx = innerEx.InnerException;
-                }
-
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { Status = false, Message = "An error occurred while creating order. Please try again later." });
             }
         }
     }

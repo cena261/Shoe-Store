@@ -268,7 +268,9 @@
           document.getElementById('profile-email').textContent = user.Email || 'guest@example.com';
         }
       } catch (error) {
-        console.error('Error loading user info:', error);
+        if (typeof logger !== 'undefined') {
+          logger.error('Error loading user info', { error: error.message });
+        }
       }
 
       loadAddresses();
@@ -293,7 +295,9 @@
           addressList.innerHTML = '<p class="text-sm text-zinc-500">Chưa có địa chỉ nào</p>';
         }
       } catch (error) {
-        console.error('Error loading addresses:', error);
+        if (typeof logger !== 'undefined') {
+          logger.error('Error loading addresses', { error: error.message });
+        }
         document.getElementById('address-list').innerHTML = '<p class="text-sm text-zinc-500">Chưa có địa chỉ nào</p>';
       }
     }
@@ -332,7 +336,9 @@
           orderList.innerHTML = '<p class="text-sm text-zinc-500">Chưa có đơn hàng nào</p>';
         }
       } catch (error) {
-        console.error('Error loading orders:', error);
+        if (typeof logger !== 'undefined') {
+          logger.error('Error loading orders', { error: error.message });
+        }
         orderList.innerHTML = '<p class="text-sm text-zinc-500">Lỗi khi tải đơn hàng</p>';
       }
     }

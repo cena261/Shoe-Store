@@ -50,27 +50,9 @@ namespace ShoeStore.Controllers
                     });
                 }
 
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
-
-                var newUser = new Users
-                {
-                    Email = model.Email,
-                    PasswordHash = hashedPassword,
-                    FullName = model.FullName,
-                    Phone = model.Phone,
-                    IsActive = true,
-                    createdAt = DateTime.Now
-                };
-
-                db.Users.Add(newUser);
-                db.SaveChanges();
-
                 var userRole = db.Roles.FirstOrDefault(r => r.RoleName == "User");
                 if (userRole == null)
                 {
-                    db.Users.Remove(newUser);
-                    db.SaveChanges();
-
                     return Json(new RegisterResponse
                     {
                         Status = false,
@@ -78,18 +60,46 @@ namespace ShoeStore.Controllers
                     });
                 }
 
-                var userRoleAssignment = new UserRoles
+                Users newUser;
+
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    UserID = newUser.userId,
-                    RoleID = userRole.RoleID,
-                    AssignedAt = DateTime.Now
-                };
+                    try
+                    {
+                        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
-                db.UserRoles.Add(userRoleAssignment);
-                db.SaveChanges();
+                        newUser = new Users
+                        {
+                            Email = model.Email,
+                            PasswordHash = hashedPassword,
+                            FullName = model.FullName,
+                            Phone = model.Phone,
+                            IsActive = true,
+                            createdAt = DateTime.Now,
+                            lastLogin = DateTime.Now
+                        };
 
-                newUser.lastLogin = DateTime.Now;
-                db.SaveChanges();
+                        db.Users.Add(newUser);
+                        db.SaveChanges();
+
+                        var userRoleAssignment = new UserRoles
+                        {
+                            UserID = newUser.userId,
+                            RoleID = userRole.RoleID,
+                            AssignedAt = DateTime.Now
+                        };
+
+                        db.UserRoles.Add(userRoleAssignment);
+                        db.SaveChanges();
+
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
 
                 Session["UserId"] = newUser.userId;
                 Session["UserEmail"] = newUser.Email;
@@ -129,16 +139,12 @@ namespace ShoeStore.Controllers
             }
             catch (Exception ex)
             {
-                var innerException = ex;
-                while (innerException.InnerException != null)
-                {
-                    innerException = innerException.InnerException;
-                }
+                System.Diagnostics.Debug.WriteLine($"Registration error: {ex}");
 
                 return Json(new RegisterResponse
                 {
                     Status = false,
-                    Message = "An error occurred during registration: " + innerException.Message
+                    Message = "An error occurred during registration. Please try again later."
                 });
             }
         }
@@ -243,16 +249,12 @@ namespace ShoeStore.Controllers
             }
             catch (Exception ex)
             {
-                var innerException = ex;
-                while (innerException.InnerException != null)
-                {
-                    innerException = innerException.InnerException;
-                }
+                System.Diagnostics.Debug.WriteLine($"Login error: {ex}");
 
                 return Json(new LoginResponse
                 {
                     Status = false,
-                    Message = "An error occurred during login: " + innerException.Message
+                    Message = "An error occurred during login. Please try again later."
                 });
             }
         }
@@ -354,13 +356,9 @@ namespace ShoeStore.Controllers
             }
             catch (Exception ex)
             {
-                var innerException = ex;
-                while (innerException.InnerException != null)
-                {
-                    innerException = innerException.InnerException;
-                }
+                System.Diagnostics.Debug.WriteLine($"Change password error: {ex}");
 
-                return Json(new { Status = false, Message = "An error occurred: " + innerException.Message });
+                return Json(new { Status = false, Message = "An error occurred while changing password. Please try again later." });
             }
         }
 
@@ -394,13 +392,9 @@ namespace ShoeStore.Controllers
             }
             catch (Exception ex)
             {
-                var innerException = ex;
-                while (innerException.InnerException != null)
-                {
-                    innerException = innerException.InnerException;
-                }
+                System.Diagnostics.Debug.WriteLine($"Get user addresses error: {ex}");
 
-                return Json(new { Status = false, Message = "An error occurred: " + innerException.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { Status = false, Message = "An error occurred while retrieving addresses. Please try again later." }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -468,13 +462,9 @@ namespace ShoeStore.Controllers
             }
             catch (Exception ex)
             {
-                var innerException = ex;
-                while (innerException.InnerException != null)
-                {
-                    innerException = innerException.InnerException;
-                }
+                System.Diagnostics.Debug.WriteLine($"Add address error: {ex}");
 
-                return Json(new { Status = false, Message = "An error occurred: " + innerException.Message });
+                return Json(new { Status = false, Message = "An error occurred while adding address. Please try again later." });
             }
         }
 
@@ -556,16 +546,12 @@ namespace ShoeStore.Controllers
             }
             catch (Exception ex)
             {
-                var innerException = ex;
-                while (innerException.InnerException != null)
-                {
-                    innerException = innerException.InnerException;
-                }
+                System.Diagnostics.Debug.WriteLine($"Forgot password error: {ex}");
 
                 return Json(new ForgotPasswordResponse
                 {
                     Status = false,
-                    Message = "An error occurred: " + innerException.Message
+                    Message = "An error occurred while processing your request. Please try again later."
                 });
             }
         }
@@ -614,16 +600,12 @@ namespace ShoeStore.Controllers
             }
             catch (Exception ex)
             {
-                var innerException = ex;
-                while (innerException.InnerException != null)
-                {
-                    innerException = innerException.InnerException;
-                }
+                System.Diagnostics.Debug.WriteLine($"Verify reset code error: {ex}");
 
                 return Json(new ForgotPasswordResponse
                 {
                     Status = false,
-                    Message = "An error occurred: " + innerException.Message
+                    Message = "An error occurred while verifying code. Please try again later."
                 });
             }
         }
@@ -695,16 +677,12 @@ namespace ShoeStore.Controllers
             }
             catch (Exception ex)
             {
-                var innerException = ex;
-                while (innerException.InnerException != null)
-                {
-                    innerException = innerException.InnerException;
-                }
+                System.Diagnostics.Debug.WriteLine($"Reset password error: {ex}");
 
                 return Json(new ForgotPasswordResponse
                 {
                     Status = false,
-                    Message = "An error occurred: " + innerException.Message
+                    Message = "An error occurred while resetting password. Please try again later."
                 });
             }
         }

@@ -39,3 +39,4 @@ target/
 node_modules/
 .DS_Store
 
+ShoeStore/Web.config

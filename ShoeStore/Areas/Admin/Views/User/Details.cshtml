@@ -101,7 +101,6 @@
                             <th>Items</th>
                             <th>Total</th>
                             <th>Status</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,16 +116,13 @@
                                     <td>
                                         <span class="badge bg-info">@order.OrderStatus</span>
                                     </td>
-                                    <td>
-                                        <a href="@Url.Action("Details", "Order", new { id = order.OrderID, area = "Admin" })" class="btn btn-sm btn-primary">View</a>
-                                    </td>
                                 </tr>
                             }
                         }
                         else
                         {
                             <tr>
-                                <td colspan="6" class="text-center py-4">
+                                <td colspan="5" class="text-center py-4">
                                     <div class="text-secondary">No orders yet</div>
                                 </td>
                             </tr>

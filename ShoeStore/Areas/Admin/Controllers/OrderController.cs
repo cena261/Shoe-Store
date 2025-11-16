@@ -101,7 +101,7 @@ namespace ShoeStore.Areas.Admin.Controllers
 
             if (order == null)
             {
-                return Json(new { Success = false, Message = "Order not found" }, JsonRequestBehavior.AllowGet);
+                return Json(new { Status = false, Message = "Order not found" }, JsonRequestBehavior.AllowGet);
             }
 
             var model = new OrderDetailDTO
@@ -136,7 +136,7 @@ namespace ShoeStore.Areas.Admin.Controllers
                 }).ToList()
             };
 
-            return Json(new { Success = true, Data = model }, JsonRequestBehavior.AllowGet);
+            return Json(new { Status = true, Data = model }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -152,7 +152,7 @@ namespace ShoeStore.Areas.Admin.Controllers
                 {
                     return Json(new OrderResponseDTO
                     {
-                        Success = false,
+                        Status = false,
                         Message = "Order not found"
                     });
                 }
@@ -167,7 +167,7 @@ namespace ShoeStore.Areas.Admin.Controllers
                         {
                             return Json(new OrderResponseDTO
                             {
-                                Success = false,
+                                Status = false,
                                 Message = $"Insufficient stock for {item.ProductVariant.Product.ProductName} - {item.ProductVariant.ColorName} - Size {item.ProductVariant.SizeValue}"
                             });
                         }
@@ -191,17 +191,19 @@ namespace ShoeStore.Areas.Admin.Controllers
 
                 return Json(new OrderResponseDTO
                 {
-                    Success = true,
+                    Status = true,
                     Message = $"Order status updated to {newStatus}",
                     Data = new { OrderID = orderId, NewStatus = newStatus }
                 });
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Update order status error: {ex}");
+
                 return Json(new OrderResponseDTO
                 {
-                    Success = false,
-                    Message = "Error updating order status: " + ex.Message
+                    Status = false,
+                    Message = "An error occurred while updating order status. Please try again later."
                 });
             }
         }

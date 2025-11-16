@@ -293,17 +293,9 @@ namespace ShoeStore.ApiControllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[Cart Sync] ERROR: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"[Cart Sync] Stack trace: {ex.StackTrace}");
+                System.Diagnostics.Debug.WriteLine($"[Cart Sync] ERROR: {ex}");
 
-                var innerEx = ex.InnerException;
-                while (innerEx != null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[Cart Sync] Inner Exception: {innerEx.Message}");
-                    innerEx = innerEx.InnerException;
-                }
-
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { Status = false, Message = "An error occurred while syncing cart. Please try again later." });
             }
         }
 

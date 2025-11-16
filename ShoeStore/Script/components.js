@@ -104,24 +104,81 @@ function renderCart() {
   `;
 }
 
-function updateCartCount() {
-  const countElement = document.getElementById('cart-count');
-  if (countElement && typeof cart !== 'undefined') {
-    countElement.textContent = cart.getItemCount();
-  }
-}
-
 function filterByGender(gender) {
   localStorage.setItem('activeFilter', JSON.stringify({ type: 'gender', value: gender }));
   window.location.href = 'shoes.html';
 }
 
 function logoutFromMenu() {
-  if (confirm('Are you sure you want to logout?')) {
+  showLogoutConfirm();
+}
+
+function showLogoutConfirm() {
+  const overlay = document.createElement('div');
+  overlay.className = 'logout-modal-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-labelledby', 'logout-modal-title');
+  overlay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+
+  const modal = document.createElement('div');
+  modal.style.cssText = 'background: white; padding: 2rem; border-radius: 8px; max-width: 400px; width: 90%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
+  modal.innerHTML = `
+    <h3 id="logout-modal-title" style="margin: 0 0 1rem 0; color: #1f2937; font-size: 1.25rem;">Confirm Logout</h3>
+    <p style="margin: 0 0 1.5rem 0; color: #6b7280;">Are you sure you want to logout?</p>
+    <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
+      <button id="logout-cancel-btn" style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; background: white; border-radius: 4px; cursor: pointer; color: #374151;">Cancel</button>
+      <button id="logout-confirm-btn" style="padding: 0.5rem 1rem; border: none; background: #ef4444; color: white; border-radius: 4px; cursor: pointer;">Logout</button>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  const cancelBtn = document.getElementById('logout-cancel-btn');
+  const confirmBtn = document.getElementById('logout-confirm-btn');
+  const focusableElements = [cancelBtn, confirmBtn];
+  let currentFocusIndex = 0;
+
+  const closeModal = () => {
+    document.body.removeChild(overlay);
+    document.removeEventListener('keydown', handleKeyDown);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeModal();
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      currentFocusIndex = e.shiftKey
+        ? (currentFocusIndex - 1 + focusableElements.length) % focusableElements.length
+        : (currentFocusIndex + 1) % focusableElements.length;
+      focusableElements[currentFocusIndex].focus();
+    } else if (e.key === 'Enter' && document.activeElement === confirmBtn) {
+      e.preventDefault();
+      confirmBtn.click();
+    }
+  };
+
+  cancelBtn.addEventListener('click', closeModal);
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      closeModal();
+    }
+  });
+
+  confirmBtn.addEventListener('click', () => {
     localStorage.removeItem('user');
-    toggleMobileMenu(); // Close menu
+    closeModal();
+    toggleMobileMenu();
     window.location.href = 'login.html';
-  }
+  });
+
+  document.addEventListener('keydown', handleKeyDown);
+
+  cancelBtn.focus();
 }
 
 function initializeComponents() {
@@ -145,7 +202,9 @@ function initializeComponents() {
     cartContainer.innerHTML = renderCart();
   }
 
-  updateCartCount();
+  if (typeof cart !== 'undefined') {
+    cart.updateUI();
+  }
 }
 
 if (document.readyState === 'loading') {

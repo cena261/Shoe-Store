@@ -141,6 +141,8 @@ namespace ShoeStore.ApiControllers
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"Get products error: {ex}");
+
                     return Ok(new ProductListResponse
                     {
                         Status = false,
@@ -262,10 +264,12 @@ namespace ShoeStore.ApiControllers
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"Get product detail error: {ex}");
+
                     return Ok(new ProductDetailResponse
                     {
                         Status = false,
-                        Message = "An error occurred: " + ex.Message,
+                        Message = "An error occurred while retrieving product details. Please try again later.",
                         Product = null
                     });
                 }
