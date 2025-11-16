@@ -1,0 +1,215 @@
+@model ShoeStore.Areas.Admin.Models.DTOs.OrderDetailDTO
+@{
+    ViewBag.Title = "Order Details";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayoutPage.cshtml";
+    ViewData["PageTitle"] = "Order #" + Model.OrderID;
+}
+
+<div class="row mb-3">
+    <div class="col">
+        <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Orders
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">Order Items</h3>
+            </div>
+            <div class="card-body">
+                <div class="divide-y">
+                    @foreach (var item in Model.OrderItems)
+                    {
+                        <div class="row py-3">
+                            <div class="col-auto">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                            <polyline points="21 15 16 10 5 21"></polyline>
+                                        </svg>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col">
+                                <div class="fw-bold">@item.ProductName</div>
+                                <div class="text-secondary small">
+                                    Color: @item.ColorName | Size: @item.Size | SKU: @item.SKU
+                                </div>
+                                <div class="text-secondary small">
+                                    @item.UnitPrice.ToString("N0") VNĐ x @item.Quantity
+                                </div>
+                            </div>
+                            <div class="col-auto align-self-center">
+                                <div class="fw-bold">@item.Subtotal.ToString("N0") VNĐ</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>Total Amount:</strong>
+                    <strong class="h3 mb-0">@Model.TotalAmount.ToString("N0") VNĐ</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">Order Information</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Order ID</label>
+                    <div>#@Model.OrderID</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Order Date</label>
+                    <div>@Model.OrderDate.ToString("MMMM dd, yyyy HH:mm")</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Customer Email</label>
+                    <div>@Model.UserEmail</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <div>
+                        @if (Model.OrderStatus == "Pending")
+                        {
+                            <span class="badge bg-yellow text-white">Pending</span>
+                        }
+                        else if (Model.OrderStatus == "Confirmed")
+                        {
+                            <span class="badge bg-blue text-white">Confirmed</span>
+                        }
+                        else if (Model.OrderStatus == "On Delivery")
+                        {
+                            <span class="badge bg-purple text-white">On Delivery</span>
+                        }
+                        else if (Model.OrderStatus == "Success")
+                        {
+                            <span class="badge bg-success text-white">Success</span>
+                        }
+                        else if (Model.OrderStatus == "Cancelled")
+                        {
+                            <span class="badge bg-orange text-white">Cancelled</span>
+                        }
+                        else if (Model.OrderStatus == "Failed")
+                        {
+                            <span class="badge bg-red text-white">Failed</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">Shipping Information</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <strong>@Model.ShippingName</strong>
+                </div>
+                <div class="mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    @Model.ShippingPhone
+                </div>
+                <div class="text-secondary">
+                    <div>@Model.ShippingTenDuong</div>
+                    <div>@Model.ShippingXaQuan</div>
+                    <div>@Model.ShippingTinhThanh</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Update Status</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Change order status</label>
+                    <select id="newStatus" class="form-select">
+                        <option value="">Select new status...</option>
+                        @if (Model.OrderStatus == "Pending")
+                        {
+                            <option value="Confirmed">Confirm Order</option>
+                            <option value="Cancelled">Cancel Order</option>
+                            <option value="Failed">Mark as Failed</option>
+                        }
+                        else if (Model.OrderStatus == "Confirmed")
+                        {
+                            <option value="On Delivery">Ship Order</option>
+                            <option value="Cancelled">Cancel Order</option>
+                            <option value="Failed">Mark as Failed</option>
+                        }
+                        else if (Model.OrderStatus == "On Delivery")
+                        {
+                            <option value="Success">Mark as Delivered</option>
+                            <option value="Failed">Mark as Failed</option>
+                        }
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary w-100" onclick="updateOrderStatus()">Update Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function updateOrderStatus() {
+        const newStatus = document.getElementById('newStatus').value;
+
+        if (!newStatus) {
+            toast.warning('Please select a status');
+            return;
+        }
+
+        fetch('@Url.Action("UpdateStatus")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderId: @Model.OrderID,
+                newStatus: newStatus
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.Status) {
+                toast.success(result.Message);
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                toast.error(result.Message);
+            }
+        })
+        .catch(error => {
+            toast.error('Error updating order status');
+            if (typeof logger !== 'undefined') {
+                logger.error('Error updating order status', { error: error.message });
+            }
+        });
+    }
+    </script>
+}

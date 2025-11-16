@@ -1,0 +1,125 @@
+@model ShoeStore.Areas.Admin.Models.DTOs.UserRoleDTO
+@{
+    ViewBag.Title = "Manage Roles";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayoutPage.cshtml";
+    ViewData["PageTitle"] = ViewBag.PageTitle;
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="avatar avatar-lg me-3" style="background-image: url(https://ui-avatars.com/api/?name=@Uri.EscapeDataString(Model.FullName)&background=066fd1&color=fff&size=128)"></span>
+                    <div>
+                        <h3 class="m-0">@Model.FullName</h3>
+                        <div class="text-secondary">@Model.Email</div>
+                    </div>
+                </div>
+
+                <h4 class="mb-3">Assign Roles</h4>
+
+                <div class="list-group mb-3">
+                    @foreach (var role in Model.AvailableRoles)
+                    {
+                        <div class="list-group-item">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <div class="fw-bold">@role.RoleName</div>
+                                </div>
+                                <div class="col-auto">
+                                    @if (role.IsAssigned)
+                                    {
+                                        <button class="btn btn-sm btn-danger" onclick="removeRole(@Model.UserId, @role.RoleID, '@role.RoleName')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                                                <path d="M18 6l-12 12"></path>
+                                                <path d="M6 6l12 12"></path>
+                                            </svg>
+                                            Remove
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm btn-success" onclick="assignRole(@Model.UserId, @role.RoleID, '@role.RoleName')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                                                <path d="M12 5l0 14"></path>
+                                                <path d="M5 12l14 0"></path>
+                                            </svg>
+                                            Assign
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div id="message-container"></div>
+            </div>
+
+            <div class="card-footer">
+                <a href="@Url.Action("Index")" class="btn btn-link">Back to Users List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function assignRole(userId, roleId, roleName) {
+        showConfirm(
+            'Assign role "' + roleName + '" to this user?',
+            'Assign Role',
+            function() {
+                fetch('@Url.Action("AssignRole")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: userId, roleId: roleId })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.Status) {
+                        toast.success(result.Message);
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        toast.error(result.Message);
+                    }
+                })
+                .catch(error => {
+                    toast.error('Error assigning role');
+                });
+            }
+        );
+    }
+
+    function removeRole(userId, roleId, roleName) {
+        showConfirm(
+            'Remove role "' + roleName + '" from this user?',
+            'Remove Role',
+            function() {
+                fetch('@Url.Action("RemoveRole")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: userId, roleId: roleId })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.Status) {
+                        toast.success(result.Message);
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        toast.error(result.Message);
+                    }
+                })
+                .catch(error => {
+                    toast.error('Error removing role');
+                });
+            }
+        );
+    }
+    </script>
+}

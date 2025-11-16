@@ -1,0 +1,244 @@
+@model ShoeStore.Areas.Admin.Models.DTOs.ProductFormDTO
+@{
+    ViewBag.Title = "Create Product";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayoutPage.cshtml";
+    ViewData["PageTitle"] = "Create New Product";
+
+    var categories = ViewBag.Categories as List<ShoeStore.Models.Categories>;
+}
+
+@using (Html.BeginForm("Create", "Product", FormMethod.Post, new { @class = "card" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card-body">
+        <h3 class="card-title">Product Information</h3>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.ProductName, new { @class = "form-label required" })
+                    @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control", placeholder = "Enter product name" })
+                    @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Slug, new { @class = "form-label required" })
+                    @Html.TextBoxFor(m => m.Slug, new { @class = "form-control", placeholder = "product-slug" })
+                    @Html.ValidationMessageFor(m => m.Slug, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.CategoryID, new { @class = "form-label required" })
+                    @Html.DropDownListFor(m => m.CategoryID,
+                        new SelectList(categories, "CategoryID", "CategoryName"),
+                        "Select Category",
+                        new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Price, new { @class = "form-label required" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number", step = "1000", placeholder = "0" })
+                        <span class="input-group-text">₫</span>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Price, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.PromotionPrice, new { @class = "form-label" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.PromotionPrice, new { @class = "form-control", type = "number", step = "1000", placeholder = "0" })
+                        <span class="input-group-text">₫</span>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.PromotionPrice, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Product description..." })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-check">
+                @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
+                <span class="form-check-label">Active</span>
+            </label>
+        </div>
+
+        <hr class="my-4">
+
+        <h3 class="card-title">Product Variants</h3>
+        <div id="variants-container">
+        </div>
+        <button type="button" class="btn btn-outline-primary" onclick="addVariant()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                <path d="M12 5l0 14"></path>
+                <path d="M5 12l14 0"></path>
+            </svg>
+            Add Variant
+        </button>
+
+        <hr class="my-4">
+
+        <h3 class="card-title">Product Images</h3>
+        <div id="images-container">
+        </div>
+        <button type="button" class="btn btn-outline-primary" onclick="addImage()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                <path d="M12 5l0 14"></path>
+                <path d="M5 12l14 0"></path>
+            </svg>
+            Add Image
+        </button>
+    </div>
+
+    <div class="card-footer text-end">
+        <div class="d-flex">
+            <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
+            <button type="submit" class="btn btn-primary ms-auto">Create Product</button>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+    let variantIndex = 0;
+    let imageIndex = 0;
+
+    function addVariant() {
+        const container = document.getElementById('variants-container');
+        const variantHtml = `
+            <div class="card mb-3 variant-item" data-index="${variantIndex}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title mb-0">Variant ${variantIndex + 1}</h4>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeVariant(${variantIndex})">Remove</button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label required">Size</label>
+                                <input type="text" name="Variants[${variantIndex}].SizeValue" class="form-control" placeholder="e.g., 42" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label required">Color Name</label>
+                                <input type="text" name="Variants[${variantIndex}].ColorName" class="form-control" placeholder="e.g., Black" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Style Color</label>
+                                <input type="text" name="Variants[${variantIndex}].StyleColor" class="form-control" placeholder="e.g., #000000" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label required">SKU</label>
+                                <input type="text" name="Variants[${variantIndex}].SKU" class="form-control" placeholder="e.g., SHOE-BLK-42" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label required">Stock Quantity</label>
+                                <input type="number" name="Variants[${variantIndex}].StockQty" class="form-control" value="0" min="0" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Price Override</label>
+                                <div class="input-group">
+                                    <input type="number" name="Variants[${variantIndex}].PriceOverride" class="form-control" step="1000" placeholder="Optional" />
+                                    <span class="input-group-text">₫</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-check mt-4">
+                                    <input type="checkbox" name="Variants[${variantIndex}].IsActive" class="form-check-input" checked />
+                                    <span class="form-check-label">Active</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', variantHtml);
+        variantIndex++;
+    }
+
+    function removeVariant(index) {
+        const variant = document.querySelector(`.variant-item[data-index="${index}"]`);
+        if (variant) {
+            variant.remove();
+        }
+    }
+
+    function addImage() {
+        const container = document.getElementById('images-container');
+        const imageHtml = `
+            <div class="card mb-3 image-item" data-index="${imageIndex}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="card-title mb-0">Image ${imageIndex + 1}</h4>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeImage(${imageIndex})">Remove</button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label required">Image URL</label>
+                                <input type="text" name="Images[${imageIndex}].ImageURL" class="form-control" placeholder="https://..." required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Style Color</label>
+                                <input type="text" name="Images[${imageIndex}].StyleColor" class="form-control" placeholder="Optional" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Display Order</label>
+                                <input type="number" name="Images[${imageIndex}].DisplayOrder" class="form-control" value="${imageIndex}" min="0" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', imageHtml);
+        imageIndex++;
+    }
+
+    function removeImage(index) {
+        const image = document.querySelector(`.image-item[data-index="${index}"]`);
+        if (image) {
+            image.remove();
+        }
+    }
+
+    document.getElementById('ProductName').addEventListener('input', function(e) {
+        const slug = e.target.value
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+        document.getElementById('Slug').value = slug;
+    });
+    </script>
+}

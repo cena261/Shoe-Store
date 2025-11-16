@@ -1,0 +1,542 @@
+@{
+    ViewBag.Title = "Orders";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayoutPage.cshtml";
+    ViewData["PageTitle"] = "Orders Management";
+
+    var orders = ViewBag.Orders as List<ShoeStore.Areas.Admin.Models.DTOs.OrderListItemDTO>;
+    var status = ViewBag.Status as string;
+    var search = ViewBag.Search as string;
+    var page = (int)ViewBag.Page;
+    var totalPages = (int)ViewBag.TotalPages;
+    var totalOrders = (int)ViewBag.TotalOrders;
+
+    var pendingCount = (int)ViewBag.PendingCount;
+    var confirmedCount = (int)ViewBag.ConfirmedCount;
+    var onDeliveryCount = (int)ViewBag.OnDeliveryCount;
+    var successCount = (int)ViewBag.SuccessCount;
+    var cancelledCount = (int)ViewBag.CancelledCount;
+    var failedCount = (int)ViewBag.FailedCount;
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <div class="d-flex">
+            <div>@TempData["SuccessMessage"]</div>
+        </div>
+        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+    </div>
+}
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="row row-cards">
+            <div class="col-sm-6 col-lg-2">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-yellow text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">@pendingCount</div>
+                                <div class="text-secondary">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-blue text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">@confirmedCount</div>
+                                <div class="text-secondary">Confirmed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-purple text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="3" width="15" height="13"></rect>
+                                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">@onDeliveryCount</div>
+                                <div class="text-secondary">On Delivery</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-success text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">@successCount</div>
+                                <div class="text-secondary">Success</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-orange text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">@cancelledCount</div>
+                                <div class="text-secondary">Cancelled</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+                <div class="card card-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <span class="bg-red text-white avatar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="col">
+                                <div class="font-weight-medium">@failedCount</div>
+                                <div class="text-secondary">Failed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="d-flex gap-2">
+            <a href="@Url.Action("Index")" class="btn @(string.IsNullOrEmpty(status) ? "btn-primary" : "btn-outline-primary")">All</a>
+            <a href="@Url.Action("Index", new { status = "Pending" })" class="btn @(status == "Pending" ? "btn-yellow" : "btn-outline-secondary")">Pending</a>
+            <a href="@Url.Action("Index", new { status = "Confirmed" })" class="btn @(status == "Confirmed" ? "btn-blue" : "btn-outline-secondary")">Confirmed</a>
+            <a href="@Url.Action("Index", new { status = "On Delivery" })" class="btn @(status == "On Delivery" ? "btn-purple" : "btn-outline-secondary")">On Delivery</a>
+            <a href="@Url.Action("Index", new { status = "Success" })" class="btn @(status == "Success" ? "btn-success" : "btn-outline-secondary")">Success</a>
+            <a href="@Url.Action("Index", new { status = "Cancelled" })" class="btn @(status == "Cancelled" ? "btn-orange" : "btn-outline-secondary")">Cancelled</a>
+            <a href="@Url.Action("Index", new { status = "Failed" })" class="btn @(status == "Failed" ? "btn-red" : "btn-outline-secondary")">Failed</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col">
+        <form method="get" class="d-flex gap-2">
+            <input type="hidden" name="status" value="@status">
+            <input type="text" name="search" class="form-control" placeholder="Search by order ID, customer name, phone, email..." value="@search" style="width: 500px;">
+            <button type="submit" class="btn btn-primary">Search</button>
+            @if (!string.IsNullOrEmpty(search))
+            {
+                <a href="@Url.Action("Index", new { status = status })" class="btn btn-secondary">Clear</a>
+            }
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Order Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Location</th>
+                            <th class="w-1"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (orders != null && orders.Any())
+                        {
+                            foreach (var order in orders)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">#@order.OrderID</div>
+                                    </td>
+                                    <td>@order.CustomerName</td>
+                                    <td>@order.UserEmail</td>
+                                    <td>@order.OrderDate.ToString("MMM dd, yyyy HH:mm")</td>
+                                    <td>@order.TotalAmount.ToString("N0") VNĐ</td>
+                                    <td>
+                                        @if (order.OrderStatus == "Pending")
+                                        {
+                                            <span class="badge bg-yellow text-white">Pending</span>
+                                        }
+                                        else if (order.OrderStatus == "Confirmed")
+                                        {
+                                            <span class="badge bg-blue text-white">Confirmed</span>
+                                        }
+                                        else if (order.OrderStatus == "On Delivery")
+                                        {
+                                            <span class="badge bg-purple text-white">On Delivery</span>
+                                        }
+                                        else if (order.OrderStatus == "Success")
+                                        {
+                                            <span class="badge bg-success text-white">Success</span>
+                                        }
+                                        else if (order.OrderStatus == "Cancelled")
+                                        {
+                                            <span class="badge bg-orange text-white">Cancelled</span>
+                                        }
+                                        else if (order.OrderStatus == "Failed")
+                                        {
+                                            <span class="badge bg-red text-white">Failed</span>
+                                        }
+                                    </td>
+                                    <td>@order.ShippingTinhThanh</td>
+                                    <td>
+                                        <button type="button" data-order-id="@order.OrderID" data-bs-toggle="modal" data-bs-target="#orderDetailsModal" class="btn btn-cyan view-order-btn" title="View Details" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <div class="text-secondary">No orders found</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if (totalPages > 1)
+            {
+                <div class="card-footer d-flex align-items-center">
+                    <p class="m-0 text-secondary">Showing <span>@((page - 1) * 20 + 1)</span> to <span>@Math.Min(page * 20, totalOrders)</span> of <span>@totalOrders</span> orders</p>
+                    <ul class="pagination m-0 ms-auto">
+                        @if (page > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { status = status, search = search, page = page - 1 })">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                                        <path d="M15 6l-6 6l6 6"></path>
+                                    </svg>
+                                    prev
+                                </a>
+                            </li>
+                        }
+
+                        @for (int i = Math.Max(1, page - 2); i <= Math.Min(totalPages, page + 2); i++)
+                        {
+                            <li class="page-item @(i == page ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { status = status, search = search, page = i })">@i</a>
+                            </li>
+                        }
+
+                        @if (page < totalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { status = status, search = search, page = page + 1 })">
+                                    next
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                                        <path d="M9 6l6 6l-6 6"></path>
+                                    </svg>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="orderDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalTitle">Order Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="orderModalBody">
+                <div class="text-center py-5">
+                    <div class="spinner-border" role="status"></div>
+                    <div class="mt-2">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    let currentOrderId = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('orderDetailsModal');
+
+        modal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const orderId = button.getAttribute('data-order-id');
+            currentOrderId = orderId;
+
+            document.getElementById('orderModalBody').innerHTML = '<div class="text-center py-5"><div class="spinner-border" role="status"></div><div class="mt-2">Loading...</div></div>';
+
+            fetch('@Url.Action("GetOrderDetails")?id=' + orderId)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.Status) {
+                        displayOrderDetails(result.Data);
+                    } else {
+                        document.getElementById('orderModalBody').innerHTML = '<div class="alert alert-danger">Order not found</div>';
+                        toast.error('Order not found');
+                    }
+                })
+                .catch(error => {
+                    if (typeof logger !== 'undefined') {
+                        logger.error('Fetch error', { error: error.message });
+                    }
+                    document.getElementById('orderModalBody').innerHTML = '<div class="alert alert-danger">Error loading order details</div>';
+                    toast.error('Error loading order details');
+                });
+        });
+    });
+
+    function displayOrderDetails(order) {
+        document.getElementById('orderModalTitle').textContent = 'Order #' + order.OrderID;
+
+        let statusBadge = '';
+        if (order.OrderStatus === 'Pending') statusBadge = '<span class="badge bg-yellow text-white">Pending</span>';
+        else if (order.OrderStatus === 'Confirmed') statusBadge = '<span class="badge bg-blue text-white">Confirmed</span>';
+        else if (order.OrderStatus === 'On Delivery') statusBadge = '<span class="badge bg-purple text-white">On Delivery</span>';
+        else if (order.OrderStatus === 'Success') statusBadge = '<span class="badge bg-success text-white">Success</span>';
+        else if (order.OrderStatus === 'Cancelled') statusBadge = '<span class="badge bg-orange text-white">Cancelled</span>';
+        else if (order.OrderStatus === 'Failed') statusBadge = '<span class="badge bg-red text-white">Failed</span>';
+
+        let itemsHtml = '';
+        order.OrderItems.forEach(item => {
+            let imgHtml = item.ImageUrl
+                ? `<img src="${item.ImageUrl}" alt="${item.ProductName}" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">`
+                : `<div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                   </div>`;
+
+            itemsHtml += `
+                <div class="row py-3 border-bottom">
+                    <div class="col-auto">${imgHtml}</div>
+                    <div class="col">
+                        <div class="fw-bold">${item.ProductName}</div>
+                        <div class="text-secondary small">Color: ${item.ColorName} | Size: ${item.Size} | SKU: ${item.SKU}</div>
+                        <div class="text-secondary small">${parseFloat(item.UnitPrice).toLocaleString('vi-VN')} VNĐ x ${item.Quantity}</div>
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <div class="fw-bold">${parseFloat(item.Subtotal).toLocaleString('vi-VN')} VNĐ</div>
+                    </div>
+                </div>`;
+        });
+
+        let statusOptions = '';
+        if (order.OrderStatus === 'Pending') {
+            statusOptions = `
+                <option value="">Select new status...</option>
+                <option value="Confirmed">Confirm Order</option>
+                <option value="Cancelled">Cancel Order</option>
+                <option value="Failed">Mark as Failed</option>`;
+        } else if (order.OrderStatus === 'Confirmed') {
+            statusOptions = `
+                <option value="">Select new status...</option>
+                <option value="On Delivery">Ship Order</option>
+                <option value="Cancelled">Cancel Order</option>
+                <option value="Failed">Mark as Failed</option>`;
+        } else if (order.OrderStatus === 'On Delivery') {
+            statusOptions = `
+                <option value="">Select new status...</option>
+                <option value="Success">Mark as Delivered</option>
+                <option value="Failed">Mark as Failed</option>`;
+        } else {
+            statusOptions = '<option value="">Order is finalized</option>';
+        }
+
+        const orderDate = new Date(order.OrderDate);
+        const formattedDate = orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+        const html = `
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="card-title">Order Items</h3>
+                        </div>
+                        <div class="card-body">
+                            ${itemsHtml}
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>Total Amount:</strong>
+                                <strong class="h3 mb-0">${parseFloat(order.TotalAmount).toLocaleString('vi-VN')} VNĐ</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="card-title">Order Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Order ID</label>
+                                <div>#${order.OrderID}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Order Date</label>
+                                <div>${formattedDate}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Customer Email</label>
+                                <div>${order.UserEmail}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                <div>${statusBadge}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h3 class="card-title">Shipping Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-2">
+                                <strong>${order.ShippingName}</strong>
+                            </div>
+                            <div class="mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                ${order.ShippingPhone}
+                            </div>
+                            <div class="text-secondary">
+                                <div>${order.ShippingTenDuong}</div>
+                                <div>${order.ShippingXaQuan}</div>
+                                <div>${order.ShippingTinhThanh}</div>
+                            </div>
+                        </div>
+                    </div>
+                    ${order.OrderStatus !== 'Success' && order.OrderStatus !== 'Cancelled' && order.OrderStatus !== 'Failed' ? `
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Update Status</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Change order status</label>
+                                <select id="newStatus" class="form-select">${statusOptions}</select>
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="updateOrderStatus()">Update Status</button>
+                        </div>
+                    </div>` : ''}
+                </div>
+            </div>
+        `;
+
+        document.getElementById('orderModalBody').innerHTML = html;
+    }
+
+    function updateOrderStatus() {
+        const newStatus = document.getElementById('newStatus').value;
+
+        if (!newStatus) {
+            toast.warning('Please select a status');
+            return;
+        }
+
+        fetch('@Url.Action("UpdateStatus")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                orderId: currentOrderId,
+                newStatus: newStatus
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.Status) {
+                toast.success(result.Message);
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                toast.error(result.Message);
+            }
+        })
+        .catch(error => {
+            toast.error('Error updating order status');
+            if (typeof logger !== 'undefined') {
+                logger.error('Error updating order status', { error: error.message });
+            }
+        });
+    }
+    </script>
+}
+

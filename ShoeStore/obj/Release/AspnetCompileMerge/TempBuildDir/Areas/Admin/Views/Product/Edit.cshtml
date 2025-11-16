@@ -1,0 +1,349 @@
+@model ShoeStore.Areas.Admin.Models.DTOs.ProductFormDTO
+@{
+    ViewBag.Title = "Edit Product";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayoutPage.cshtml";
+    ViewData["PageTitle"] = ViewBag.PageTitle;
+
+    var categories = ViewBag.Categories as List<ShoeStore.Models.Categories>;
+}
+
+@using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { @class = "card" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ProductID)
+
+    <div class="card-body">
+        <h3 class="card-title">Product Information</h3>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.ProductName, new { @class = "form-label required" })
+                    @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control", placeholder = "Enter product name" })
+                    @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Slug, new { @class = "form-label required" })
+                    @Html.TextBoxFor(m => m.Slug, new { @class = "form-control", placeholder = "product-slug" })
+                    @Html.ValidationMessageFor(m => m.Slug, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.CategoryID, new { @class = "form-label required" })
+                    @Html.DropDownListFor(m => m.CategoryID,
+                        new SelectList(categories, "CategoryID", "CategoryName", Model.CategoryID),
+                        "Select Category",
+                        new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.Price, new { @class = "form-label required" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number", step = "1000", placeholder = "0" })
+                        <span class="input-group-text">₫</span>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Price, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    @Html.LabelFor(m => m.PromotionPrice, new { @class = "form-label" })
+                    <div class="input-group">
+                        @Html.TextBoxFor(m => m.PromotionPrice, new { @class = "form-control", type = "number", step = "1000", placeholder = "0" })
+                        <span class="input-group-text">₫</span>
+                    </div>
+                    @Html.ValidationMessageFor(m => m.PromotionPrice, "", new { @class = "invalid-feedback d-block" })
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Description, new { @class = "form-label" })
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Product description..." })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-check">
+                @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
+                <span class="form-check-label">Active</span>
+            </label>
+        </div>
+
+        <hr class="my-4">
+
+        <h3 class="card-title">Product Variants by Color</h3>
+
+        @for (int colorIndex = 0; colorIndex < Model.ColorGroups.Count; colorIndex++)
+        {
+            var colorGroup = Model.ColorGroups[colorIndex];
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            @if (!string.IsNullOrEmpty(colorGroup.ImageURL))
+                            {
+                                <img src="@colorGroup.ImageURL" alt="@colorGroup.ColorName" class="img-thumbnail" style="width: 100%; max-height: 150px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="bg-light text-center p-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-lg text-secondary" width="48" height="48" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                                        <path d="M15 8h.01"></path>
+                                        <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"></path>
+                                        <path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"></path>
+                                        <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"></path>
+                                    </svg>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-10">
+                            <div class="mb-3">
+                                <h4 class="mb-2">
+                                    <span class="badge" style="background-color: @(colorGroup.StyleColor ?? "#cccccc")"></span>
+                                    @colorGroup.ColorName
+                                    @if (!string.IsNullOrEmpty(colorGroup.StyleColor))
+                                    {
+                                        <span class="text-secondary">(@colorGroup.StyleColor)</span>
+                                    }
+                                </h4>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Size</th>
+                                            <th>SKU</th>
+                                            <th>Stock</th>
+                                            <th>Price Override</th>
+                                            <th>Active</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int variantIndex = 0; variantIndex < colorGroup.Variants.Count; variantIndex++)
+                                        {
+                                            var variant = colorGroup.Variants[variantIndex];
+                                            var globalIndex = Model.ColorGroups.Take(colorIndex).Sum(cg => cg.Variants.Count) + variantIndex;
+
+                                            <tr>
+                                                <td style="width: 15%">
+                                                    @Html.Hidden($"Variants[{globalIndex}].VariantID", variant.VariantID)
+                                                    @Html.Hidden($"Variants[{globalIndex}].ColorName", variant.ColorName)
+                                                    @Html.Hidden($"Variants[{globalIndex}].StyleColor", variant.StyleColor)
+                                                    @Html.Hidden($"Variants[{globalIndex}].SKU", variant.SKU)
+                                                    <strong>@variant.SizeValue</strong>
+                                                </td>
+                                                <td style="width: 20%">
+                                                    <small class="text-secondary">@variant.SKU</small>
+                                                </td>
+                                                <td style="width: 15%">
+                                                    <input type="number" name="Variants[@globalIndex].StockQty" value="@variant.StockQty" class="form-control form-control-sm" min="0" />
+                                                </td>
+                                                <td style="width: 20%">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="number" name="Variants[@globalIndex].PriceOverride" value="@variant.PriceOverride" class="form-control" step="1000" placeholder="Optional" />
+                                                        <span class="input-group-text">₫</span>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 10%">
+                                                    <label class="form-check form-switch mb-0">
+                                                        <input type="checkbox" name="Variants[@globalIndex].IsActive" value="true" class="form-check-input" @(variant.IsActive ? "checked" : "") />
+                                                    </label>
+                                                </td>
+                                                <td style="width: 10%">
+                                                    <button type="button" class="btn btn-sm btn-danger" onclick="removeVariant(this)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                                                            <path d="M4 7l16 0"></path>
+                                                            <path d="M10 11l0 6"></path>
+                                                            <path d="M14 11l0 6"></path>
+                                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addSizeToColor('@colorGroup.StyleColor', '@colorGroup.ColorName', @colorIndex)">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                                    <path d="M12 5l0 14"></path>
+                                    <path d="M5 12l14 0"></path>
+                                </svg>
+                                Add Size
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card-footer text-end">
+        <div class="d-flex">
+            <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
+            <button type="submit" class="btn btn-primary ms-auto">Update Product</button>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+    let variantCounter = @Model.ColorGroups.Sum(cg => cg.Variants.Count);
+
+    function addSizeToColor(styleColor, colorName, colorIndex) {
+        showAddVariantModal(styleColor, colorName, colorIndex);
+    }
+
+    function showAddVariantModal(styleColor, colorName, colorIndex) {
+        const modalHtml = `
+            <div class="modal fade" id="addVariantModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Size Variant</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label required">Size</label>
+                                <input type="text" class="form-control" id="variantSize" placeholder="e.g., 40, 41, 42" />
+                                <div class="invalid-feedback" id="sizeError"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label required">SKU</label>
+                                <input type="text" class="form-control" id="variantSku" placeholder="Enter unique SKU" />
+                                <div class="invalid-feedback" id="skuError"></div>
+                            </div>
+                            <div class="alert alert-info mb-0">
+                                <strong>Color:</strong> ${colorName} (${styleColor})
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="confirmAddVariant">Add Variant</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const existingModal = document.getElementById('addVariantModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        const modal = new bootstrap.Modal(document.getElementById('addVariantModal'));
+        modal.show();
+
+        document.getElementById('confirmAddVariant').addEventListener('click', function() {
+            const size = document.getElementById('variantSize').value.trim();
+            const sku = document.getElementById('variantSku').value.trim();
+
+            let isValid = true;
+
+            if (!size) {
+                document.getElementById('variantSize').classList.add('is-invalid');
+                document.getElementById('sizeError').textContent = 'Size is required';
+                isValid = false;
+            } else {
+                document.getElementById('variantSize').classList.remove('is-invalid');
+            }
+
+            if (!sku) {
+                document.getElementById('variantSku').classList.add('is-invalid');
+                document.getElementById('skuError').textContent = 'SKU is required';
+                isValid = false;
+            } else {
+                document.getElementById('variantSku').classList.remove('is-invalid');
+            }
+
+            if (!isValid) return;
+
+            addVariantRow(size, sku, styleColor, colorName, colorIndex);
+
+            modal.hide();
+            toast.success('Variant added successfully');
+        });
+
+        document.getElementById('variantSize').addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+        });
+        document.getElementById('variantSku').addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+        });
+    }
+
+    function addVariantRow(size, sku, styleColor, colorName, colorIndex) {
+
+        const tbody = document.querySelectorAll('.table tbody')[colorIndex];
+        const newRow = document.createElement('tr');
+
+        newRow.innerHTML = `
+            <td style="width: 15%">
+                <input type="hidden" name="Variants[${variantCounter}].ColorName" value="${colorName}" />
+                <input type="hidden" name="Variants[${variantCounter}].StyleColor" value="${styleColor}" />
+                <input type="hidden" name="Variants[${variantCounter}].SKU" value="${sku}" />
+                <input type="hidden" name="Variants[${variantCounter}].SizeValue" value="${size}" />
+                <strong>${size}</strong>
+            </td>
+            <td style="width: 20%">
+                <small class="text-secondary">${sku}</small>
+            </td>
+            <td style="width: 15%">
+                <input type="number" name="Variants[${variantCounter}].StockQty" value="0" class="form-control form-control-sm" min="0" />
+            </td>
+            <td style="width: 20%">
+                <div class="input-group input-group-sm">
+                    <input type="number" name="Variants[${variantCounter}].PriceOverride" class="form-control" step="1000" placeholder="Optional" />
+                    <span class="input-group-text">₫</span>
+                </div>
+            </td>
+            <td style="width: 10%">
+                <label class="form-check form-switch mb-0">
+                    <input type="checkbox" name="Variants[${variantCounter}].IsActive" value="true" class="form-check-input" checked />
+                </label>
+            </td>
+            <td style="width: 10%">
+                <button type="button" class="btn btn-sm btn-danger" onclick="removeVariant(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
+                        <path d="M4 7l16 0"></path>
+                        <path d="M10 11l0 6"></path>
+                        <path d="M14 11l0 6"></path>
+                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                    </svg>
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(newRow);
+        variantCounter++;
+    }
+
+    function removeVariant(button) {
+        showConfirm(
+            'Remove this variant?',
+            'Remove Variant',
+            function() {
+                button.closest('tr').remove();
+                toast.success('Variant removed');
+            }
+        );
+    }
+    </script>
+}

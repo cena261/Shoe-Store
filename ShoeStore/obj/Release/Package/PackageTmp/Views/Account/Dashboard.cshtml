@@ -1,0 +1,606 @@
+﻿@model ShoeStore.Models.Users
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<section class="px-4 py-20 sm:px-8">
+    <div class="mx-auto flex max-w-4xl flex-col gap-10">
+        <div class="space-y-4">
+            <p class="text-sm uppercase tracking-[0.35em] text-zinc-400">Dashboard</p>
+            <h1 class="text-5xl font-bold">Xin chào <span id="user-name">Khách</span>!</h1>
+            <p class="text-base text-zinc-500">
+                Quản lý thông tin cá nhân, địa chỉ, trạng thái đơn hàng. Các tính năng về thông tin cá nhân sẽ bổ sung sau
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <button class="btn rounded-full px-6 py-3" onclick="logout()">Đăng xuất</button>
+                <a href="/Products" class="rounded-full border border-zinc-900 px-6 py-3 font-semibold transition hover:bg-zinc-900 hover:text-white">Xem danh sách các sản phẩm</a>
+            </div>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-2">
+            <!-- Profile Card -->
+            <article class="rounded-3xl border border-zinc-200 p-6 shadow-sm">
+                <h2 class="text-lg font-semibold">Trang cá nhân</h2>
+                <p class="mt-3 text-sm text-zinc-500">Tên: <span id="profile-name">Khách</span></p>
+                <p class="text-sm text-zinc-500">Email: <span id="profile-email">guest@example.com</span></p>
+                <p class="text-sm text-zinc-500">Hạng thành viên: Bạc</p>
+                <button class="mt-4 rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white" onclick="openChangePasswordModal()">Đổi mật khẩu</button>
+            </article>
+
+            <!-- Saved Addresses Card -->
+            <article class="rounded-3xl border border-zinc-200 p-6 shadow-sm">
+                <h2 class="text-lg font-semibold">Địa chỉ đã lưu</h2>
+                <div id="address-list" class="mt-3">
+                    <p class="text-sm text-zinc-500">Đang tải địa chỉ...</p>
+                </div>
+                <button class="mt-4 rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold transition hover:border-zinc-900 hover:bg-zinc-900 hover:text-white" onclick="openAddressModal()">Quản lý địa chỉ</button>
+            </article>
+
+            <!-- Recent Orders Card -->
+            <article class="rounded-3xl border border-zinc-200 p-6 shadow-sm md:col-span-2">
+                <h2 class="text-lg font-semibold">Các đơn hàng gần đây</h2>
+                <div class="mt-5 space-y-4" id="order-list">
+                    <p class="text-sm text-zinc-500">Đang tải đơn hàng...</p>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<div id="change-password-modal" class="change-password-modal">
+    <div id="modal-content" class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: black;">Đổi mật khẩu</h2>
+            <button onclick="closeChangePasswordModal()" style="font-size: 1.5rem; color: #6b7280; border: none; background: none; cursor: pointer;">&times;</button>
+        </div>
+        <form id="change-password-form">
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Mật khẩu hiện tại</span>
+                <input type="password" id="current-password" class="input" placeholder="Nhập mật khẩu hiện tại" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="current-password-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Mật khẩu mới</span>
+                <input type="password" id="new-password" class="input" placeholder="Enter new password" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="new-password-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1.5rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Xác nhận mật khẩu mới</span>
+                <input type="password" id="confirm-password" class="input" placeholder="Xác nhận mật khẩu mới" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="confirm-password-error"></div>
+            </label>
+
+            <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; font-weight: 600;">
+                Cập nhật mật khẩu
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="address-modal" class="change-password-modal">
+    <div id="address-modal-content" class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 700; color: black;">Thêm địa chỉ</h2>
+            <button onclick="closeAddressModal()" style="font-size: 1.5rem; color: #6b7280; border: none; background: none; cursor: pointer;">&times;</button>
+        </div>
+        <form id="address-form">
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Họ và Tên</span>
+                <input type="text" id="address-fullname" class="input" placeholder="Nhập họ và tên" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-fullname-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Số điện thoại</span>
+                <input type="text" id="address-phone" class="input" placeholder="Nhập số điện thoại (bắt đầu bằng số 0)" style="width: 100%;" maxlength="10" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-phone-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Tên đường / Tòa nhà</span>
+                <input type="text" id="address-street" class="input" placeholder="Nhập tên đường / tòa nhà" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-street-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Xã / Quận</span>
+                <input type="text" id="address-ward" class="input" placeholder="Nhập xã / quận" style="width: 100%;" />
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-ward-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: black;">Tỉnh Thành</span>
+                <select id="address-province" class="input" style="width: 100%;">
+                    <option value="">Chọn tỉnh / thành phố</option>
+                    <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+                    <option value="Bắc Giang">Bắc Giang</option>
+                    <option value="Bắc Ninh">Bắc Ninh</option>
+                    <option value="Bình Định">Bình Định</option>
+                    <option value="Bình Thuận">Bình Thuận</option>
+                    <option value="Cao Bằng">Cao Bằng</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                    <option value="Điện Biên">Điện Biên</option>
+                    <option value="Đồng Nai">Đồng Nai</option>
+                    <option value="Hà Giang">Hà Giang</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Hà Tĩnh">Hà Tĩnh</option>
+                    <option value="Hòa Bình">Hòa Bình</option>
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                    <option value="Huế">Huế</option>
+                    <option value="Khánh Hòa">Khánh Hòa</option>
+                    <option value="Lai Châu">Lai Châu</option>
+                    <option value="Lạng Sơn">Lạng Sơn</option>
+                    <option value="Long An">Long An</option>
+                    <option value="Nghệ An">Nghệ An</option>
+                    <option value="Ninh Thuận">Ninh Thuận</option>
+                    <option value="Phú Yên">Phú Yên</option>
+                    <option value="Quảng Bình">Quảng Bình</option>
+                    <option value="Quảng Nam">Quảng Nam</option>
+                    <option value="Quảng Ngãi">Quảng Ngãi</option>
+                    <option value="Quảng Ninh">Quảng Ninh</option>
+                    <option value="Quảng Trị">Quảng Trị</option>
+                    <option value="Sơn La">Sơn La</option>
+                    <option value="Thái Nguyên">Thái Nguyên</option>
+                    <option value="Thanh Hóa">Thanh Hóa</option>
+                    <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+                    <option value="Tiền Giang">Tiền Giang</option>
+                    <option value="Tuyên Quang">Tuyên Quang</option>
+                    <option value="Vĩnh Phúc">Vĩnh Phúc</option>
+                </select>
+                <div style="height: 1rem; font-size: 0.75rem; font-style: italic; color: #ef4444; margin-top: 0.25rem;" id="address-province-error"></div>
+            </label>
+
+            <label style="display: flex; flex-direction: row; align-items: center; margin-bottom: 1.5rem; cursor: pointer;">
+                <input type="checkbox" id="address-default" style="position: static; width: 1rem; height: 1rem; margin-right: 0.5rem; cursor: pointer; clip: auto; clip-path: none; overflow: visible;" />
+                <span style="font-size: 0.875rem; font-weight: 600; color: black;">Chọn làm địa chỉ mặc định</span>
+            </label>
+
+            <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; font-weight: 600;">
+                Thêm địa chỉ
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .change-password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        @@keyframes slideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-animate {
+            animation-name: slideDown;
+            animation-duration: 0.4s;
+            animation-timing-function: cubic-bezier(0.6, 0.01, -0.05, 0.9);
+            animation-fill-mode: forwards;
+            opacity: 0;
+        }
+
+        @@keyframes slideInRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @@keyframes slideOutRight {
+            0% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+
+    function checkAuth() {
+      const isLoggedIn = getCookie('UserInfo') !== null;
+      if (!isLoggedIn) {
+        window.location.href = '/Account/Login';
+        return false;
+      }
+      return true;
+    }
+
+    async function loadAccountInfo() {
+      if (!checkAuth()) return;
+
+      try {
+        const response = await fetch('/Account/GetUserInfo', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const user = await response.json();
+          document.getElementById('user-name').textContent = user.FullName || 'Khách';
+          document.getElementById('profile-name').textContent = user.FullName || 'Khách';
+          document.getElementById('profile-email').textContent = user.Email || 'guest@example.com';
+        }
+      } catch (error) {
+        if (typeof logger !== 'undefined') {
+          logger.error('Error loading user info', { error: error.message });
+        }
+      }
+
+      loadAddresses();
+    }
+
+    async function loadAddresses() {
+      try {
+        const response = await fetch('/Account/GetUserAddresses');
+        const result = await response.json();
+
+        const addressList = document.getElementById('address-list');
+
+        if (result.Status && result.Addresses && result.Addresses.length > 0) {
+          addressList.innerHTML = result.Addresses.map(address => `
+            <p class="text-sm text-zinc-500">
+              ${address.FullName}, ${address.Phone}<br/>
+              ${address.TenDuong}, ${address.XaQuan}, ${address.TinhThanh}
+              ${address.IsDefault ? '<span style="color: #10b981; font-weight: 600;">(Mặc định)</span>' : ''}
+            </p>
+          `).join('');
+        } else {
+          addressList.innerHTML = '<p class="text-sm text-zinc-500">Chưa có địa chỉ nào</p>';
+        }
+      } catch (error) {
+        if (typeof logger !== 'undefined') {
+          logger.error('Error loading addresses', { error: error.message });
+        }
+        document.getElementById('address-list').innerHTML = '<p class="text-sm text-zinc-500">Chưa có địa chỉ nào</p>';
+      }
+    }
+
+    async function loadOrders() {
+      const orderList = document.getElementById('order-list');
+
+      try {
+        const response = await fetch('/api/Order/history');
+        const result = await response.json();
+
+        if (result.Status && result.Orders && result.Orders.length > 0) {
+          const recentOrders = result.Orders.slice(0, 3);
+
+          orderList.innerHTML = recentOrders.map(order => {
+            const orderDate = new Date(order.OrderDate);
+            const formattedDate = orderDate.toLocaleDateString('en-GB', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric'
+            });
+
+            const statusConfig = getStatusConfig(order.OrderStatus);
+
+            return `
+              <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-zinc-100/80 p-4">
+                <div>
+                  <p class="text-sm font-semibold">Đơn hàng #${order.OrderID}</p>
+                  <p class="text-xs text-zinc-500">Đặt vào lúc ${formattedDate} • ${order.ItemCount} món • ${formatCurrency(order.TotalAmount)}</p>
+                </div>
+                <span class="rounded-full ${statusConfig.bgClass} px-3 py-1 text-xs font-semibold ${statusConfig.textClass}">${statusConfig.label}</span>
+              </div>
+            `;
+          }).join('');
+        } else {
+          orderList.innerHTML = '<p class="text-sm text-zinc-500">Chưa có đơn hàng nào</p>';
+        }
+      } catch (error) {
+        if (typeof logger !== 'undefined') {
+          logger.error('Error loading orders', { error: error.message });
+        }
+        orderList.innerHTML = '<p class="text-sm text-zinc-500">Lỗi khi tải đơn hàng</p>';
+      }
+    }
+
+    function getStatusConfig(status) {
+      const statusMap = {
+        'Pending': { label: 'Chờ xác nhận', bgClass: 'bg-amber-100', textClass: 'text-amber-700' },
+        'Processing': { label: 'Chờ lấy hàng', bgClass: 'bg-blue-100', textClass: 'text-blue-700' },
+        'Shipped': { label: 'Đã lấy hàng', bgClass: 'bg-indigo-100', textClass: 'text-indigo-700' },
+        'Delivered': { label: 'Đang giao hàng', bgClass: 'bg-emerald-100', textClass: 'text-emerald-700' },
+        'Cancelled': { label: 'Đã hủy', bgClass: 'bg-red-100', textClass: 'text-red-700' }
+      };
+
+      return statusMap[status] || { label: status, bgClass: 'bg-gray-100', textClass: 'text-gray-700' };
+    }
+
+    function logout() {
+      document.cookie = 'AuthToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'UserInfo=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      localStorage.removeItem('user');
+      cart.onLogout();
+      window.location.href = '/Account/Login';
+    }
+
+    function openChangePasswordModal() {
+      const modal = document.getElementById('change-password-modal');
+      const content = document.getElementById('modal-content');
+
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      setTimeout(() => {
+        content.classList.add('modal-animate');
+      }, 10);
+    }
+
+    function closeChangePasswordModal() {
+      const modal = document.getElementById('change-password-modal');
+      const content = document.getElementById('modal-content');
+
+      content.classList.remove('modal-animate');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.getElementById('change-password-form').reset();
+        document.querySelectorAll('[id$="-error"]').forEach(el => el.textContent = '');
+      }, 300);
+    }
+
+    document.getElementById('change-password-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      document.querySelectorAll('[id$="-error"]').forEach(el => el.textContent = '');
+
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      let hasError = false;
+
+      if (!currentPassword) {
+        document.getElementById('current-password-error').textContent = 'Phải có mật khẩu hiện tại';
+        hasError = true;
+      }
+
+      if (!newPassword || newPassword.length < 6) {
+        document.getElementById('new-password-error').textContent = 'Mật khẩu mới phải có ít nhất 6 ký tự';
+        hasError = true;
+      }
+
+      if (newPassword !== confirmPassword) {
+        document.getElementById('confirm-password-error').textContent = 'Passwords do not match';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Đang cập nhật...';
+
+      try {
+        const response = await fetch('/Account/ChangePassword', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            CurrentPassword: currentPassword,
+            NewPassword: newPassword
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.Status) {
+          closeChangePasswordModal();
+          showNotification('Đổi mật khẩu thành công!');
+        } else {
+          if (result.Message.includes('incorrect')) {
+            document.getElementById('current-password-error').textContent = result.Message;
+          } else {
+            showNotification(result.Message, false);
+          }
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Cập nhật mật khẩu';
+        }
+      } catch (error) {
+        showNotification('Có lỗi xảy ra. Vui lòng thử lại.', false);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Cập nhật mật khẩu';
+      }
+    });
+
+    document.getElementById('change-password-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeChangePasswordModal();
+      }
+    });
+
+    function openAddressModal() {
+      const modal = document.getElementById('address-modal');
+      const content = document.getElementById('address-modal-content');
+
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      setTimeout(() => {
+        content.classList.add('modal-animate');
+      }, 10);
+    }
+
+    function closeAddressModal() {
+      const modal = document.getElementById('address-modal');
+      const content = document.getElementById('address-modal-content');
+
+      content.classList.remove('modal-animate');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.getElementById('address-form').reset();
+        document.querySelectorAll('[id^="address-"][id$="-error"]').forEach(el => el.textContent = '');
+      }, 300);
+    }
+
+    document.getElementById('address-modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeAddressModal();
+      }
+    });
+
+    document.getElementById('address-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      document.querySelectorAll('[id^="address-"][id$="-error"]').forEach(el => el.textContent = '');
+
+      const fullname = document.getElementById('address-fullname').value.trim();
+      const phone = document.getElementById('address-phone').value.trim();
+      const street = document.getElementById('address-street').value.trim();
+      const ward = document.getElementById('address-ward').value.trim();
+      const province = document.getElementById('address-province').value;
+      const isDefault = document.getElementById('address-default').checked;
+
+      let hasError = false;
+
+      if (!fullname) {
+        document.getElementById('address-fullname-error').textContent = 'Phải có họ và tên';
+        hasError = true;
+      }
+
+      if (!phone) {
+        document.getElementById('address-phone-error').textContent = 'Phải có số điện thoại';
+        hasError = true;
+      } else if (!/^0[0-9]{9}$/.test(phone)) {
+        document.getElementById('address-phone-error').textContent = 'Số điện thoại phải có 10 ký tự và bắt đầu bằng số 0';
+        hasError = true;
+      }
+
+      if (!street) {
+        document.getElementById('address-street-error').textContent = 'Phải có tên đường / tòa nhà';
+        hasError = true;
+      }
+
+      if (!ward) {
+        document.getElementById('address-ward-error').textContent = 'Phải có thông tin xã / quận';
+        hasError = true;
+      }
+
+      if (!province) {
+        document.getElementById('address-province-error').textContent = 'Phải có tỉnh / thành phố';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Đang thêm...';
+
+      try {
+        const response = await fetch('/Account/AddAddress', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            FullName: fullname,
+            Phone: phone,
+            TenDuong: street,
+            XaQuan: ward,
+            TinhThanh: province,
+            IsDefault: isDefault
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.Status) {
+          closeAddressModal();
+          loadAddresses();
+          showNotification('Thêm địa chỉ thành công!');
+        } else {
+          showNotification(result.Message, false);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Thêm địa chỉ';
+        }
+      } catch (error) {
+        showNotification('Có lỗi xảy ra. Vui lòng thử lại.', false);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Thêm địa chỉ';
+      }
+    });
+
+    function showNotification(message, isSuccess = true) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${isSuccess ? '#10b981' : '#ef4444'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 9999;
+        font-weight: 600;
+        animation: slideInRight 0.3s ease-out;
+      `;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAccountInfo();
+      loadOrders();
+    });
+    </script>
+}
+
+

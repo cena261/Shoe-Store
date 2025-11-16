@@ -1,0 +1,197 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section Styles {
+    <style>
+        body #app > footer {
+            display: none;
+        }
+        @@keyframes scaleIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) translateY(40%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(40%);
+            }
+        }
+
+        @@keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #home-main {
+            animation-name: scaleIn;
+            animation-duration: 1.4s;
+            animation-timing-function: cubic-bezier(0.6, 0.01, -0.05, 0.9);
+            animation-fill-mode: forwards;
+            opacity: 0;
+        }
+
+        #home-text {
+            animation-name: fadeUp;
+            animation-duration: 0.8s;
+            animation-delay: 1s;
+            animation-timing-function: cubic-bezier(0.6, 0.01, -0.05, 0.9);
+            animation-fill-mode: forwards;
+            opacity: 0;
+        }
+
+        #collections-container {
+            animation-name: fadeInUp;
+            animation-duration: 0.8s;
+            animation-delay: 2s;
+            animation-timing-function: cubic-bezier(0.6, 0.01, -0.05, 0.9);
+            animation-fill-mode: forwards;
+            opacity: 0;
+        }
+    </style>
+}
+
+<div class="flex h-full w-full items-center justify-center">
+    <div class="relative h-64 w-64 sm:h-96 sm:w-96" style="width: 100%; height: 80%; padding: 1rem; transform: translateY(40%);" id="home-main">
+
+        <!-- Sport, the smart choice text -->
+        <div class="absolute bottom-full ml-5 mb-0 md:ml-10 lg:-mb-5 xl:ml-24 2xl:mb-5 2xl:ml-48" id="home-text">
+            <h1 class="text-5xl md:text-6xl xl:text-extra font-extrabold xl:-mt-12 -mt-5 md:-mt-8 mb-1">
+                Sport,
+            </h1>
+            <h1 class="text-5xl md:text-6xl xl:text-extra font-extrabold hidden sm:block">
+                the smart choice.
+            </h1>
+            <h1 class="text-5xl md:text-6xl xl:text-extra font-extrabold block sm:hidden">
+                the smart
+            </h1>
+            <h1 class="text-5xl md:text-6xl xl:text-extra font-extrabold block sm:hidden">
+                choice.
+            </h1>
+        </div>
+
+        <!-- Main Image -->
+        <img alt=""
+             src="~/Content/images/main.jpg"
+             height="2000"
+             width="3000"
+             class="h-full w-full object-cover object-center"
+             style="aspect-ratio: 3000 / 2000;" />
+
+        <!-- Collections Section -->
+        <div id="collections-container">
+            <div class="py-28">
+                <div class="flex w-full flex-col items-center md:px-16 lg:px-0">
+
+                    <!-- First Row (Men & Women) -->
+                    <div class="w-full lg:w-[40rem] lg:translate-x-20 xl:w-[60rem]">
+
+                        <!-- Men Collection -->
+                        <div class="-mb-8 flex h-96 gap-4 sm:gap-8">
+                            <div class="h-80 w-48 sm:w-64 xl:h-auto xl:w-80">
+                                <img alt="Men"
+                                     src="~/Content/images/men.jpg"
+                                     height="500"
+                                     width="400"
+                                     class="h-full w-full object-cover object-center"
+                                     style="aspect-ratio: 400 / 500;" />
+                            </div>
+
+                            <div class="mt-10 flex flex-col items-start text-left">
+                                <h2 class="-mb-2 text-3xl font-bold sm:text-5xl">Men</h2>
+                                <h3 class="w-2/3 text-sm">Xem ngay bộ sưu tập mùa đông dành cho nam</h3>
+                                <a class="btn mt-2 w-max" href="/Products?gender=Men">Explore</a>
+                            </div>
+                        </div>
+
+                        <!-- Women Collection -->
+                        <div class="flex-row-reverse self-end -mb-8 flex h-96 gap-4 sm:gap-8">
+                            <div class="h-80 w-48 sm:w-64 xl:h-auto xl:w-80">
+                                <img alt="Women"
+                                     src="~/Content/images/women.jpg"
+                                     height="500"
+                                     width="400"
+                                     class="h-full w-full object-cover object-center"
+                                     style="aspect-ratio: 400 / 500;" />
+                            </div>
+
+                            <div class="mt-10 flex flex-col items-end text-right">
+                                <h2 class="-mb-2 text-3xl font-bold sm:text-5xl">Women</h2>
+                                <h3 class="w-2/3 text-sm">Có gì mới trong bộ sưu tập mùa đông dành cho nữ</h3>
+                                <a class="btn mt-2 w-max" href="/Products?gender=Women">Explore</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Second Row (Kid & Unisex) -->
+                    <div class="w-full lg:w-[40rem] lg:-translate-x-20 xl:w-[60rem]">
+
+                        <!-- Kid Collection -->
+                        <div class="-mb-8 flex h-96 gap-4 sm:gap-8">
+                            <div class="h-80 w-48 sm:w-64 xl:h-auto xl:w-80">
+                                <img alt="Kid"
+                                     src="~/Content/images/kid.jpg"
+                                     height="500"
+                                     width="400"
+                                     class="h-full w-full object-cover object-center"
+                                     style="aspect-ratio: 400 / 500;" />
+                            </div>
+
+                            <div class="mt-10 flex flex-col items-start text-left">
+                                <h2 class="-mb-2 text-3xl font-bold sm:text-5xl">Kid</h2>
+                                <h3 class="w-2/3 text-sm">Nhiều kích thước phù hợp với trẻ em</h3>
+                                <a class="btn mt-2 w-max" href="/Products?gender=Kid">Explore</a>
+                            </div>
+                        </div>
+
+                        <!-- Unisex Collection -->
+                        <div class="flex-row-reverse self-end -mb-8 flex h-96 gap-4 sm:gap-8">
+                            <div class="h-80 w-48 sm:w-64 xl:h-auto xl:w-80">
+                                <img alt="Unisex"
+                                     src="~/Content/images/unisex.jpg"
+                                     height="500"
+                                     width="400"
+                                     class="h-full w-full object-cover object-center"
+                                     style="aspect-ratio: 400 / 500;" />
+                            </div>
+
+                            <div class="mt-10 flex flex-col items-end text-right">
+                                <h2 class="-mb-2 text-3xl font-bold sm:text-5xl">Unisex</h2>
+                                <h3 class="w-2/3 text-sm">Xem ngay danh sách các sản phẩm hiện có</h3>
+                                <a class="btn mt-2 w-max" href="/Products?gender=Unisex">Explore</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            @Html.Partial("_Footer")
+        </div>
+
+    </div>
+</div>
+
+

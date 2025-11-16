@@ -150,6 +150,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\css\toast.css" />
+    <Content Include="Content\images\favicon.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\css\styles.css" />
     <Content Include="Content\images\kid.jpg" />
@@ -305,7 +306,6 @@
     <Content Include="Areas\Admin\Views\Shared\AdminLayoutPage.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Navbar.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Footer.cshtml" />
-    <Content Include="Areas\Admin\Views\Admin\Dashboard.cshtml" />
     <Content Include="Areas\Admin\Views\Product\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Product\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Product\Index.cshtml" />
@@ -352,6 +352,8 @@
     <Content Include="Scripts\bootstrap.esm.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <None Include="Properties\PublishProfiles\tucena261-001-site1 - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\tucena261-001-site1 - Web Deploy.pubxml" />
     <None Include="Web.config.example" />
     <None Include="Web.config.Debug.example">
       <DependentUpon>Web.config.example</DependentUpon>
@@ -369,6 +371,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202511090816199_InitDatabase.resx">

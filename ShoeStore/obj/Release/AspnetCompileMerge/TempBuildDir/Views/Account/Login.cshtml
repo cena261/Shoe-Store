@@ -1,0 +1,203 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section Styles {
+    <style>
+    @@keyframes slideDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #login-content {
+      animation-name: slideDown;
+      animation-duration: 0.8s;
+      animation-timing-function: cubic-bezier(0.6, 0.01, -0.05, 0.9);
+      animation-fill-mode: forwards;
+      opacity: 0;
+    }
+
+    #password::-ms-reveal,
+    #password::-ms-clear {
+      display: none;
+    }
+
+    #password::-webkit-credentials-auto-fill-button,
+    #password::-webkit-contacts-auto-fill-button {
+      visibility: hidden;
+      display: none !important;
+      pointer-events: none;
+      height: 0;
+      width: 0;
+      margin: 0;
+    }
+    </style>
+}
+
+<div class="flex flex-col items-center justify-center" style="min-height: 80vh;">
+    <div class="-mt-24 w-full p-4 sm:mt-0 sm:p-7 2xl:-mt-36" id="login-content">
+        <h1 class="text-center text-4xl font-semibold leading-tight xl:text-6xl">
+            Đăng nhập để nhận nhiều ưu đãi hấp dẫn.
+        </h1>
+
+        <div class="w-full text-center">
+            <a class="underline" href="/Account/Register">Chưa có tài khoản? Đăng ký ngay!</a>
+        </div>
+
+        <div class="mt-10">
+            <div class="flex w-full justify-center">
+                <form class="flex w-160 flex-col gap-1" id="login-form">
+
+                    <label class="flex flex-col">
+                        <span class="text-lg font-semibold">Email</span>
+                        <input type="text"
+                               class="input"
+                               placeholder="Enter your email..."
+                               id="email"
+                               name="email"
+                               value="" />
+                        <div class="h-4 text-xs italic text-red-500" id="email-error"></div>
+                    </label>
+
+                    <label class="flex flex-col">
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-semibold">Password</span>
+                            <a href="/Account/ForgotPassword" class="text-sm underline text-gray-600 hover:text-black">Quên mật khẩu?</a>
+                        </div>
+                        <div class="relative w-full">
+                            <input type="password"
+                                   class="input w-full"
+                                   placeholder="Enter your password..."
+                                   id="password"
+                                   name="password"
+                                   value=""
+                                   autocomplete="current-password"
+                                   style="padding-right: 2.5rem;" />
+                            <button class="btn-icon absolute right-0 h-full px-2" type="button" onclick="togglePassword()">
+                                <svg stroke="currentColor"
+                                     fill="currentColor"
+                                     stroke-width="0"
+                                     viewBox="0 0 1024 1024"
+                                     height="1em"
+                                     width="1em"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     id="eye-icon">
+                                    <path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="h-4 text-xs italic text-red-500" id="password-error"></div>
+                    </label>
+
+                    <div class="h-4 text-xs italic text-red-500 text-center" id="login-error"></div>
+
+                    <button type="submit" class="btn mt-1 rounded-md py-2 h-10">
+                        Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eye-icon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.innerHTML = '<path d="M942.2 486.2Q889.47 375.11 816.7 296l-227.1 227.1A176.09 176.09 0 0 1 512 552q-90.67 0-155.39-64.73T291.88 332q0-82.69 53.5-145.84L149.6 390.4a60.29 60.29 0 0 1-85.2 0 60.29 60.29 0 0 1 0-85.2l714.1-714.1a60.29 60.29 0 0 1 85.2 0 60.29 60.29 0 0 1 0 85.2L539 1l2.5 2.5C723.8 191.1 857.5 325.9 942.2 486.2zM878.43 165.1L165.1 878.43l-.01-.02.01.02a60.29 60.29 0 0 1-85.19 0 60.29 60.29 0 0 1 0-85.19L793.24 79.91a60.29 60.29 0 0 1 85.19 0 60.29 60.29 0 0 1 0 85.19z"></path>';
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.innerHTML = '<path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 0 0 0 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path>';
+      }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      document.getElementById('email-error').textContent = '';
+      document.getElementById('password-error').textContent = '';
+      document.getElementById('login-error').textContent = '';
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      let hasError = false;
+
+      if (!email) {
+        document.getElementById('email-error').textContent = 'Bắt buộc';
+        hasError = true;
+      } else if (!validateEmail(email)) {
+        document.getElementById('email-error').textContent = 'Email không hợp lệ';
+        hasError = true;
+      }
+
+      if (!password) {
+        document.getElementById('password-error').textContent = 'Bắt buộc';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Logging in...';
+
+      try {
+        const response = await fetch('/Account/Login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            Email: email,
+            Password: password
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.Status) {
+          localStorage.setItem('user', JSON.stringify({
+            userId: result.User.UserId,
+            email: result.User.Email,
+            fullName: result.User.FullName,
+            phone: result.User.Phone,
+            roles: result.User.Roles,
+            loggedIn: true
+          }));
+
+          await cart.migrateGuestCart();
+
+          if (result.User.Roles && result.User.Roles.includes('Admin')) {
+            window.location.href = '/Admin/Product/Index';
+          } else {
+            window.location.href = '/Home/Index';
+          }
+        } else {
+          document.getElementById('login-error').textContent = result.Message;
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Login';
+        }
+      } catch (error) {
+        document.getElementById('login-error').textContent = 'Có lỗi xảy ra. Vui lòng thử lại.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Login';
+      }
+    });
+
+    </script>
+}
+
+

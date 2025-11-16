@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewBag.Title = "Success";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="order-success">
+    <div class="order-success-content" id="success-content">
+        <div style="font-size: 5rem; margin-bottom: 1rem;">✓</div>
+        <h1>Đặt hàng thành công!</h1>
+        <p>
+            Cảm ơn bạn vì đã đặt hàng! Đơn hàng sẽ được vận chuyển trong thời gian sớm nhất.
+            Bạn thể xem tình trạng đơn hàng tại trang thông tin cá nhân.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/Home/Index" class="btn">Tiếp tục mua sắm</a>
+            <a href="/Account/Dashboard" class="btn" style="background: #6b7280;">Xem đơn hàng</a>
+        </div>
+
+        <div id="order-summary" style="margin-top: 3rem; text-align: left; background: #f9fafb; padding: 1.5rem; border-radius: 0.5rem;">
+            <!-- Xy ly danh sach order -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function loadOrderSummary() {
+      const lastOrder = sessionStorage.getItem('lastOrder');
+      const orderSummary = document.getElementById('order-summary');
+
+      if (!lastOrder) {
+        setTimeout(() => {
+          window.location.href = '/Home/Index';
+        }, 3000);
+        return;
+      }
+
+      const order = JSON.parse(lastOrder);
+
+      orderSummary.innerHTML = `
+        <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; text-align: center;">Chi tiết đơn hàng</h2>
+
+        <div style="margin-bottom: 1rem;">
+          <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Địa chỉ giao hàng:</h3>
+          <p style="color: #6b7280; line-height: 1.6;">
+            ${order.customer.fullName}<br>
+            ${order.customer.tenDuong}<br>
+            ${order.customer.xaQuan}, ${order.customer.tinhThanh}
+          </p>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Items:</h3>
+          ${order.items.map(item => `
+            <div style="display: flex; gap: 1rem; margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb;">
+              <img src="${item.images[0]}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.375rem;">
+              <div style="flex: 1;">
+                <div style="font-weight: 500;">${item.name}</div>
+                <div style="font-size: 0.875rem; color: #6b7280;">${item.colorName} - Size: EU ${item.size}</div>
+                <div style="font-size: 0.875rem; color: #6b7280;">Số lượng: ${item.quantity}</div>
+              </div>
+              <div style="font-weight: 600; text-align: right;">${formatCurrency((item.promotionPrice || item.price) * item.quantity)}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div style="border-top: 2px solid #e5e7eb; padding-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span>Tiền hàng:</span>
+            <span>${formatCurrency(order.subtotal)}</span>
+          </div>
+          ${order.discount > 0 ? `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #10b981;">
+              <span>Giảm giá:</span>
+              <span>-${formatCurrency(order.discount)}</span>
+            </div>
+          ` : ''}
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #10b981;">
+            <span>Phí ship:</span>
+            <span>FREE</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 700; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e5e7eb;">
+            <span>Thành tiền:</span>
+            <span>${formatCurrency(order.total)}</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem; padding: 1rem; background: #f0fdf4; border-radius: 0.375rem; text-align: center;">
+          <p style="color: #15803d; font-weight: 500;">
+            Số hóa đơn: #${order.orderId || 'Chờ xác nhận'}
+          </p>
+          <p style="color: #15803d; font-size: 0.875rem; margin-top: 0.25rem;">
+            Thông tin đơn hàng sẽ được gửi đến ${order.customer.email}
+          </p>
+        </div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadOrderSummary();
+
+      const { animate } = window.Motion;
+
+      animate('#success-content',
+        {
+          opacity: [0, 1],
+          scale: [0.95, 1],
+          y: [20, 0]
+        },
+        {
+          duration: 0.8,
+          ease: [0.6, 0.01, -0.05, 0.9]
+        }
+      );
+
+      const checkmark = document.querySelector('#success-content > div');
+      animate(checkmark,
+        {
+          scale: [0, 1.2, 1],
+          rotate: [0, 10, 0]
+        },
+        {
+          duration: 0.6,
+          delay: 0.3
+        }
+      );
+    });
+    </script>
+}
+
+
