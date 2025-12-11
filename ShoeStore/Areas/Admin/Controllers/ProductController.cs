@@ -31,11 +31,12 @@ namespace ShoeStore.Areas.Admin.Controllers
             base.OnActionExecuting(filterContext);
         }
 
-        public ActionResult Index(string search = "", int page = 1, int pageSize = 20)
+        public ActionResult Index(string search = "", string category = "", int page = 1, int pageSize = 20)
         {
             ViewBag.Title = "Products";
             ViewBag.PageTitle = "Products Management";
             ViewBag.Search = search;
+            ViewBag.Category = category;
             ViewBag.Page = page;
 
             var query = db.Products.Include(p => p.Category).AsQueryable();
@@ -43,6 +44,11 @@ namespace ShoeStore.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(p => p.ProductName.Contains(search) || p.Slug.Contains(search));
+            }
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(p => p.Category.CategoryName == category);
             }
 
             var totalProducts = query.Count();

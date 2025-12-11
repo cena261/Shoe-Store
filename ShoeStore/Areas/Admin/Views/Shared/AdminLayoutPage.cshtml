@@ -1,11 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>@ViewData["Title"] - Your App Name</title>
+    <title>@ViewData["Title"] - ShoeStore Admin</title>
     <link rel="icon" href="~/Content/images/favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @@media screen and (-webkit-min-device-pixel-ratio: 1.1) {
             html {
@@ -14,65 +15,51 @@
         }
     </style>
 
-    <link rel="stylesheet" href="~/Areas/Admin/Content/css/tabler.min.css">
-    <link rel="stylesheet" href="~/Content/bootstrap.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontSize: {
+                        'extra': '7rem'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="~/Content/css/styles.css">
     <link rel="stylesheet" href="~/Content/css/toast.css">
+
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    <div class="page">
-        <!-- Navbar -->
-        @Html.Partial("_Navbar")
+    <div id="app">
+        @Html.Partial("_AdminHeader")
 
-        <!-- Page wrapper -->
-        <div class="page-wrapper" style="color: white;">
-            @if (ViewData["PageTitle"] != null)
-            {
-                <div class="page-header d-print-none">
-                    <div class="container-xl">
-                        <div class="row g-2 align-items-center">
-                            <div class="col">
-                                <h2 class="page-title" style="color: white;">@ViewData["PageTitle"]</h2>
-                                @if (ViewData["PageSubtitle"] != null)
-                                {
-                                    <div class="text-secondary mt-1" style="color: rgba(255,255,255,0.7) !important;">@ViewData["PageSubtitle"]</div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
+        @Html.Partial("_MobileMenu")
 
-            <!-- Page body -->
-            <div class="page-body">
-                <div class="container-xl">
-                    @RenderBody()
-                </div>
-            </div>
-
-            <!-- Footer -->
-            @Html.Partial("_Footer")
-        </div>
+        @RenderBody()
     </div>
 
-    <div class="modal modal-blur fade" id="confirmModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="modal-title mb-3" id="confirmModalTitle">Confirm Action</div>
-                    <div id="confirmModalMessage">Are you sure?</div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmModalButton">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="~/Areas/Admin/Script/tabler.js"></script>
+    <script src="~/Script/logger.js"></script>
     <script src="~/Script/toast.js"></script>
-    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Script/main.js"></script>
+    <script src="~/Script/components.js"></script>
+
+    <div id="confirmModal" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 24px; max-width: 500px; width: 90%; padding: 2rem;">
+            <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;" id="confirmModalTitle">Confirm Action</h3>
+            <p style="color: #71717a; margin-bottom: 1.5rem;" id="confirmModalMessage">Are you sure?</p>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" onclick="closeConfirmModal()" style="flex: 1; padding: 0.75rem 1.5rem; border-radius: 9999px; border: 1px solid #e4e4e7; background: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    Cancel
+                </button>
+                <button type="button" id="confirmModalButton" style="flex: 1; padding: 0.75rem 1.5rem; border-radius: 9999px; background: black; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none;">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
         let confirmCallback = null;
@@ -81,18 +68,25 @@
             document.getElementById('confirmModalTitle').textContent = title;
             document.getElementById('confirmModalMessage').textContent = message;
             confirmCallback = callback;
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
 
-            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
-            modal.show();
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+            confirmCallback = null;
         }
 
         document.getElementById('confirmModalButton').addEventListener('click', function() {
-            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmModal'));
-            modal.hide();
-
+            closeConfirmModal();
             if (confirmCallback) {
                 confirmCallback();
                 confirmCallback = null;
+            }
+        });
+
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeConfirmModal();
             }
         });
     </script>

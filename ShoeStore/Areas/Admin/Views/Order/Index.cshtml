@@ -20,305 +20,305 @@
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <div class="d-flex">
-            <div>@TempData["SuccessMessage"]</div>
-        </div>
-        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+    <div style="position: fixed; top: 2rem; right: 2rem; z-index: 9999; background: #dcfce7; border: 1px solid #86efac; border-radius: 24px; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; color: #166534; font-weight: 500; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <span>@TempData["SuccessMessage"]</span>
     </div>
 }
 
-<div class="row mb-3">
-    <div class="col-12">
-        <div class="row row-cards">
-            <div class="col-sm-6 col-lg-2">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-yellow text-white avatar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="font-weight-medium">@pendingCount</div>
-                                <div class="text-secondary">Pending</div>
-                            </div>
-                        </div>
+<section style="padding: 1rem 1rem 5rem; margin: 0 auto;">
+    <div style="max-width: 80rem; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <a href="@Url.Action("Index", "Admin", new { area = "Admin" })" style="display: flex; align-items: center; gap: 0.5rem; color: #71717a; text-decoration: none; transition: color 0.15s;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span style="font-weight: 600;">Back to Admin Dashboard</span>
+            </a>
+            <p style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.35em; color: #a1a1aa;">Order Management</p>
+            <h1 style="font-size: 3rem; font-weight: 700; line-height: 1;">Orders</h1>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #fef3c7; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #18181b;">@pendingCount</div>
+                        <div style="font-size: 0.875rem; color: #71717a;">Pending</div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-2">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-blue text-white avatar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="font-weight-medium">@confirmedCount</div>
-                                <div class="text-secondary">Confirmed</div>
-                            </div>
-                        </div>
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #dbeafe; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #18181b;">@confirmedCount</div>
+                        <div style="font-size: 0.875rem; color: #71717a;">Confirmed</div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-2">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-purple text-white avatar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="1" y="3" width="15" height="13"></rect>
-                                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="font-weight-medium">@onDeliveryCount</div>
-                                <div class="text-secondary">On Delivery</div>
-                            </div>
-                        </div>
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #e9d5ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #18181b;">@onDeliveryCount</div>
+                        <div style="font-size: 0.875rem; color: #71717a;">On Delivery</div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-2">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-success text-white avatar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="font-weight-medium">@successCount</div>
-                                <div class="text-secondary">Success</div>
-                            </div>
-                        </div>
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #dcfce7; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #18181b;">@successCount</div>
+                        <div style="font-size: 0.875rem; color: #71717a;">Success</div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-2">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-orange text-white avatar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="font-weight-medium">@cancelledCount</div>
-                                <div class="text-secondary">Cancelled</div>
-                            </div>
-                        </div>
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #fed7aa; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #18181b;">@cancelledCount</div>
+                        <div style="font-size: 0.875rem; color: #71717a;">Cancelled</div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-2">
-                <div class="card card-sm">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <span class="bg-red text-white avatar">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="col">
-                                <div class="font-weight-medium">@failedCount</div>
-                                <div class="text-secondary">Failed</div>
-                            </div>
-                        </div>
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #18181b;">@failedCount</div>
+                        <div style="font-size: 0.875rem; color: #71717a;">Failed</div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="row mb-3">
-    <div class="col-12">
-        <div class="d-flex gap-2">
-            <a href="@Url.Action("Index")" class="btn @(string.IsNullOrEmpty(status) ? "btn-primary" : "btn-outline-primary")">All</a>
-            <a href="@Url.Action("Index", new { status = "Pending" })" class="btn @(status == "Pending" ? "btn-yellow" : "btn-outline-secondary")">Pending</a>
-            <a href="@Url.Action("Index", new { status = "Confirmed" })" class="btn @(status == "Confirmed" ? "btn-blue" : "btn-outline-secondary")">Confirmed</a>
-            <a href="@Url.Action("Index", new { status = "On Delivery" })" class="btn @(status == "On Delivery" ? "btn-purple" : "btn-outline-secondary")">On Delivery</a>
-            <a href="@Url.Action("Index", new { status = "Success" })" class="btn @(status == "Success" ? "btn-success" : "btn-outline-secondary")">Success</a>
-            <a href="@Url.Action("Index", new { status = "Cancelled" })" class="btn @(status == "Cancelled" ? "btn-orange" : "btn-outline-secondary")">Cancelled</a>
-            <a href="@Url.Action("Index", new { status = "Failed" })" class="btn @(status == "Failed" ? "btn-red" : "btn-outline-secondary")">Failed</a>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <a href="@Url.Action("Index")" style="padding: 0.5rem 1rem; @(string.IsNullOrEmpty(status) ? "background: #18181b; color: white;" : "background: white; color: #18181b; border: 1px solid #e4e4e7;") border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s;">All</a>
+            <a href="@Url.Action("Index", new { status = "Pending" })" style="padding: 0.5rem 1rem; @(status == "Pending" ? "background: #f59e0b; color: white;" : "background: white; color: #18181b; border: 1px solid #e4e4e7;") border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s;">Pending</a>
+            <a href="@Url.Action("Index", new { status = "Confirmed" })" style="padding: 0.5rem 1rem; @(status == "Confirmed" ? "background: #3b82f6; color: white;" : "background: white; color: #18181b; border: 1px solid #e4e4e7;") border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s;">Confirmed</a>
+            <a href="@Url.Action("Index", new { status = "On Delivery" })" style="padding: 0.5rem 1rem; @(status == "On Delivery" ? "background: #a855f7; color: white;" : "background: white; color: #18181b; border: 1px solid #e4e4e7;") border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s;">On Delivery</a>
+            <a href="@Url.Action("Index", new { status = "Success" })" style="padding: 0.5rem 1rem; @(status == "Success" ? "background: #16a34a; color: white;" : "background: white; color: #18181b; border: 1px solid #e4e4e7;") border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s;">Success</a>
+            <a href="@Url.Action("Index", new { status = "Cancelled" })" style="padding: 0.5rem 1rem; @(status == "Cancelled" ? "background: #ea580c; color: white;" : "background: white; color: #18181b; border: 1px solid #e4e4e7;") border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s;">Cancelled</a>
+            <a href="@Url.Action("Index", new { status = "Failed" })" style="padding: 0.5rem 1rem; @(status == "Failed" ? "background: #dc2626; color: white;" : "background: white; color: #18181b; border: 1px solid #e4e4e7;") border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s;">Failed</a>
         </div>
-    </div>
-</div>
 
-<div class="row mb-3">
-    <div class="col">
-        <form method="get" class="d-flex gap-2">
+        <form method="get" style="display: flex; gap: 0.75rem; max-width: 800px;">
             <input type="hidden" name="status" value="@status">
-            <input type="text" name="search" class="form-control" placeholder="Search by order ID, customer name, phone, email..." value="@search" style="width: 500px;">
-            <button type="submit" class="btn btn-primary">Search</button>
+            <div style="position: relative; flex: 1;">
+                <input type="text" name="search" placeholder="Search by order ID, customer name, phone, email..." value="@search" style="width: 100%; padding: 0.75rem 1rem; padding-right: 2.5rem; border: 1px solid #e4e4e7; border-radius: 9999px; font-size: 0.875rem; outline: none; transition: all 0.15s;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #a1a1aa; pointer-events: none;">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="M21 21l-4.35-4.35"></path>
+                </svg>
+            </div>
+            <button type="submit" style="padding: 0.75rem 1.5rem; background: #18181b; color: white; border: none; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="M21 21l-4.35-4.35"></path>
+                </svg>
+                Search
+            </button>
             @if (!string.IsNullOrEmpty(search))
             {
-                <a href="@Url.Action("Index", new { status = status })" class="btn btn-secondary">Clear</a>
+                <a href="@Url.Action("Index", new { status = status })" style="padding: 0.75rem 1.5rem; background: white; color: #18181b; border: 1px solid #e4e4e7; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center;">Clear</a>
             }
         </form>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="table-responsive">
-                <table class="table table-vcenter card-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Email</th>
-                            <th>Order Date</th>
-                            <th>Total Amount</th>
-                            <th>Status</th>
-                            <th>Location</th>
-                            <th class="w-1"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (orders != null && orders.Any())
+        <div style="overflow-x: auto; border-radius: 24px; border: 1px solid #e4e4e7; background: white; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="border-bottom: 1px solid #e4e4e7; background: #fafafa;">
+                    <tr>
+                        <th style="padding: 1rem 1.5rem; text-align: left; font-size: 0.875rem; font-weight: 600; color: #52525b;">Order ID</th>
+                        <th style="padding: 1rem 1.5rem; text-align: left; font-size: 0.875rem; font-weight: 600; color: #52525b;">Customer</th>
+                        <th style="padding: 1rem 1.5rem; text-align: left; font-size: 0.875rem; font-weight: 600; color: #52525b;">Email</th>
+                        <th style="padding: 1rem 1.5rem; text-align: left; font-size: 0.875rem; font-weight: 600; color: #52525b;">Order Date</th>
+                        <th style="padding: 1rem 1.5rem; text-align: left; font-size: 0.875rem; font-weight: 600; color: #52525b;">Total Amount</th>
+                        <th style="padding: 1rem 1.5rem; text-align: left; font-size: 0.875rem; font-weight: 600; color: #52525b;">Status</th>
+                        <th style="padding: 1rem 1.5rem; text-align: left; font-size: 0.875rem; font-weight: 600; color: #52525b;">Location</th>
+                        <th style="padding: 1rem 1.5rem; text-align: center; font-size: 0.875rem; font-weight: 600; color: #52525b;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (orders != null && orders.Any())
+                    {
+                        foreach (var order in orders)
                         {
-                            foreach (var order in orders)
-                            {
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold">#@order.OrderID</div>
-                                    </td>
-                                    <td>@order.CustomerName</td>
-                                    <td>@order.UserEmail</td>
-                                    <td>@order.OrderDate.ToString("MMM dd, yyyy HH:mm")</td>
-                                    <td>@order.TotalAmount.ToString("N0") VNĐ</td>
-                                    <td>
-                                        @if (order.OrderStatus == "Pending")
-                                        {
-                                            <span class="badge bg-yellow text-white">Pending</span>
-                                        }
-                                        else if (order.OrderStatus == "Confirmed")
-                                        {
-                                            <span class="badge bg-blue text-white">Confirmed</span>
-                                        }
-                                        else if (order.OrderStatus == "On Delivery")
-                                        {
-                                            <span class="badge bg-purple text-white">On Delivery</span>
-                                        }
-                                        else if (order.OrderStatus == "Success")
-                                        {
-                                            <span class="badge bg-success text-white">Success</span>
-                                        }
-                                        else if (order.OrderStatus == "Cancelled")
-                                        {
-                                            <span class="badge bg-orange text-white">Cancelled</span>
-                                        }
-                                        else if (order.OrderStatus == "Failed")
-                                        {
-                                            <span class="badge bg-red text-white">Failed</span>
-                                        }
-                                    </td>
-                                    <td>@order.ShippingTinhThanh</td>
-                                    <td>
-                                        <button type="button" data-order-id="@order.OrderID" data-bs-toggle="modal" data-bs-target="#orderDetailsModal" class="btn btn-cyan view-order-btn" title="View Details" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <tr style="border-bottom: 1px solid #f4f4f5; transition: background-color 0.15s;">
+                                <td style="padding: 1rem 1.5rem;">
+                                    <div style="font-weight: 700; color: #18181b;">#@order.OrderID</div>
+                                </td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    <span style="color: #52525b;">@order.CustomerName</span>
+                                </td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    <span style="color: #52525b;">@order.UserEmail</span>
+                                </td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    <span style="color: #71717a; font-size: 0.875rem;">@order.OrderDate.ToString("MMM dd, yyyy HH:mm")</span>
+                                </td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    <span style="font-weight: 600; color: #18181b;">@order.TotalAmount.ToString("N0") VNĐ</span>
+                                </td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    @if (order.OrderStatus == "Pending")
+                                    {
+                                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #fef3c7; color: #92400e;">Pending</span>
+                                    }
+                                    else if (order.OrderStatus == "Confirmed")
+                                    {
+                                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dbeafe; color: #1e40af;">Confirmed</span>
+                                    }
+                                    else if (order.OrderStatus == "On Delivery")
+                                    {
+                                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #e9d5ff; color: #6b21a8;">On Delivery</span>
+                                    }
+                                    else if (order.OrderStatus == "Success")
+                                    {
+                                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #166534;">Success</span>
+                                    }
+                                    else if (order.OrderStatus == "Cancelled")
+                                    {
+                                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #fed7aa; color: #9a3412;">Cancelled</span>
+                                    }
+                                    else if (order.OrderStatus == "Failed")
+                                    {
+                                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #fee2e2; color: #991b1b;">Failed</span>
+                                    }
+                                </td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    <span style="color: #52525b;">@order.ShippingTinhThanh</span>
+                                </td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                        <button type="button" data-order-id="@order.OrderID" data-bs-toggle="modal" data-bs-target="#orderDetailsModal" class="view-order-btn" style="padding: 0.5rem; background: #06b6d4; color: white; border: none; border-radius: 9999px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center;" title="View Details">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
                                                 <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
                                             </svg>
                                         </button>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="8" class="text-center py-5">
-                                    <div class="text-secondary">No orders found</div>
+                                    </div>
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 5rem 2rem; color: #a1a1aa;">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 1rem; display: block;">
+                                    <rect x="1" y="3" width="15" height="13"></rect>
+                                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                </svg>
+                                <div style="font-weight: 500;">No orders found</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
             @if (totalPages > 1)
             {
-                <div class="card-footer d-flex align-items-center">
-                    <p class="m-0 text-secondary">Showing <span>@((page - 1) * 20 + 1)</span> to <span>@Math.Min(page * 20, totalOrders)</span> of <span>@totalOrders</span> orders</p>
-                    <ul class="pagination m-0 ms-auto">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-top: 1px solid #e4e4e7;">
+                    <p style="margin: 0; color: #71717a; font-size: 0.875rem;">
+                        Showing <strong>@((page - 1) * 20 + 1)</strong> to <strong>@Math.Min(page * 20, totalOrders)</strong> of <strong>@totalOrders</strong> orders
+                    </p>
+                    <div style="display: flex; gap: 0.5rem;">
                         @if (page > 1)
                         {
-                            <li class="page-item">
-                                <a class="page-link" href="@Url.Action("Index", new { status = status, search = search, page = page - 1 })">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-                                        <path d="M15 6l-6 6l6 6"></path>
-                                    </svg>
-                                    prev
-                                </a>
-                            </li>
+                            <a href="@Url.Action("Index", new { status = status, search = search, page = page - 1 })" style="padding: 0.5rem 0.875rem; background: white; color: #18181b; border: 1px solid #e4e4e7; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.25rem;">
+                                    <path d="M15 6l-6 6l6 6"></path>
+                                </svg>
+                                Prev
+                            </a>
                         }
 
                         @for (int i = Math.Max(1, page - 2); i <= Math.Min(totalPages, page + 2); i++)
                         {
-                            <li class="page-item @(i == page ? "active" : "")">
-                                <a class="page-link" href="@Url.Action("Index", new { status = status, search = search, page = i })">@i</a>
-                            </li>
+                            if (i == page)
+                            {
+                                <span style="padding: 0.5rem 0.875rem; background: #18181b; color: white; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; display: inline-block;">@i</span>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Index", new { status = status, search = search, page = i })" style="padding: 0.5rem 0.875rem; background: white; color: #18181b; border: 1px solid #e4e4e7; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s;">@i</a>
+                            }
                         }
 
                         @if (page < totalPages)
                         {
-                            <li class="page-item">
-                                <a class="page-link" href="@Url.Action("Index", new { status = status, search = search, page = page + 1 })">
-                                    next
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-                                        <path d="M9 6l6 6l-6 6"></path>
-                                    </svg>
-                                </a>
-                            </li>
+                            <a href="@Url.Action("Index", new { status = status, search = search, page = page + 1 })" style="padding: 0.5rem 0.875rem; background: white; color: #18181b; border: 1px solid #e4e4e7; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center;">
+                                Next
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.25rem;">
+                                    <path d="M9 6l6 6l-6 6"></path>
+                                </svg>
+                            </a>
                         }
-                    </ul>
+                    </div>
                 </div>
             }
         </div>
     </div>
-</div>
+</section>
 
-<div class="modal modal-blur fade" id="orderDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="orderModalTitle">Order Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="orderModalBody">
-                <div class="text-center py-5">
-                    <div class="spinner-border" role="status"></div>
-                    <div class="mt-2">Loading...</div>
-                </div>
+<div style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; align-items: center; justify-content: center;" id="orderDetailsModal" tabindex="-1" role="dialog">
+    <div style="background: white; border-radius: 24px; width: 90%; max-width: 1200px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);" role="document">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem; border-bottom: 1px solid #e4e4e7;">
+            <h5 style="font-size: 1.25rem; font-weight: 700; margin: 0;" id="orderModalTitle">Order Details</h5>
+            <button type="button" style="background: none; border: none; cursor: pointer; padding: 0.5rem; color: #71717a; transition: color 0.15s;" onclick="document.getElementById('orderDetailsModal').style.display='none'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div style="padding: 2rem;" id="orderModalBody">
+            <div style="text-align: center; padding: 3rem 2rem;">
+                <div style="display: inline-block; width: 48px; height: 48px; border: 4px solid #e4e4e7; border-top-color: #18181b; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <div style="margin-top: 1rem; color: #71717a;">Loading...</div>
             </div>
         </div>
     </div>
@@ -330,31 +330,40 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('orderDetailsModal');
+        const viewBtns = document.querySelectorAll('.view-order-btn');
 
-        modal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            const orderId = button.getAttribute('data-order-id');
-            currentOrderId = orderId;
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const orderId = this.getAttribute('data-order-id');
+                currentOrderId = orderId;
 
-            document.getElementById('orderModalBody').innerHTML = '<div class="text-center py-5"><div class="spinner-border" role="status"></div><div class="mt-2">Loading...</div></div>';
+                modal.style.display = 'flex';
+                document.getElementById('orderModalBody').innerHTML = '<div style="text-align: center; padding: 3rem 2rem;"><div style="display: inline-block; width: 48px; height: 48px; border: 4px solid #e4e4e7; border-top-color: #18181b; border-radius: 50%; animation: spin 1s linear infinite;"></div><div style="margin-top: 1rem; color: #71717a;">Loading...</div></div>';
 
-            fetch('@Url.Action("GetOrderDetails")?id=' + orderId)
-                .then(response => response.json())
-                .then(result => {
-                    if (result.Status) {
-                        displayOrderDetails(result.Data);
-                    } else {
-                        document.getElementById('orderModalBody').innerHTML = '<div class="alert alert-danger">Order not found</div>';
-                        toast.error('Order not found');
-                    }
-                })
-                .catch(error => {
-                    if (typeof logger !== 'undefined') {
-                        logger.error('Fetch error', { error: error.message });
-                    }
-                    document.getElementById('orderModalBody').innerHTML = '<div class="alert alert-danger">Error loading order details</div>';
-                    toast.error('Error loading order details');
-                });
+                fetch('@Url.Action("GetOrderDetails")?id=' + orderId)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.Status) {
+                            displayOrderDetails(result.Data);
+                        } else {
+                            document.getElementById('orderModalBody').innerHTML = '<div style="padding: 2rem; background: #fee2e2; border-radius: 12px; color: #991b1b;">Order not found</div>';
+                            toast.error('Order not found');
+                        }
+                    })
+                    .catch(error => {
+                        if (typeof logger !== 'undefined') {
+                            logger.error('Fetch error', { error: error.message });
+                        }
+                        document.getElementById('orderModalBody').innerHTML = '<div style="padding: 2rem; background: #fee2e2; border-radius: 12px; color: #991b1b;">Error loading order details</div>';
+                        toast.error('Error loading order details');
+                    });
+            });
+        });
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
         });
     });
 
@@ -362,19 +371,19 @@
         document.getElementById('orderModalTitle').textContent = 'Order #' + order.OrderID;
 
         let statusBadge = '';
-        if (order.OrderStatus === 'Pending') statusBadge = '<span class="badge bg-yellow text-white">Pending</span>';
-        else if (order.OrderStatus === 'Confirmed') statusBadge = '<span class="badge bg-blue text-white">Confirmed</span>';
-        else if (order.OrderStatus === 'On Delivery') statusBadge = '<span class="badge bg-purple text-white">On Delivery</span>';
-        else if (order.OrderStatus === 'Success') statusBadge = '<span class="badge bg-success text-white">Success</span>';
-        else if (order.OrderStatus === 'Cancelled') statusBadge = '<span class="badge bg-orange text-white">Cancelled</span>';
-        else if (order.OrderStatus === 'Failed') statusBadge = '<span class="badge bg-red text-white">Failed</span>';
+        if (order.OrderStatus === 'Pending') statusBadge = '<span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #fef3c7; color: #92400e;">Pending</span>';
+        else if (order.OrderStatus === 'Confirmed') statusBadge = '<span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dbeafe; color: #1e40af;">Confirmed</span>';
+        else if (order.OrderStatus === 'On Delivery') statusBadge = '<span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #e9d5ff; color: #6b21a8;">On Delivery</span>';
+        else if (order.OrderStatus === 'Success') statusBadge = '<span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #dcfce7; color: #166534;">Success</span>';
+        else if (order.OrderStatus === 'Cancelled') statusBadge = '<span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #fed7aa; color: #9a3412;">Cancelled</span>';
+        else if (order.OrderStatus === 'Failed') statusBadge = '<span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #fee2e2; color: #991b1b;">Failed</span>';
 
         let itemsHtml = '';
         order.OrderItems.forEach(item => {
             let imgHtml = item.ImageUrl
-                ? `<img src="${item.ImageUrl}" alt="${item.ProductName}" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">`
-                : `<div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                ? `<img src="${item.ImageUrl}" alt="${item.ProductName}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 12px;">`
+                : `<div style="width: 80px; height: 80px; background: #f4f4f5; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="2">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                         <circle cx="8.5" cy="8.5" r="1.5"></circle>
                         <polyline points="21 15 16 10 5 21"></polyline>
@@ -382,15 +391,15 @@
                    </div>`;
 
             itemsHtml += `
-                <div class="row py-3 border-bottom">
-                    <div class="col-auto">${imgHtml}</div>
-                    <div class="col">
-                        <div class="fw-bold">${item.ProductName}</div>
-                        <div class="text-secondary small">Color: ${item.ColorName} | Size: ${item.Size} | SKU: ${item.SKU}</div>
-                        <div class="text-secondary small">${parseFloat(item.UnitPrice).toLocaleString('vi-VN')} VNĐ x ${item.Quantity}</div>
+                <div style="display: flex; gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid #e4e4e7;">
+                    <div style="flex-shrink: 0;">${imgHtml}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; color: #18181b; margin-bottom: 0.25rem;">${item.ProductName}</div>
+                        <div style="font-size: 0.875rem; color: #71717a; margin-bottom: 0.25rem;">Color: ${item.ColorName} | Size: ${item.Size} | SKU: ${item.SKU}</div>
+                        <div style="font-size: 0.875rem; color: #71717a;">${parseFloat(item.UnitPrice).toLocaleString('vi-VN')} VNĐ x ${item.Quantity}</div>
                     </div>
-                    <div class="col-auto align-self-center">
-                        <div class="fw-bold">${parseFloat(item.Subtotal).toLocaleString('vi-VN')} VNĐ</div>
+                    <div style="align-self: center;">
+                        <div style="font-weight: 700; color: #18181b;">${parseFloat(item.Subtotal).toLocaleString('vi-VN')} VNĐ</div>
                     </div>
                 </div>`;
         });
@@ -421,62 +430,62 @@
         const formattedDate = orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
         const html = `
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Order Items</h3>
+            <div style="display: grid; grid-template-columns: 1fr 400px; gap: 2rem;">
+                <div>
+                    <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; margin-bottom: 1.5rem;">
+                        <div style="padding: 1.5rem; border-bottom: 1px solid #e4e4e7;">
+                            <h3 style="font-size: 1.125rem; font-weight: 700; margin: 0;">Order Items</h3>
                         </div>
-                        <div class="card-body">
+                        <div style="padding: 0 1.5rem;">
                             ${itemsHtml}
                         </div>
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong>Total Amount:</strong>
-                                <strong class="h3 mb-0">${parseFloat(order.TotalAmount).toLocaleString('vi-VN')} VNĐ</strong>
+                        <div style="padding: 1.5rem; border-top: 1px solid #e4e4e7;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong style="font-size: 1rem;">Total Amount:</strong>
+                                <strong style="font-size: 1.5rem; color: #18181b;">${parseFloat(order.TotalAmount).toLocaleString('vi-VN')} VNĐ</strong>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Order Information</h3>
+                <div>
+                    <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; margin-bottom: 1.5rem;">
+                        <div style="padding: 1.5rem; border-bottom: 1px solid #e4e4e7;">
+                            <h3 style="font-size: 1.125rem; font-weight: 700; margin: 0;">Order Information</h3>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Order ID</label>
-                                <div>#${order.OrderID}</div>
+                        <div style="padding: 1.5rem;">
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="font-size: 0.875rem; color: #71717a; margin-bottom: 0.25rem;">Order ID</div>
+                                <div style="font-weight: 600; color: #18181b;">#${order.OrderID}</div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Order Date</label>
-                                <div>${formattedDate}</div>
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="font-size: 0.875rem; color: #71717a; margin-bottom: 0.25rem;">Order Date</div>
+                                <div style="font-weight: 600; color: #18181b;">${formattedDate}</div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Customer Email</label>
-                                <div>${order.UserEmail}</div>
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="font-size: 0.875rem; color: #71717a; margin-bottom: 0.25rem;">Customer Email</div>
+                                <div style="font-weight: 600; color: #18181b;">${order.UserEmail}</div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Status</label>
+                            <div>
+                                <div style="font-size: 0.875rem; color: #71717a; margin-bottom: 0.25rem;">Status</div>
                                 <div>${statusBadge}</div>
                             </div>
                         </div>
                     </div>
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Shipping Information</h3>
+                    <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; margin-bottom: 1.5rem;">
+                        <div style="padding: 1.5rem; border-bottom: 1px solid #e4e4e7;">
+                            <h3 style="font-size: 1.125rem; font-weight: 700; margin: 0;">Shipping Information</h3>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-2">
-                                <strong>${order.ShippingName}</strong>
+                        <div style="padding: 1.5rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <strong style="color: #18181b;">${order.ShippingName}</strong>
                             </div>
-                            <div class="mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                            <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                                 </svg>
-                                ${order.ShippingPhone}
+                                <span style="color: #52525b;">${order.ShippingPhone}</span>
                             </div>
-                            <div class="text-secondary">
+                            <div style="color: #71717a; font-size: 0.875rem;">
                                 <div>${order.ShippingTenDuong}</div>
                                 <div>${order.ShippingXaQuan}</div>
                                 <div>${order.ShippingTinhThanh}</div>
@@ -484,16 +493,16 @@
                         </div>
                     </div>
                     ${order.OrderStatus !== 'Success' && order.OrderStatus !== 'Cancelled' && order.OrderStatus !== 'Failed' ? `
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Update Status</h3>
+                    <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white;">
+                        <div style="padding: 1.5rem; border-bottom: 1px solid #e4e4e7;">
+                            <h3 style="font-size: 1.125rem; font-weight: 700; margin: 0;">Update Status</h3>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Change order status</label>
-                                <select id="newStatus" class="form-select">${statusOptions}</select>
+                        <div style="padding: 1.5rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-size: 0.875rem; color: #71717a; margin-bottom: 0.5rem;">Change order status</div>
+                                <select id="newStatus" style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; outline: none;">${statusOptions}</select>
                             </div>
-                            <button type="button" class="btn btn-primary w-100" onclick="updateOrderStatus()">Update Status</button>
+                            <button type="button" style="width: 100%; padding: 0.75rem 1.5rem; background: #18181b; color: white; border: none; border-radius: 9999px; font-weight: 600; font-size: 0.875rem; cursor: pointer; transition: all 0.15s;" onclick="updateOrderStatus()">Update Status</button>
                         </div>
                     </div>` : ''}
                 </div>
@@ -538,5 +547,10 @@
         });
     }
     </script>
-}
 
+    <style>
+    @@keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    </style>
+}

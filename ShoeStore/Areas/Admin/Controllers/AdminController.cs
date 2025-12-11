@@ -28,7 +28,7 @@ namespace ShoeStore.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            return RedirectToAction("Index", "Order");
+            return View();
         }
     }
 }
