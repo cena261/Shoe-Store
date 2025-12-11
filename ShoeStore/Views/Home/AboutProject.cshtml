@@ -1,0 +1,342 @@
+@{
+    ViewBag.Title = "Phân công công việc";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+@section Styles {
+    <style>
+        .about-project-container {
+            padding: 8rem 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-project-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .about-project-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-section {
+            margin-bottom: 3rem;
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 0.5rem;
+        }
+
+        .about-section h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #000;
+        }
+
+        .about-section h3 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+            color: #111;
+        }
+
+        .about-section h4 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            color: #333;
+        }
+
+        .about-section p {
+            line-height: 1.8;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+
+        .about-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .about-section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        .summary-section {
+            background: #000;
+            color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .summary-section h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .summary-section p {
+            line-height: 1.8;
+            color: #e5e7eb;
+        }
+
+        .member-name {
+            font-weight: 700;
+            color: #000;
+            font-size: 1.1rem;
+        }
+    </style>
+}
+
+<div class="about-project-container">
+    <div class="about-project-header">
+        <h1>Phân công công việc</h1>
+        <p style="font-size: 1.125rem; color: #6b7280;">Dự án ShoeStore - Hệ thống bán giày trực tuyến</p>
+    </div>
+
+    <!-- Nguyễn Hưng Khánh Tú -->
+    <div class="about-section">
+        <h2>1. Nguyễn Hưng Khánh Tú</h2>
+
+        <h3>I. Phân tích & Thiết kế</h3>
+
+        <h4>1. Phân tích nghiệp vụ</h4>
+        <ul>
+            <li>Tổng hợp yêu cầu hệ thống (customer + admin).</li>
+            <li>Xác định các use case chính: đăng ký, đăng nhập, shopping cart, checkout, order, quản trị…</li>
+            <li>Phân tích luồng nghiệp vụ nâng cao như:
+                <ul>
+                    <li>Đồng bộ stock,</li>
+                    <li>Guest checkout,</li>
+                    <li>Cart migration,</li>
+                    <li>Variant pricing & SKU,</li>
+                    <li>RBAC.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h4>2. Thiết kế cơ sở dữ liệu</h4>
+        <ul>
+            <li>Thiết kế ERD hoàn chỉnh (Products, Variants, Images, Categories, Users, Orders, OrderItems, Addresses, Roles…).</li>
+            <li>Tối ưu quan hệ, khóa ngoại, unique constraints, xử lý giá khuyến mãi & variant price override.</li>
+            <li>Viết tài liệu mô tả quan hệ bảng và ràng buộc.</li>
+        </ul>
+
+        <h4>3. Xây dựng Database trên Oracle</h4>
+        <ul>
+            <li>Tạo schema, bảng, sequence/identity.</li>
+            <li>Viết toàn bộ script tạo bảng + index + ràng buộc.</li>
+            <li>Seed dữ liệu mẫu cho sản phẩm & user.</li>
+            <li>Xử lý các vấn đề về timezone, dữ liệu ảnh, kiểu số/chuỗi.</li>
+        </ul>
+
+        <h3>II. System Development</h3>
+
+        <h4>4. User Account Management</h4>
+        <ul>
+            <li>Đăng ký, đăng nhập bằng email + password.</li>
+            <li>Session/token management.</li>
+            <li>Auto-login bằng cookie 7 ngày.</li>
+            <li>Chức năng xem profile & đổi mật khẩu.</li>
+            <li>Deactivate account.</li>
+        </ul>
+
+        <h4>5. Password Recovery</h4>
+        <ul>
+            <li>API gửi mã 6 số.</li>
+            <li>Giới hạn 15 phút.</li>
+            <li>Reset mật khẩu.</li>
+            <li>Gửi email HTML template.</li>
+        </ul>
+
+        <h4>6. Product Catalog API</h4>
+        <ul>
+            <li>API list sản phẩm + pagination.</li>
+            <li>Tìm kiếm theo tên/style.</li>
+            <li>Lọc theo giới tính, size, giá min-max.</li>
+            <li>Sắp xếp (newest, price asc, desc, name).</li>
+            <li>API product detail + variants + images.</li>
+            <li>Xử lý chọn màu → trả về styleColor variant tương ứng.</li>
+        </ul>
+
+        <h4>7. Cart API</h4>
+        <ul>
+            <li>Giỏ hàng cho user login (DB).</li>
+            <li>Giỏ hàng guest (tích hợp logic merge cart khi login).</li>
+            <li>Update / remove / clear cart.</li>
+            <li>Kiểm tra tồn kho realtime.</li>
+        </ul>
+
+        <h4>8. Checkout & Order API</h4>
+        <ul>
+            <li>Validate địa chỉ.</li>
+            <li>Guest checkout.</li>
+            <li>Order summary & order placement.</li>
+        </ul>
+
+        <h4>9. Order Tracking + History</h4>
+        <ul>
+            <li>API xem lịch sử mua hàng.</li>
+            <li>API xem trạng thái đơn.</li>
+        </ul>
+
+        <h3>III. Admin Backend</h3>
+
+        <h4>10. Product Management (Admin)</h4>
+        <ul>
+            <li>Tạo sản phẩm, sửa, xóa.</li>
+            <li>Tạo variant (color/size), SKU, giá, stock.</li>
+            <li>Upload ảnh cho từng màu.</li>
+            <li>Kích hoạt/tắt sản phẩm.</li>
+            <li>Tự động tạo slug.</li>
+        </ul>
+
+        <h4>11. User Management (Admin)</h4>
+        <ul>
+            <li>Lấy danh sách user + bộ lọc.</li>
+            <li>Xem chi tiết user: orders, addresses.</li>
+            <li>Chỉnh sửa thông tin.</li>
+            <li>Phân quyền role.</li>
+        </ul>
+
+        <h4>12. Order Management (Admin)</h4>
+        <ul>
+            <li>Lấy danh sách đơn hàng + bộ lọc theo trạng thái.</li>
+            <li>Cập nhật trạng thái đơn → deduct stock / restore stock.</li>
+        </ul>
+
+        <h3>IV. DevOps & Tools</h3>
+
+        <h4>13. Docker</h4>
+        <ul>
+            <li>Tạo docker-compose</li>
+            <li>Viết hướng dẫn chạy project bằng Docker.</li>
+            <li>Setup volume, network, healthcheck.</li>
+        </ul>
+
+        <h4>15. Documentation</h4>
+        <ul>
+            <li>Tổng hợp báo cáo cuối kỳ.</li>
+        </ul>
+    </div>
+
+    <!-- Đặng Anh Tuấn -->
+    <div class="about-section">
+        <h2>2. Đặng Anh Tuấn </h2>
+
+        <h3>I. Frontend Development (ASP.NET MVC 5)</h3>
+
+        <h4>1. Trang chủ & Danh mục sản phẩm</h4>
+        <ul>
+            <li>Trang listing sản phẩm 15/sp.</li>
+            <li>Tìm kiếm sản phẩm theo tên / style.</li>
+            <li>Bộ lọc giới tính, size, giá.</li>
+            <li>Sort (newest, price asc/desc, name).</li>
+            <li>Giao diện phân trang.</li>
+            <li>Tích hợp API ajax.</li>
+        </ul>
+
+        <h4>2. Product Detail Page</h4>
+        <ul>
+            <li>Hiển thị ảnh theo color variant.</li>
+            <li>Chọn màu → điều hướng sang đúng styleColor.</li>
+            <li>Hiển thị size + tồn kho theo từng màu.</li>
+            <li>Hiển thị giá gốc & giá sale.</li>
+            <li>Tối ưu UI/UX phần thumbnail.</li>
+        </ul>
+
+        <h4>3. Shopping Cart (Frontend)</h4>
+        <ul>
+            <li>Giao diện thêm vào giỏ hàng.</li>
+            <li>Chỉnh sửa số lượng, xóa sản phẩm.</li>
+            <li>Giỏ hàng guest bằng localStorage.</li>
+            <li>Badge đếm số item realtime.</li>
+        </ul>
+
+        <h4>4. Checkout Page</h4>
+        <ul>
+            <li>Checkout UX.</li>
+            <li>Hiển thị địa chỉ đã lưu / nhập địa chỉ mới.</li>
+            <li>Hiển thị tổng quan đơn hàng.</li>
+            <li>Gọi API tạo đơn.</li>
+        </ul>
+
+        <h4>5. User Pages</h4>
+        <ul>
+            <li>Login, Register, Logout.</li>
+            <li>Trang hồ sơ cá nhân.</li>
+            <li>Đổi mật khẩu.</li>
+            <li>Địa chỉ giao hàng (CRUD giao diện).</li>
+            <li>Quên mật khẩu (Nhập email → nhập mã → reset).</li>
+        </ul>
+
+        <h4>6. Order History</h4>
+        <ul>
+            <li>Xem danh sách đơn hàng.</li>
+            <li>Xem chi tiết đơn.</li>
+        </ul>
+
+        <h3>II. Admin Frontend</h3>
+
+        <h4>7. Admin Dashboard</h4>
+        <ul>
+            <li>Layout admin + navbar + roles routing.</li>
+            <li>Trang xem danh sách sản phẩm.</li>
+            <li>Trang thêm/sửa sản phẩm.</li>
+            <li>Trang quản lý variants + ảnh.</li>
+            <li>Quản lý users (list + search).</li>
+            <li>Quản lý orders + update status.</li>
+            <li>Giao diện confirm/cancel order.</li>
+        </ul>
+
+        <h3>III. Email & Localization</h3>
+
+        <h4>8. Giao diện Email HTML</h4>
+        <ul>
+            <li>Thiết kế email template (password reset).</li>
+            <li>Responsive layout.</li>
+            <li>Tích hợp branding.</li>
+        </ul>
+
+        <h4>9. Localization</h4>
+        <ul>
+            <li>Hiển thị tiền tệ theo VND.</li>
+            <li>Format địa chỉ theo chuẩn Việt Nam.</li>
+            <li>Tối ưu UI tiếng Việt.</li>
+        </ul>
+
+        <h3>IV. Hỗ trợ khác</h3>
+
+        <h4>10. Test & Debug</h4>
+        <ul>
+            <li>Black-box test frontend.</li>
+            <li>Kiểm tra toàn bộ flow checkout.</li>
+            <li>Kiểm thử giao diện admin.</li>
+        </ul>
+    </div>
+
+    <!-- Công việc chung -->
+    <div class="about-section">
+        <h2>3. Công việc chung</h2>
+        <ul>
+            <li>Họp nhóm phân tích nghiệp vụ.</li>
+            <li>Thống nhất ERD & API spec.</li>
+            <li>Kiểm thử tích hợp end-to-end.</li>
+            <li>Chuẩn bị thuyết trình & demo.</li>
+        </ul>
+    </div>
+
+    <!-- Tổng kết -->
+    <div class="summary-section">
+        <h2>4. Tổng kết khối lượng</h2>
+        <p><strong>Tú:</strong> Backend chính, database, ERD, Docker, admin logic, core logic - Hoàn thành 100% công việc được giao</p>
+        <p><strong>Tuấn:</strong> Frontend MVC, admin UI, email template, localization - Hoàn thành 100% công việc được giao</p>
+    </div>
+</div>

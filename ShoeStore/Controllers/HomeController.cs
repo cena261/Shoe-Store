@@ -12,5 +12,10 @@ namespace ShoeStore.Controllers
         {
             return View();
         }
+
+        public ActionResult AboutProject()
+        {
+            return View();
+        }
     }
 }
