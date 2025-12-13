@@ -77,10 +77,10 @@
         }
 
         document.getElementById('confirmModalButton').addEventListener('click', function() {
+            const callback = confirmCallback;
             closeConfirmModal();
-            if (confirmCallback) {
-                confirmCallback();
-                confirmCallback = null;
+            if (callback) {
+                callback();
             }
         });
 

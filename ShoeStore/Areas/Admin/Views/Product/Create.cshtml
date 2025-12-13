@@ -455,14 +455,10 @@
     const submitBtn = document.getElementById('submit-btn');
 
     form.addEventListener('submit', function(e) {
-        console.log('Form submit event triggered');
-
         const productName = document.getElementById('ProductName').value.trim();
         const slug = document.getElementById('Slug').value.trim();
         const price = document.querySelector('input[name="Price"]').value;
         const categoryId = document.querySelector('select[name="CategoryID"]').value;
-
-        console.log('Form data:', { productName, slug, price, categoryId });
 
         if (!productName) {
             e.preventDefault();
@@ -488,7 +484,6 @@
             return false;
         }
 
-        console.log('Form validation passed, submitting...');
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.6';
         submitBtn.querySelector('span').textContent = 'Creating...';

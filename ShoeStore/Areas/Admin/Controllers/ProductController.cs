@@ -93,18 +93,10 @@ namespace ShoeStore.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProductFormDTO model)
         {
-            System.Diagnostics.Debug.WriteLine("=== CREATE POST ACTION CALLED ===");
-            System.Diagnostics.Debug.WriteLine($"Model received: ProductName={model?.ProductName}, Slug={model?.Slug}, Price={model?.Price}");
-
             try
             {
-                System.Diagnostics.Debug.WriteLine($"ModelState.IsValid: {ModelState.IsValid}");
                 if (!ModelState.IsValid)
                 {
-                    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        System.Diagnostics.Debug.WriteLine($"ModelState Error: {error.ErrorMessage}");
-                    }
                     ViewBag.Categories = db.Categories.OrderBy(c => c.CategoryName).ToList();
                     return View(model);
                 }
@@ -130,10 +122,7 @@ namespace ShoeStore.Areas.Admin.Controllers
                 };
 
                 db.Products.Add(product);
-
-                System.Diagnostics.Debug.WriteLine("Product added to context, calling SaveChanges...");
                 db.SaveChanges();
-                System.Diagnostics.Debug.WriteLine($"Product saved successfully! ProductID: {product.ProductID}");
 
                 if (model.Variants != null && model.Variants.Any())
                 {
@@ -177,22 +166,16 @@ namespace ShoeStore.Areas.Admin.Controllers
                     db.SaveChanges();
                 }
 
-                System.Diagnostics.Debug.WriteLine("All done! Redirecting to Index...");
                 TempData["SuccessMessage"] = "Product created successfully";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Create product error: {ex}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
-
                 var innerException = ex;
                 while (innerException.InnerException != null)
                 {
                     innerException = innerException.InnerException;
                 }
-
-                System.Diagnostics.Debug.WriteLine($"Root exception: {innerException.Message}");
 
                 ModelState.AddModelError("", $"Error: {innerException.Message}");
                 ViewBag.Categories = db.Categories.OrderBy(c => c.CategoryName).ToList();
@@ -291,79 +274,85 @@ namespace ShoeStore.Areas.Admin.Controllers
                 product.CategoryID = model.CategoryID;
                 product.IsActive = model.IsActive;
 
-                var existingVariantIds = model.Variants.Where(v => v.VariantID.HasValue).Select(v => v.VariantID.Value).ToList();
-                var variantsToDelete = product.ProductVariants.Where(v => !existingVariantIds.Contains(v.VariantID)).ToList();
-                foreach (var variant in variantsToDelete)
+                if (model.Variants != null && model.Variants.Any())
                 {
-                    db.ProductVariants.Remove(variant);
-                }
-
-                foreach (var variantDTO in model.Variants)
-                {
-                    if (variantDTO.VariantID.HasValue)
+                    var existingVariantIds = model.Variants.Where(v => v.VariantID.HasValue).Select(v => v.VariantID.Value).ToList();
+                    var variantsToDelete = product.ProductVariants.Where(v => !existingVariantIds.Contains(v.VariantID)).ToList();
+                    foreach (var variant in variantsToDelete)
                     {
-                        var existingVariant = product.ProductVariants.FirstOrDefault(v => v.VariantID == variantDTO.VariantID);
-                        if (existingVariant != null)
+                        db.ProductVariants.Remove(variant);
+                    }
+
+                    foreach (var variantDTO in model.Variants)
+                    {
+                        if (variantDTO.VariantID.HasValue)
                         {
-                            existingVariant.SizeValue = variantDTO.SizeValue;
-                            existingVariant.ColorName = variantDTO.ColorName;
-                            existingVariant.StyleColor = variantDTO.StyleColor;
-                            existingVariant.SKU = variantDTO.SKU;
-                            existingVariant.StockQty = variantDTO.StockQty;
-                            existingVariant.PriceOverride = variantDTO.PriceOverride;
-                            existingVariant.IsActive = variantDTO.IsActive;
+                            var existingVariant = product.ProductVariants.FirstOrDefault(v => v.VariantID == variantDTO.VariantID);
+                            if (existingVariant != null)
+                            {
+                                existingVariant.SizeValue = variantDTO.SizeValue;
+                                existingVariant.ColorName = variantDTO.ColorName;
+                                existingVariant.StyleColor = variantDTO.StyleColor;
+                                existingVariant.SKU = variantDTO.SKU;
+                                existingVariant.StockQty = variantDTO.StockQty;
+                                existingVariant.PriceOverride = variantDTO.PriceOverride;
+                                existingVariant.IsActive = variantDTO.IsActive;
+                            }
+                        }
+                        else
+                        {
+                            var existingSKU = db.ProductVariants.Any(v => v.SKU == variantDTO.SKU);
+                            if (!existingSKU)
+                            {
+                                var newVariant = new ProductVariants
+                                {
+                                    ProductID = product.ProductID,
+                                    SizeValue = variantDTO.SizeValue,
+                                    ColorName = variantDTO.ColorName,
+                                    StyleColor = variantDTO.StyleColor,
+                                    SKU = variantDTO.SKU,
+                                    StockQty = variantDTO.StockQty,
+                                    PriceOverride = variantDTO.PriceOverride,
+                                    IsActive = variantDTO.IsActive
+                                };
+                                db.ProductVariants.Add(newVariant);
+                            }
                         }
                     }
-                    else
+                }
+
+                if (model.Images != null && model.Images.Any())
+                {
+                    var existingImageIds = model.Images.Where(i => i.ImageID.HasValue).Select(i => i.ImageID.Value).ToList();
+                    var imagesToDelete = product.ProductImages.Where(i => !existingImageIds.Contains(i.ImageID)).ToList();
+                    foreach (var image in imagesToDelete)
                     {
-                        var existingSKU = db.ProductVariants.Any(v => v.SKU == variantDTO.SKU);
-                        if (!existingSKU)
+                        db.ProductImages.Remove(image);
+                    }
+
+                    foreach (var imageDTO in model.Images)
+                    {
+                        if (imageDTO.ImageID.HasValue)
                         {
-                            var newVariant = new ProductVariants
+                            var existingImage = product.ProductImages.FirstOrDefault(i => i.ImageID == imageDTO.ImageID);
+                            if (existingImage != null)
+                            {
+                                existingImage.StyleColor = imageDTO.StyleColor;
+                                existingImage.ImageURL = imageDTO.ImageURL;
+                                existingImage.DisplayOrder = imageDTO.DisplayOrder;
+                            }
+                        }
+                        else
+                        {
+                            var newImage = new ProductImages
                             {
                                 ProductID = product.ProductID,
-                                SizeValue = variantDTO.SizeValue,
-                                ColorName = variantDTO.ColorName,
-                                StyleColor = variantDTO.StyleColor,
-                                SKU = variantDTO.SKU,
-                                StockQty = variantDTO.StockQty,
-                                PriceOverride = variantDTO.PriceOverride,
-                                IsActive = variantDTO.IsActive
+                                StyleColor = imageDTO.StyleColor,
+                                ImageURL = imageDTO.ImageURL,
+                                DisplayOrder = imageDTO.DisplayOrder
                             };
-                            db.ProductVariants.Add(newVariant);
+                            db.ProductImages.Add(newImage);
                         }
-                    }
-                }
-
-                var existingImageIds = model.Images.Where(i => i.ImageID.HasValue).Select(i => i.ImageID.Value).ToList();
-                var imagesToDelete = product.ProductImages.Where(i => !existingImageIds.Contains(i.ImageID)).ToList();
-                foreach (var image in imagesToDelete)
-                {
-                    db.ProductImages.Remove(image);
-                }
-
-                foreach (var imageDTO in model.Images)
-                {
-                    if (imageDTO.ImageID.HasValue)
-                    {
-                        var existingImage = product.ProductImages.FirstOrDefault(i => i.ImageID == imageDTO.ImageID);
-                        if (existingImage != null)
-                        {
-                            existingImage.StyleColor = imageDTO.StyleColor;
-                            existingImage.ImageURL = imageDTO.ImageURL;
-                            existingImage.DisplayOrder = imageDTO.DisplayOrder;
-                        }
-                    }
-                    else
-                    {
-                        var newImage = new ProductImages
-                        {
-                            ProductID = product.ProductID,
-                            StyleColor = imageDTO.StyleColor,
-                            ImageURL = imageDTO.ImageURL,
-                            DisplayOrder = imageDTO.DisplayOrder
-                        };
-                        db.ProductImages.Add(newImage);
                     }
                 }
 
@@ -374,9 +363,13 @@ namespace ShoeStore.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Update product error: {ex}");
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
 
-                ModelState.AddModelError("", "An error occurred while updating product. Please try again.");
+                ModelState.AddModelError("", $"Error: {innerException.Message}");
                 ViewBag.Categories = db.Categories.OrderBy(c => c.CategoryName).ToList();
                 return View(model);
             }
@@ -394,19 +387,19 @@ namespace ShoeStore.Areas.Admin.Controllers
 
                 if (product == null)
                 {
-                    return Json(new ProductResponseDTO { Status = false, Message = "Product not found" });
+                    return Json(new ProductResponseDTO { Status = false, Message = "Product not found" }, JsonRequestBehavior.AllowGet);
                 }
 
                 db.Products.Remove(product);
                 db.SaveChanges();
 
-                return Json(new ProductResponseDTO { Status = true, Message = "Product deleted successfully" });
+                return Json(new ProductResponseDTO { Status = true, Message = "Product deleted successfully" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Delete product error: {ex}");
 
-                return Json(new ProductResponseDTO { Status = false, Message = "An error occurred while deleting product. Please try again." });
+                return Json(new ProductResponseDTO { Status = false, Message = "An error occurred while deleting product. Please try again." }, JsonRequestBehavior.AllowGet);
             }
         }
 
