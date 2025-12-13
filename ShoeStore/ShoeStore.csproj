@@ -267,6 +267,10 @@
     <Compile Include="Migrations\202511140850172_AddPasswordResetToken.Designer.cs">
       <DependentUpon>202511140850172_AddPasswordResetToken.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202512131211170_UpdateProduct.cs" />
+    <Compile Include="Migrations\202512131211170_UpdateProduct.Designer.cs">
+      <DependentUpon>202512131211170_UpdateProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -419,6 +423,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202511140850172_AddPasswordResetToken.resx">
       <DependentUpon>202511140850172_AddPasswordResetToken.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202512131211170_UpdateProduct.resx">
+      <DependentUpon>202512131211170_UpdateProduct.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
