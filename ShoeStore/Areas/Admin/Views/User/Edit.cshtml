@@ -5,50 +5,180 @@
     ViewData["PageTitle"] = ViewBag.PageTitle;
 }
 
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { @class = "card" }))
+<section style="padding: 1rem 1rem 5rem; margin: 0 auto;">
+    <div style="max-width: 56rem; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
+        <a href="@Url.Action("Index")" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #71717a; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; width: fit-content;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Users
+        </a>
+
+        @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { style = "display: contents;" }))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.UserId)
 
-            <div class="card-body">
-                <h3 class="card-title">User Information</h3>
-
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.Email, new { @class = "form-label required" })
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "user@example.com" })
-                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "invalid-feedback d-block" })
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 2rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e4e4e7;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #18181b; margin: 0;">User Information</h2>
                 </div>
 
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.FullName, new { @class = "form-label required" })
-                    @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", placeholder = "Enter full name" })
-                    @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "invalid-feedback d-block" })
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                            Email <span style="color: #ef4444;">*</span>
+                        </label>
+                        @Html.TextBoxFor(m => m.Email, new {
+                            style = "width: 100%; padding: 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none;",
+                            placeholder = "user@example.com",
+                            onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                            onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                        })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { style = "display: block; margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;" })
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                            Full Name <span style="color: #ef4444;">*</span>
+                        </label>
+                        @Html.TextBoxFor(m => m.FullName, new {
+                            style = "width: 100%; padding: 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none;",
+                            placeholder = "Enter full name",
+                            onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                            onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                        })
+                        @Html.ValidationMessageFor(m => m.FullName, "", new { style = "display: block; margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;" })
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                            Phone
+                        </label>
+                        @Html.TextBoxFor(m => m.Phone, new {
+                            style = "width: 100%; padding: 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none;",
+                            placeholder = "0123456789",
+                            onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                            onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                        })
+                        @Html.ValidationMessageFor(m => m.Phone, "", new { style = "display: block; margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;" })
+                        <small style="display: block; margin-top: 0.5rem; font-size: 0.75rem; color: #71717a;">Phone must be 10-11 digits starting with 0</small>
+                    </div>
+
+                    <div style="border-radius: 12px; background: #fafafa; padding: 1rem; border: 1px solid #e4e4e7;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                            <div style="flex: 1;">
+                                <span style="display: block; font-size: 0.875rem; font-weight: 600; color: #18181b;">Active</span>
+                                <small style="display: block; font-size: 0.75rem; color: #71717a; margin-top: 0.25rem;">Inactive users cannot login to the system</small>
+                            </div>
+                            <label class="toggle-switch">
+                                @Html.CheckBoxFor(m => m.IsActive, new { @class = "toggle-input" })
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.Phone, new { @class = "form-label" })
-                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "0123456789" })
-                    @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "invalid-feedback d-block" })
-                    <small class="form-hint">Phone must be 10-11 digits starting with 0</small>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-check form-switch">
-                        @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
-                        <span class="form-check-label">Active</span>
-                    </label>
-                    <small class="form-hint">Inactive users cannot login</small>
-                </div>
-            </div>
-
-            <div class="card-footer text-end">
-                <div class="d-flex">
-                    <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
-                    <button type="submit" class="btn btn-primary ms-auto">Update User</button>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e4e4e7;">
+                    <a href="@Url.Action("Index")" style="flex: 1; padding: 0.75rem 1.5rem; border-radius: 9999px; background: white; color: #18181b; border: 1px solid #e4e4e7; text-decoration: none; font-size: 0.875rem; font-weight: 600; text-align: center; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                        Cancel
+                    </a>
+                    <button type="submit" style="flex: 1; padding: 0.75rem 1.5rem; border-radius: 9999px; background: #18181b; color: white; border: none; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;" onmouseover="this.style.background='#27272a';" onmouseout="this.style.background='#18181b';">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Update User
+                    </button>
                 </div>
             </div>
         }
     </div>
-</div>
+</section>
+
+<style>
+    a[href*="Index"]:hover {
+        color: #18181b !important;
+    }
+
+    a[href*="Index"][style*="background: white"]:hover {
+        background: #fafafa !important;
+        border-color: #18181b !important;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 26px;
+        cursor: pointer;
+        flex-shrink: 0;
+        z-index: 1;
+    }
+
+    .toggle-input {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e4e4e7;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .toggle-input:checked ~ .toggle-slider {
+        background-color: #18181b;
+    }
+
+    .toggle-input:checked ~ .toggle-slider:before {
+        transform: translateX(22px);
+    }
+
+    .toggle-switch:hover .toggle-slider {
+        background-color: #d4d4d8;
+    }
+
+    .toggle-input:checked ~ .toggle-slider:hover {
+        background-color: #27272a;
+    }
+
+    input[type="hidden"][name="IsActive"] {
+        display: none;
+    }
+</style>

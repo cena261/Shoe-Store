@@ -93,10 +93,18 @@ namespace ShoeStore.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProductFormDTO model)
         {
+            System.Diagnostics.Debug.WriteLine("=== CREATE POST ACTION CALLED ===");
+            System.Diagnostics.Debug.WriteLine($"Model received: ProductName={model?.ProductName}, Slug={model?.Slug}, Price={model?.Price}");
+
             try
             {
+                System.Diagnostics.Debug.WriteLine($"ModelState.IsValid: {ModelState.IsValid}");
                 if (!ModelState.IsValid)
                 {
+                    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        System.Diagnostics.Debug.WriteLine($"ModelState Error: {error.ErrorMessage}");
+                    }
                     ViewBag.Categories = db.Categories.OrderBy(c => c.CategoryName).ToList();
                     return View(model);
                 }
@@ -122,7 +130,10 @@ namespace ShoeStore.Areas.Admin.Controllers
                 };
 
                 db.Products.Add(product);
+
+                System.Diagnostics.Debug.WriteLine("Product added to context, calling SaveChanges...");
                 db.SaveChanges();
+                System.Diagnostics.Debug.WriteLine($"Product saved successfully! ProductID: {product.ProductID}");
 
                 if (model.Variants != null && model.Variants.Any())
                 {
@@ -166,14 +177,24 @@ namespace ShoeStore.Areas.Admin.Controllers
                     db.SaveChanges();
                 }
 
+                System.Diagnostics.Debug.WriteLine("All done! Redirecting to Index...");
                 TempData["SuccessMessage"] = "Product created successfully";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Create product error: {ex}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
 
-                ModelState.AddModelError("", "An error occurred while creating product. Please try again.");
+                var innerException = ex;
+                while (innerException.InnerException != null)
+                {
+                    innerException = innerException.InnerException;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"Root exception: {innerException.Message}");
+
+                ModelState.AddModelError("", $"Error: {innerException.Message}");
                 ViewBag.Categories = db.Categories.OrderBy(c => c.CategoryName).ToList();
                 return View(model);
             }

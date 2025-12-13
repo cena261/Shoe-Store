@@ -7,229 +7,439 @@
     var categories = ViewBag.Categories as List<ShoeStore.Models.Categories>;
 }
 
-@using (Html.BeginForm("Create", "Product", FormMethod.Post, new { @class = "card" }))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="card-body">
-        <h3 class="card-title">Product Information</h3>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.ProductName, new { @class = "form-label required" })
-                    @Html.TextBoxFor(m => m.ProductName, new { @class = "form-control", placeholder = "Enter product name" })
-                    @Html.ValidationMessageFor(m => m.ProductName, "", new { @class = "invalid-feedback d-block" })
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.Slug, new { @class = "form-label required" })
-                    @Html.TextBoxFor(m => m.Slug, new { @class = "form-control", placeholder = "product-slug" })
-                    @Html.ValidationMessageFor(m => m.Slug, "", new { @class = "invalid-feedback d-block" })
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.CategoryID, new { @class = "form-label required" })
-                    @Html.DropDownListFor(m => m.CategoryID,
-                        new SelectList(categories, "CategoryID", "CategoryName"),
-                        "Select Category",
-                        new { @class = "form-select" })
-                    @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "invalid-feedback d-block" })
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.Price, new { @class = "form-label required" })
-                    <div class="input-group">
-                        @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number", step = "1000", placeholder = "0" })
-                        <span class="input-group-text">₫</span>
-                    </div>
-                    @Html.ValidationMessageFor(m => m.Price, "", new { @class = "invalid-feedback d-block" })
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="mb-3">
-                    @Html.LabelFor(m => m.PromotionPrice, new { @class = "form-label" })
-                    <div class="input-group">
-                        @Html.TextBoxFor(m => m.PromotionPrice, new { @class = "form-control", type = "number", step = "1000", placeholder = "0" })
-                        <span class="input-group-text">₫</span>
-                    </div>
-                    @Html.ValidationMessageFor(m => m.PromotionPrice, "", new { @class = "invalid-feedback d-block" })
-                </div>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(m => m.Description, new { @class = "form-label" })
-            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Product description..." })
-        </div>
-
-        <div class="mb-3">
-            <label class="form-check">
-                @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
-                <span class="form-check-label">Active</span>
-            </label>
-        </div>
-
-        <hr class="my-4">
-
-        <h3 class="card-title">Product Variants</h3>
-        <div id="variants-container">
-        </div>
-        <button type="button" class="btn btn-outline-primary" onclick="addVariant()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-                <path d="M12 5l0 14"></path>
-                <path d="M5 12l14 0"></path>
+<section style="padding: 1rem 1rem 5rem; margin: 0 auto;">
+    <div style="max-width: 72rem; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
+        <a href="@Url.Action("Index")" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #71717a; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; width: fit-content;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            Add Variant
-        </button>
+            Back to Products
+        </a>
 
-        <hr class="my-4">
+        @using (Html.BeginForm("Create", "Product", FormMethod.Post, new { style = "display: contents;" }))
+        {
+            @Html.AntiForgeryToken()
 
-        <h3 class="card-title">Product Images</h3>
-        <div id="images-container">
-        </div>
-        <button type="button" class="btn btn-outline-primary" onclick="addImage()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-                <path d="M12 5l0 14"></path>
-                <path d="M5 12l14 0"></path>
-            </svg>
-            Add Image
-        </button>
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 2rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);">
+                <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e4e4e7;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #18181b; margin: 0;">Basic Information</h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                            Product Name <span style="color: #ef4444;">*</span>
+                        </label>
+                        @Html.TextBoxFor(m => m.ProductName, new {
+                            id = "ProductName",
+                            style = "width: 100%; padding: 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none;",
+                            placeholder = "Enter product name",
+                            onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                            onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                        })
+                        @Html.ValidationMessageFor(m => m.ProductName, "", new { style = "display: block; margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;" })
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                            Slug <span style="color: #ef4444;">*</span>
+                        </label>
+                        @Html.TextBoxFor(m => m.Slug, new {
+                            id = "Slug",
+                            style = "width: 100%; padding: 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none;",
+                            placeholder = "product-slug",
+                            onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                            onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                        })
+                        @Html.ValidationMessageFor(m => m.Slug, "", new { style = "display: block; margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;" })
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                            Category <span style="color: #ef4444;">*</span>
+                        </label>
+                        @Html.DropDownListFor(m => m.CategoryID,
+                            new SelectList(categories, "CategoryID", "CategoryName"),
+                            "Select Category",
+                            new {
+                                style = "width: 100%; padding: 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none; background: white;",
+                                onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                                onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                            })
+                        @Html.ValidationMessageFor(m => m.CategoryID, "", new { style = "display: block; margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;" })
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                            Price <span style="color: #ef4444;">*</span>
+                        </label>
+                        <div style="position: relative;">
+                            @Html.TextBoxFor(m => m.Price, new {
+                                type = "number",
+                                step = "1000",
+                                style = "width: 100%; padding: 0.75rem 2.5rem 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none;",
+                                placeholder = "0",
+                                onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                                onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                            })
+                            <span style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-size: 0.875rem; color: #71717a; pointer-events: none;">VNĐ</span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Price, "", new { style = "display: block; margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;" })
+                    </div>
+
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                            Promotion Price
+                        </label>
+                        <div style="position: relative;">
+                            @Html.TextBoxFor(m => m.PromotionPrice, new {
+                                type = "number",
+                                step = "1000",
+                                style = "width: 100%; padding: 0.75rem 2.5rem 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none;",
+                                placeholder = "0",
+                                onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                                onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                            })
+                            <span style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); font-size: 0.875rem; color: #71717a; pointer-events: none;">VNĐ</span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.PromotionPrice, "", new { style = "display: block; margin-top: 0.5rem; font-size: 0.875rem; color: #ef4444;" })
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #52525b;">
+                        Description
+                    </label>
+                    @Html.TextAreaFor(m => m.Description, new {
+                        rows = 4,
+                        style = "width: 100%; padding: 0.75rem 1rem; border: 1px solid #e4e4e7; border-radius: 12px; font-size: 0.875rem; color: #18181b; transition: all 0.2s; outline: none; resize: vertical;",
+                        placeholder = "Product description...",
+                        onfocus = "this.style.borderColor='#18181b'; this.style.boxShadow='0 0 0 3px rgba(24, 24, 27, 0.1)';",
+                        onblur = "this.style.borderColor='#e4e4e7'; this.style.boxShadow='none';"
+                    })
+                </div>
+
+                <div style="border-radius: 12px; background: #fafafa; padding: 1rem; border: 1px solid #e4e4e7;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <span style="display: block; font-size: 0.875rem; font-weight: 600; color: #18181b;">Active</span>
+                            <small style="display: block; font-size: 0.75rem; color: #71717a; margin-top: 0.25rem;">Product will be visible to customers</small>
+                        </div>
+                        <label class="toggle-switch">
+                            @Html.CheckBoxFor(m => m.IsActive, new { @class = "toggle-input", @checked = "checked" })
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 2rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e4e4e7;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #18181b; margin: 0;">Product Variants</h2>
+                    <button type="button" onclick="addVariant()" style="padding: 0.625rem 1.25rem; border-radius: 9999px; background: #18181b; color: white; border: none; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;" onmouseover="this.style.background='#27272a';" onmouseout="this.style.background='#18181b';">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Add Variant
+                    </button>
+                </div>
+
+                <div id="variants-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                </div>
+
+                <div id="empty-variants" style="text-align: center; padding: 3rem 1rem; color: #a1a1aa;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 1rem; opacity: 0.5;">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    <p style="font-size: 0.875rem; margin: 0;">No variants added yet. Click "Add Variant" to start.</p>
+                </div>
+            </div>
+
+            <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 2rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e4e4e7;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #18181b; margin: 0;">Product Images</h2>
+                    <button type="button" onclick="addImage()" style="padding: 0.625rem 1.25rem; border-radius: 9999px; background: #18181b; color: white; border: none; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;" onmouseover="this.style.background='#27272a';" onmouseout="this.style.background='#18181b';">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Add Image
+                    </button>
+                </div>
+
+                <div id="images-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                </div>
+
+                <div id="empty-images" style="text-align: center; padding: 3rem 1rem; color: #a1a1aa;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 1rem; opacity: 0.5;">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <p style="font-size: 0.875rem; margin: 0;">No images added yet. Click "Add Image" to start.</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <a href="@Url.Action("Index")" style="flex: 1; padding: 0.75rem 1.5rem; border-radius: 9999px; background: white; color: #18181b; border: 1px solid #e4e4e7; text-decoration: none; font-size: 0.875rem; font-weight: 600; text-align: center; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                    Cancel
+                </a>
+                <button type="submit" id="submit-btn" style="flex: 1; padding: 0.75rem 1.5rem; border-radius: 9999px; background: #18181b; color: white; border: none; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;" onmouseover="this.style.background='#27272a';" onmouseout="this.style.background='#18181b';">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    <span>Create Product</span>
+                </button>
+            </div>
+        }
     </div>
+</section>
 
-    <div class="card-footer text-end">
-        <div class="d-flex">
-            <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
-            <button type="submit" class="btn btn-primary ms-auto">Create Product</button>
-        </div>
-    </div>
-}
+<style>
+    a[href*="Index"]:hover {
+        color: #18181b !important;
+    }
+
+    a[style*="border: 1px solid #e4e4e7"]:hover {
+        background: #fafafa !important;
+        border-color: #18181b !important;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 26px;
+        cursor: pointer;
+        flex-shrink: 0;
+        z-index: 1;
+    }
+
+    .toggle-input {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e4e4e7;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .toggle-input:checked ~ .toggle-slider {
+        background-color: #18181b;
+    }
+
+    .toggle-input:checked ~ .toggle-slider:before {
+        transform: translateX(22px);
+    }
+
+    .toggle-switch:hover .toggle-slider {
+        background-color: #d4d4d8;
+    }
+
+    .toggle-input:checked ~ .toggle-slider:hover {
+        background-color: #27272a;
+    }
+
+    input[type="hidden"][name="IsActive"] {
+        display: none;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .variant-item, .image-item {
+        animation: slideIn 0.3s ease;
+    }
+</style>
 
 @section Scripts {
     <script>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            var message = error.ErrorMessage.Replace("'", "\\'").Replace("\r", "").Replace("\n", "");
+            <text>
+            toast.error('@message', 5000);
+            </text>
+        }
+    }
+
     let variantIndex = 0;
     let imageIndex = 0;
 
     function addVariant() {
         const container = document.getElementById('variants-container');
+        const emptyState = document.getElementById('empty-variants');
+
         const variantHtml = `
-            <div class="card mb-3 variant-item" data-index="${variantIndex}">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="card-title mb-0">Variant ${variantIndex + 1}</h4>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="removeVariant(${variantIndex})">Remove</button>
+            <div class="variant-item" data-index="${variantIndex}" style="border-radius: 16px; border: 1px solid #e4e4e7; background: #fafafa; padding: 1.5rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+                    <h4 style="font-size: 0.875rem; font-weight: 600; color: #18181b; margin: 0;">Variant ${variantIndex + 1}</h4>
+                    <button type="button" onclick="removeVariant(${variantIndex})" style="padding: 0.375rem 0.75rem; border-radius: 9999px; background: white; color: #ef4444; border: 1px solid #fecaca; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'; this.style.borderColor='#ef4444';" onmouseout="this.style.background='white'; this.style.borderColor='#fecaca';">
+                        Remove
+                    </button>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            Size <span style="color: #ef4444;">*</span>
+                        </label>
+                        <input type="text" name="Variants[${variantIndex}].SizeValue" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" placeholder="42" required />
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label required">Size</label>
-                                <input type="text" name="Variants[${variantIndex}].SizeValue" class="form-control" placeholder="e.g., 42" required />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label required">Color Name</label>
-                                <input type="text" name="Variants[${variantIndex}].ColorName" class="form-control" placeholder="e.g., Black" required />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Style Color</label>
-                                <input type="text" name="Variants[${variantIndex}].StyleColor" class="form-control" placeholder="e.g., #000000" />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label required">SKU</label>
-                                <input type="text" name="Variants[${variantIndex}].SKU" class="form-control" placeholder="e.g., SHOE-BLK-42" required />
-                            </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            Color Name <span style="color: #ef4444;">*</span>
+                        </label>
+                        <input type="text" name="Variants[${variantIndex}].ColorName" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" placeholder="Black" required />
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            Style Color
+                        </label>
+                        <input type="text" name="Variants[${variantIndex}].StyleColor" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" placeholder="#000000" />
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            SKU <span style="color: #ef4444;">*</span>
+                        </label>
+                        <input type="text" name="Variants[${variantIndex}].SKU" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" placeholder="SHOE-BLK-42" required />
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            Stock Quantity <span style="color: #ef4444;">*</span>
+                        </label>
+                        <input type="number" name="Variants[${variantIndex}].StockQty" value="0" min="0" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" required />
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            Price Override
+                        </label>
+                        <div style="position: relative;">
+                            <input type="number" name="Variants[${variantIndex}].PriceOverride" step="1000" style="width: 100%; padding: 0.5rem 2rem 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" placeholder="Optional" />
+                            <span style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: #71717a; pointer-events: none;">VNĐ</span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label required">Stock Quantity</label>
-                                <input type="number" name="Variants[${variantIndex}].StockQty" class="form-control" value="0" min="0" required />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Price Override</label>
-                                <div class="input-group">
-                                    <input type="number" name="Variants[${variantIndex}].PriceOverride" class="form-control" step="1000" placeholder="Optional" />
-                                    <span class="input-group-text">₫</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-check mt-4">
-                                    <input type="checkbox" name="Variants[${variantIndex}].IsActive" class="form-check-input" checked />
-                                    <span class="form-check-label">Active</span>
-                                </label>
-                            </div>
-                        </div>
+                    <div style="display: flex; align-items: end;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 8px; background: white; border: 1px solid #e4e4e7; cursor: pointer; width: 100%;">
+                            <input type="checkbox" name="Variants[${variantIndex}].IsActive" value="true" checked style="width: 16px; height: 16px; cursor: pointer; accent-color: #18181b;" />
+                            <span style="font-size: 0.75rem; font-weight: 600; color: #18181b;">Active</span>
+                        </label>
                     </div>
                 </div>
             </div>
         `;
+
         container.insertAdjacentHTML('beforeend', variantHtml);
+        emptyState.style.display = 'none';
         variantIndex++;
     }
 
     function removeVariant(index) {
-        const variant = document.querySelector(`.variant-item[data-index="${index}"]`);
+        const variant = document.querySelector('.variant-item[data-index="' + index + '"]');
         if (variant) {
             variant.remove();
+        }
+
+        const container = document.getElementById('variants-container');
+        const emptyState = document.getElementById('empty-variants');
+        if (container.children.length === 0) {
+            emptyState.style.display = 'block';
         }
     }
 
     function addImage() {
         const container = document.getElementById('images-container');
+        const emptyState = document.getElementById('empty-images');
+
         const imageHtml = `
-            <div class="card mb-3 image-item" data-index="${imageIndex}">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="card-title mb-0">Image ${imageIndex + 1}</h4>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="removeImage(${imageIndex})">Remove</button>
+            <div class="image-item" data-index="${imageIndex}" style="border-radius: 16px; border: 1px solid #e4e4e7; background: #fafafa; padding: 1.5rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+                    <h4 style="font-size: 0.875rem; font-weight: 600; color: #18181b; margin: 0;">Image ${imageIndex + 1}</h4>
+                    <button type="button" onclick="removeImage(${imageIndex})" style="padding: 0.375rem 0.75rem; border-radius: 9999px; background: white; color: #ef4444; border: 1px solid #fecaca; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#fef2f2'; this.style.borderColor='#ef4444';" onmouseout="this.style.background='white'; this.style.borderColor='#fecaca';">
+                        Remove
+                    </button>
+                </div>
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            Image URL <span style="color: #ef4444;">*</span>
+                        </label>
+                        <input type="text" name="Images[${imageIndex}].ImageURL" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" placeholder="https://..." required />
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label required">Image URL</label>
-                                <input type="text" name="Images[${imageIndex}].ImageURL" class="form-control" placeholder="https://..." required />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Style Color</label>
-                                <input type="text" name="Images[${imageIndex}].StyleColor" class="form-control" placeholder="Optional" />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Display Order</label>
-                                <input type="number" name="Images[${imageIndex}].DisplayOrder" class="form-control" value="${imageIndex}" min="0" />
-                            </div>
-                        </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            Style Color
+                        </label>
+                        <input type="text" name="Images[${imageIndex}].StyleColor" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" placeholder="Optional" />
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.375rem; font-size: 0.75rem; font-weight: 600; color: #52525b;">
+                            Display Order
+                        </label>
+                        <input type="number" name="Images[${imageIndex}].DisplayOrder" min="0" placeholder="Optional" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #e4e4e7; border-radius: 8px; font-size: 0.875rem; color: #18181b; background: white;" />
                     </div>
                 </div>
             </div>
         `;
+
         container.insertAdjacentHTML('beforeend', imageHtml);
+        emptyState.style.display = 'none';
         imageIndex++;
     }
 
     function removeImage(index) {
-        const image = document.querySelector(`.image-item[data-index="${index}"]`);
+        const image = document.querySelector('.image-item[data-index="' + index + '"]');
         if (image) {
             image.remove();
+        }
+
+        const container = document.getElementById('images-container');
+        const emptyState = document.getElementById('empty-images');
+        if (container.children.length === 0) {
+            emptyState.style.display = 'block';
         }
     }
 
@@ -239,6 +449,49 @@
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-|-$/g, '');
         document.getElementById('Slug').value = slug;
+    });
+
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', function(e) {
+        console.log('Form submit event triggered');
+
+        const productName = document.getElementById('ProductName').value.trim();
+        const slug = document.getElementById('Slug').value.trim();
+        const price = document.querySelector('input[name="Price"]').value;
+        const categoryId = document.querySelector('select[name="CategoryID"]').value;
+
+        console.log('Form data:', { productName, slug, price, categoryId });
+
+        if (!productName) {
+            e.preventDefault();
+            toast.error('Product name is required', 5000);
+            return false;
+        }
+
+        if (!slug) {
+            e.preventDefault();
+            toast.error('Slug is required', 5000);
+            return false;
+        }
+
+        if (!price || price <= 0) {
+            e.preventDefault();
+            toast.error('Price is required and must be greater than 0', 5000);
+            return false;
+        }
+
+        if (!categoryId) {
+            e.preventDefault();
+            toast.error('Please select a category', 5000);
+            return false;
+        }
+
+        console.log('Form validation passed, submitting...');
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.6';
+        submitBtn.querySelector('span').textContent = 'Creating...';
     });
     </script>
 }

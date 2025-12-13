@@ -5,181 +5,227 @@
     ViewData["PageTitle"] = ViewBag.PageTitle;
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body text-center">
-                <span class="avatar avatar-xl mb-3" style="background-image: url(https://ui-avatars.com/api/?name=@Uri.EscapeDataString(Model.FullName)&background=066fd1&color=fff&size=128)"></span>
-                <h3 class="m-0 mb-1">@Model.FullName</h3>
-                <div class="text-secondary mb-3">@Model.Email</div>
-                <div class="mb-3">
-                    @if (Model.Roles != null && Model.Roles.Any())
-                    {
-                        foreach (var role in Model.Roles)
-                        {
-                            <span class="badge @(role == "Admin" ? "bg-red" : "bg-blue") me-1">@role</span>
-                        }
-                    }
-                    else
-                    {
-                        <span class="text-secondary">No roles assigned</span>
-                    }
-                </div>
-                <div class="mb-3">
-                    <span class="badge @(Model.IsActive ? "bg-success" : "bg-danger") badge-lg">
-                        @(Model.IsActive ? "Active" : "Inactive")
-                    </span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="row">
-                    <div class="col">
-                        <a href="@Url.Action("Edit", new { id = Model.UserId })" class="btn btn-primary w-100">Edit User</a>
-                    </div>
-                    <div class="col">
-                        <a href="@Url.Action("ManageRoles", new { id = Model.UserId })" class="btn btn-warning w-100">Manage Roles</a>
-                    </div>
-                </div>
-            </div>
+<section style="padding: 1rem 1rem 5rem; margin: 0 auto;">
+    <div style="max-width: 80rem; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;">
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <a href="@Url.Action("Index", "User", new { area = "Admin" })" style="display: flex; align-items: center; gap: 0.5rem; color: #71717a; text-decoration: none; transition: color 0.15s;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                <span style="font-weight: 600;">Back to Users</span>
+            </a>
+            <p style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.35em; color: #a1a1aa; margin: 0;">User Management</p>
+            <h1 style="font-size: 3rem; font-weight: 700; margin: 0; line-height: 1;">User Details</h1>
         </div>
 
-        <div class="card mt-3">
-            <div class="card-header">
-                <h3 class="card-title">User Information</h3>
-            </div>
-            <div class="list-group list-group-flush">
-                <div class="list-group-item">
-                    <div class="row align-items-center">
-                        <div class="col text-secondary">User ID</div>
-                        <div class="col-auto"><strong>@Model.UserId</strong></div>
-                    </div>
-                </div>
-                <div class="list-group-item">
-                    <div class="row align-items-center">
-                        <div class="col text-secondary">Phone</div>
-                        <div class="col-auto"><strong>@(Model.Phone ?? "-")</strong></div>
-                    </div>
-                </div>
-                <div class="list-group-item">
-                    <div class="row align-items-center">
-                        <div class="col text-secondary">Joined</div>
-                        <div class="col-auto"><strong>@Model.CreatedAt.ToString("MMM dd, yyyy")</strong></div>
-                    </div>
-                </div>
-                <div class="list-group-item">
-                    <div class="row align-items-center">
-                        <div class="col text-secondary">Last Login</div>
-                        <div class="col-auto">
-                            <strong>
-                                @if (Model.LastLogin.HasValue)
-                                {
-                                    @Model.LastLogin.Value.ToString("MMM dd, yyyy HH:mm")
-                                }
-                                else
-                                {
-                                    <span class="text-secondary">Never</span>
-                                }
-                            </strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        <div style="display: grid; grid-template-columns: 350px 1fr; gap: 2rem;">
 
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Order History</h3>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-vcenter card-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.Orders != null && Model.Orders.Any())
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 2rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); text-align: center;">
+                    <div style="width: 96px; height: 96px; margin: 0 auto 1rem; border-radius: 50%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; color: white; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);">
+                        @Model.FullName.Substring(0, 1).ToUpper()
+                    </div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin: 0 0 0.5rem 0; color: #18181b;">@Model.FullName</h3>
+                    <p style="font-size: 0.9375rem; color: #71717a; margin: 0 0 1rem 0;">@Model.Email</p>
+
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
+                        @if (Model.Roles != null && Model.Roles.Any())
                         {
-                            foreach (var order in Model.Orders)
+                            foreach (var role in Model.Roles)
                             {
-                                <tr>
-                                    <td>#@order.OrderID</td>
-                                    <td>@order.OrderDate.ToString("MMM dd, yyyy")</td>
-                                    <td>@order.TotalItems</td>
-                                    <td><strong>@order.TotalAmount.ToString("N0")₫</strong></td>
-                                    <td>
-                                        <span class="badge bg-info">@order.OrderStatus</span>
-                                    </td>
-                                </tr>
+                                <span style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; @(role == "Admin" ? "background: #fee2e2; color: #991b1b;" : "background: #dbeafe; color: #1e40af;")">
+                                    @role
+                                </span>
                             }
                         }
                         else
                         {
-                            <tr>
-                                <td colspan="5" class="text-center py-4">
-                                    <div class="text-secondary">No orders yet</div>
-                                </td>
-                            </tr>
+                            <span style="color: #a1a1aa; font-size: 0.875rem;">No roles assigned</span>
                         }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    </div>
 
-        <div class="card mt-3">
-            <div class="card-header">
-                <h3 class="card-title">Addresses</h3>
+                    <span style="display: inline-block; padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 700; @(Model.IsActive ? "background: #dcfce7; color: #166534;" : "background: #fee2e2; color: #991b1b;")">
+                        @(Model.IsActive ? "Active" : "Inactive")
+                    </span>
+                </div>
+
+                <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 1.125rem; font-weight: 700; margin: 0 0 1rem 0; color: #18181b;">Quick Actions</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <a href="@Url.Action("Edit", new { id = Model.UserId })" style="width: 100%; padding: 0.75rem 1rem; border-radius: 9999px; background: #18181b; color: white; font-weight: 600; font-size: 0.9375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                <path d="M16 5l3 3"></path>
+                            </svg>
+                            Edit User
+                        </a>
+                        <a href="@Url.Action("ManageRoles", new { id = Model.UserId })" style="width: 100%; padding: 0.75rem 1rem; border-radius: 9999px; background: white; color: #18181b; border: 1px solid #e4e4e7; font-weight: 600; font-size: 0.9375rem; text-decoration: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"></path>
+                                <path d="M12 12l8 -4.5"></path>
+                                <path d="M12 12l0 9"></path>
+                                <path d="M12 12l-8 -4.5"></path>
+                            </svg>
+                            Manage Roles
+                        </a>
+                    </div>
+                </div>
+
+                <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 1.125rem; font-weight: 700; margin: 0 0 1rem 0; color: #18181b;">User Information</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f4f4f5;">
+                            <span style="font-size: 0.875rem; color: #71717a;">User ID</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: #18181b; font-family: monospace;">#@Model.UserId</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f4f4f5;">
+                            <span style="font-size: 0.875rem; color: #71717a;">Phone</span>
+                            <span style="font-size: 0.9375rem; font-weight: 600; color: #18181b;">@(Model.Phone ?? "-")</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f4f4f5;">
+                            <span style="font-size: 0.875rem; color: #71717a;">Joined</span>
+                            <span style="font-size: 0.9375rem; font-weight: 600; color: #18181b;">@Model.CreatedAt.ToString("MMM dd, yyyy")</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0;">
+                            <span style="font-size: 0.875rem; color: #71717a;">Last Login</span>
+                            <span style="font-size: 0.9375rem; font-weight: 600; color: #18181b;">
+                                @if (Model.LastLogin.HasValue)
+                                {
+                                    @Model.LastLogin.Value.ToString("MMM dd, yyyy")
+                                }
+                                else
+                                {
+                                    <span style="color: #a1a1aa;">Never</span>
+                                }
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                @if (Model.Addresses != null && Model.Addresses.Any())
-                {
-                    <div class="row">
-                        @foreach (var address in Model.Addresses)
-                        {
-                            <div class="col-md-6 mb-3">
-                                <div class="card @(address.IsDefault ? "border-primary" : "")">
-                                    <div class="card-body">
-                                        @if (address.IsDefault)
-                                        {
-                                            <span class="badge bg-primary mb-2">Default</span>
-                                        }
-                                        <div><strong>@address.FullName</strong></div>
-                                        <div class="text-secondary">@address.Phone</div>
-                                        <div class="mt-2">
-                                            @address.TenDuong<br />
-                                            @address.XaQuan<br />
-                                            @address.TinhThanh
-                                        </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+                <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 2rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; margin: 0 0 1.5rem 0; color: #18181b;">Recent Orders</h2>
+
+                    @if (Model.Orders != null && Model.Orders.Any())
+                    {
+                        <div style="overflow-x: auto; border-radius: 12px; border: 1px solid #e4e4e7;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead style="background: #f9fafb; border-bottom: 1px solid #e4e4e7;">
+                                    <tr>
+                                        <th style="padding: 0.75rem 1rem; text-align: left; font-size: 0.8125rem; font-weight: 600; color: #52525b;">Order ID</th>
+                                        <th style="padding: 0.75rem 1rem; text-align: left; font-size: 0.8125rem; font-weight: 600; color: #52525b;">Date</th>
+                                        <th style="padding: 0.75rem 1rem; text-align: right; font-size: 0.8125rem; font-weight: 600; color: #52525b;">Amount</th>
+                                        <th style="padding: 0.75rem 1rem; text-align: center; font-size: 0.8125rem; font-weight: 600; color: #52525b;">Status</th>
+                                        <th style="padding: 0.75rem 1rem; text-align: center; font-size: 0.8125rem; font-weight: 600; color: #52525b;">Items</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.Orders.Take(5))
+                                    {
+                                        <tr style="border-bottom: 1px solid #f4f4f5;">
+                                            <td style="padding: 0.75rem 1rem;">
+                                                <span style="font-weight: 700; color: #18181b; font-family: monospace;">#@order.OrderID</span>
+                                            </td>
+                                            <td style="padding: 0.75rem 1rem;">
+                                                <span style="font-size: 0.875rem; color: #71717a;">@order.OrderDate.ToString("MMM dd, yyyy")</span>
+                                            </td>
+                                            <td style="padding: 0.75rem 1rem; text-align: right;">
+                                                <span style="font-weight: 600; color: #18181b;">@order.TotalAmount.ToString("N0") ₫</span>
+                                            </td>
+                                            <td style="padding: 0.75rem 1rem; text-align: center;">
+                                                @{
+                                                    var statusStyle = "";
+                                                    switch (order.OrderStatus)
+                                                    {
+                                                        case "Pending":
+                                                            statusStyle = "background: #fef3c7; color: #92400e;";
+                                                            break;
+                                                        case "Confirmed":
+                                                            statusStyle = "background: #dbeafe; color: #1e40af;";
+                                                            break;
+                                                        case "On Delivery":
+                                                            statusStyle = "background: #e9d5ff; color: #6b21a8;";
+                                                            break;
+                                                        case "Success":
+                                                            statusStyle = "background: #dcfce7; color: #166534;";
+                                                            break;
+                                                        case "Cancelled":
+                                                            statusStyle = "background: #fed7aa; color: #9a3412;";
+                                                            break;
+                                                        case "Failed":
+                                                            statusStyle = "background: #fee2e2; color: #991b1b;";
+                                                            break;
+                                                    }
+                                                }
+                                                <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; @statusStyle">
+                                                    @order.OrderStatus
+                                                </span>
+                                            </td>
+                                            <td style="padding: 0.75rem 1rem; text-align: center;">
+                                                <span style="font-size: 0.875rem; color: #71717a;">@order.TotalItems</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="text-align: center; padding: 3rem 2rem; color: #a1a1aa;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 1rem; display: block;">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            <div style="font-weight: 500;">No orders yet</div>
+                        </div>
+                    }
+                </div>
+
+                <div style="border-radius: 24px; border: 1px solid #e4e4e7; background: white; padding: 2rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; margin: 0 0 1.5rem 0; color: #18181b;">Saved Addresses</h2>
+
+                    @if (Model.Addresses != null && Model.Addresses.Any())
+                    {
+                        <div style="display: grid; gap: 1rem;">
+                            @foreach (var address in Model.Addresses)
+                            {
+                                <div style="border-radius: 12px; border: 1px solid #e4e4e7; background: #fafafa; padding: 1.25rem; position: relative;">
+                                    @if (address.IsDefault)
+                                    {
+                                        <span style="position: absolute; top: 1rem; right: 1rem; padding: 0.25rem 0.625rem; border-radius: 9999px; background: #dcfce7; color: #166534; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Default</span>
+                                    }
+                                    <div style="font-weight: 700; color: #18181b; margin-bottom: 0.5rem; font-size: 1rem;">@address.FullName</div>
+                                    <div style="font-size: 0.875rem; color: #71717a; margin-bottom: 0.25rem;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; vertical-align: middle; margin-right: 0.25rem;">
+                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                        </svg>
+                                        @address.Phone
+                                    </div>
+                                    <div style="font-size: 0.875rem; color: #71717a; line-height: 1.5;">
+                                        @address.TenDuong, @address.XaQuan, @address.TinhThanh
                                     </div>
                                 </div>
-                            </div>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <div class="text-center text-secondary py-4">
-                        No addresses saved
-                    </div>
-                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="text-align: center; padding: 3rem 2rem; color: #a1a1aa;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 1rem; display: block;">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <div style="font-weight: 500;">No saved addresses</div>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="row mt-3">
-    <div class="col">
-        <a href="@Url.Action("Index")" class="btn btn-link">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none">
-                <path d="M15 6l-6 6l6 6"></path>
-            </svg>
-            Back to Users List
-        </a>
-    </div>
-</div>
+</section>
