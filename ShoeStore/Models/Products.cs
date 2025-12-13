@@ -34,7 +34,7 @@ namespace ShoeStore.Models
 
         public bool IsActive { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public DateTime CreatedAt { get; set; }
 
         [ForeignKey("CategoryID")]
