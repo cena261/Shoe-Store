@@ -181,7 +181,7 @@
           await cart.migrateGuestCart();
 
           if (result.User.Roles && result.User.Roles.includes('Admin')) {
-            window.location.href = '/Admin/Product/Index';
+            window.location.href = '/Admin/Admin/Index';
           } else {
             window.location.href = '/Home/Index';
           }
