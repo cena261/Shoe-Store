@@ -705,11 +705,11 @@ namespace ShoeStore.Controllers
                     Response.Cookies["UserInfo"].Expires = DateTime.Now.AddDays(-1);
                 }
 
-                return Json(new { Status = true, Message = "Logged out successfully" });
+                return Json(new { Status = true, Message = "Logged out successfully" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new { Status = false, Message = "Logout error: " + ex.Message });
+                return Json(new { Status = false, Message = "Logout error: " + ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
