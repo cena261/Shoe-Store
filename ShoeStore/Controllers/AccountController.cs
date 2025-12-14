@@ -105,6 +105,12 @@ namespace ShoeStore.Controllers
                 Session["UserEmail"] = newUser.Email;
                 Session["UserName"] = newUser.FullName;
                 Session["UserRoles"] = new string[] { "User" };
+                Session["SessionToken"] = Guid.NewGuid().ToString();
+                Session["LoginTime"] = DateTime.Now;
+
+                HttpCookie clearLogoutCookie = new HttpCookie("LoggedOut", "");
+                clearLogoutCookie.Expires = DateTime.Now.AddYears(-1);
+                Response.Cookies.Add(clearLogoutCookie);
 
                 var authCookie = new HttpCookie("AuthToken")
                 {
@@ -215,6 +221,12 @@ namespace ShoeStore.Controllers
                 Session["UserEmail"] = user.Email;
                 Session["UserName"] = user.FullName;
                 Session["UserRoles"] = userRoles;
+                Session["SessionToken"] = Guid.NewGuid().ToString();
+                Session["LoginTime"] = DateTime.Now;
+
+                HttpCookie clearLogoutCookie = new HttpCookie("LoggedOut", "");
+                clearLogoutCookie.Expires = DateTime.Now.AddYears(-1);
+                Response.Cookies.Add(clearLogoutCookie);
 
                 var authCookie = new HttpCookie("AuthToken")
                 {
@@ -692,18 +704,36 @@ namespace ShoeStore.Controllers
         {
             try
             {
+                Session.Remove("UserId");
+                Session.Remove("UserEmail");
+                Session.Remove("UserRoles");
+                Session.Remove("FullName");
+                Session.Remove("SessionToken");
+                Session.Remove("LoginTime");
+
                 Session.Clear();
                 Session.Abandon();
 
-                if (Response.Cookies["AuthToken"] != null)
-                {
-                    Response.Cookies["AuthToken"].Expires = DateTime.Now.AddDays(-1);
-                }
+                HttpCookie logoutCookie = new HttpCookie("LoggedOut", "true");
+                logoutCookie.Expires = DateTime.Now.AddMinutes(5);
+                Response.Cookies.Add(logoutCookie);
 
-                if (Response.Cookies["UserInfo"] != null)
-                {
-                    Response.Cookies["UserInfo"].Expires = DateTime.Now.AddDays(-1);
-                }
+                HttpCookie sessionCookie = new HttpCookie("ASP.NET_SessionId", "");
+                sessionCookie.Expires = DateTime.Now.AddYears(-1);
+                Response.Cookies.Add(sessionCookie);
+
+                HttpCookie authCookie = new HttpCookie("AuthToken", "");
+                authCookie.Expires = DateTime.Now.AddYears(-1);
+                Response.Cookies.Add(authCookie);
+
+                HttpCookie userInfoCookie = new HttpCookie("UserInfo", "");
+                userInfoCookie.Expires = DateTime.Now.AddYears(-1);
+                Response.Cookies.Add(userInfoCookie);
+
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.Cache.SetNoStore();
+                Response.Cache.SetExpires(DateTime.Now.AddYears(-1));
+                Response.AppendHeader("Pragma", "no-cache");
 
                 return Json(new { Status = true, Message = "Logged out successfully" }, JsonRequestBehavior.AllowGet);
             }

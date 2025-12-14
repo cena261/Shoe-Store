@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using ShoeStore.Models;
 using ShoeStore.Areas.Admin.Models.DTOs;
@@ -14,8 +15,29 @@ namespace ShoeStore.Areas.Admin.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (Session["UserId"] == null)
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            Response.Cache.SetExpires(DateTime.Now.AddYears(-1));
+            Response.AppendHeader("Pragma", "no-cache");
+
+            var logoutCookie = Request.Cookies["LoggedOut"];
+            if (logoutCookie != null && logoutCookie.Value == "true")
             {
+                Session.Clear();
+                Session.Abandon();
+
+                Response.Cookies["LoggedOut"].Expires = DateTime.Now.AddYears(-1);
+                Response.Cookies["AuthToken"].Expires = DateTime.Now.AddYears(-1);
+                Response.Cookies["UserInfo"].Expires = DateTime.Now.AddYears(-1);
+
+                filterContext.Result = new RedirectResult("/Account/Login");
+                return;
+            }
+
+            if (Session["UserId"] == null || Session["SessionToken"] == null)
+            {
+                Session.Clear();
+                Session.Abandon();
                 filterContext.Result = new RedirectResult("/Account/Login");
                 return;
             }

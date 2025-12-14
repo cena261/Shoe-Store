@@ -26,14 +26,16 @@ namespace ShoeStore
 
             if (context != null && context.Session != null)
             {
-                System.Diagnostics.Debug.WriteLine($"[Session Restore] Path: {context.Request.Path}, Has Session: {context.Session != null}, UserId in Session: {context.Session["UserId"]}");
-
                 if (context.Session["UserId"] == null)
                 {
                     var authCookie = context.Request.Cookies["AuthToken"];
                     var userCookie = context.Request.Cookies["UserInfo"];
 
-                    System.Diagnostics.Debug.WriteLine($"[Session Restore] AuthCookie: {authCookie?.Value}, UserCookie: {userCookie?.Value}");
+                    var logoutCookie = context.Request.Cookies["LoggedOut"];
+                    if (logoutCookie != null && logoutCookie.Value == "true")
+                    {
+                        return;
+                    }
 
                     if (authCookie != null && authCookie.Value == "authenticated" && userCookie != null)
                     {
@@ -54,25 +56,13 @@ namespace ShoeStore
                                     context.Session["UserEmail"] = user.Email;
                                     context.Session["UserName"] = user.FullName;
                                     context.Session["UserRoles"] = userRoles;
-
-                                    System.Diagnostics.Debug.WriteLine($"[Session Restore] SUCCESS - Restored session for UserId: {userId}");
-                                }
-                                else
-                                {
-                                    System.Diagnostics.Debug.WriteLine($"[Session Restore] FAILED - User not found in DB for UserId: {userId}");
+                                    context.Session["SessionToken"] = Guid.NewGuid().ToString();
+                                    context.Session["LoginTime"] = DateTime.Now;
                                 }
                             }
                         }
                     }
                 }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine($"[Session Restore] Session already has UserId: {context.Session["UserId"]}");
-                }
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine($"[Session Restore] SKIPPED - Context or Session is null. Path: {context?.Request.Path}");
             }
         }
     }

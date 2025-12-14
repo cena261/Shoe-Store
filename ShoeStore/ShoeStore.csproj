@@ -361,6 +361,7 @@
     <None Include="Properties\PublishProfiles\tucena261-001-site1 - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\tucena261-001-site1 - Web Deploy.pubxml" />
     <Content Include="Views\Home\AboutProject.cshtml" />
+    <Content Include="Views\Shared\_AuthLayout.cshtml" />
     <None Include="Web.config.example" />
     <None Include="Web.config.Debug.example">
       <DependentUpon>Web.config.example</DependentUpon>
