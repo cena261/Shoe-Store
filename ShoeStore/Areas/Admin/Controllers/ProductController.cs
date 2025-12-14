@@ -248,7 +248,14 @@ namespace ShoeStore.Areas.Admin.Controllers
                 PromotionPrice = product.PromotionPrice,
                 CategoryID = product.CategoryID,
                 IsActive = product.IsActive,
-                ColorGroups = colorGroups
+                ColorGroups = colorGroups,
+                Images = product.ProductImages.Select(img => new ProductImageDTO
+                {
+                    ImageID = img.ImageID,
+                    ImageURL = img.ImageURL,
+                    StyleColor = img.StyleColor,
+                    DisplayOrder = img.DisplayOrder
+                }).ToList()
             };
 
             ViewBag.Title = "Edit Product";
